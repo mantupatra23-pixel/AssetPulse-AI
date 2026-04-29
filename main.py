@@ -6,37 +6,36 @@ from fastapi.responses import FileResponse
 from groq import Groq
 from apscheduler.schedulers.background import BackgroundScheduler
 
-app = FastAPI(title="AssetPulse AI")
+# App Core
+app = FastAPI(title="AssetPulse AI - Professional Suite")
 
 # AI Configuration
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 client = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
 
-# In-Memory Database
-HUNTED_POOL = ["vision-ai.tech", "quantum-scale.io", "mantu-labs.com"]
+# In-Memory Database (Initial Assets)
+HUNTED_POOL = ["vision-ai.tech", "quantum-scale.io", "mantu-labs.com", "global-nexus.ai"]
 
-# BACKGROUND TASK
 def auto_hunter():
-    simulated_finds = ["global-nexus.ai", "hyper-loop.net", "data-mind.io"]
+    """Background Task to simulate asset discovery."""
+    simulated_finds = ["nexus-pay.io", "aero-mesh.net", "data-vault.ai"]
     for asset in simulated_finds:
         if asset not in HUNTED_POOL:
             HUNTED_POOL.insert(0, asset)
+    if len(HUNTED_POOL) > 30: HUNTED_POOL.pop()
 
-# SCHEDULER (Error fix: handles multiple starts)
+# Scheduler setup
 scheduler = BackgroundScheduler()
 scheduler.add_job(auto_hunter, 'interval', hours=1)
 if not scheduler.running:
     scheduler.start()
 
-# STATIC FOLDER FIX: Render par path check
+# Static Folder Logic
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 static_path = os.path.join(BASE_DIR, "static")
-
-# Agar folder nahi hai toh bana do (Crash hone se rokega)
 if not os.path.exists(static_path):
     os.makedirs(static_path)
 
-# Mount static files safely
 app.mount("/static", StaticFiles(directory=static_path), name="static")
 
 @app.get("/")
@@ -44,19 +43,37 @@ async def read_index():
     index_file = os.path.join(static_path, "index.html")
     if os.path.exists(index_file):
         return FileResponse(index_file)
-    return {"message": "Dashboard file missing. Please ensure index.html is in static folder."}
+    return {"error": "Dashboard (index.html) not found in static folder."}
 
 @app.get("/hunted")
 def get_hunted():
-    return {"assets": HUNTED_POOL[:12]}
+    return {"assets": HUNTED_POOL[:15]}
 
 @app.get("/analyze")
 def analyze_asset(name: str = Query(...)):
     if not client: return {"error": "GROQ_API_KEY Missing!"}
+    
+    # Professional Documentation Prompt
+    prompt = f"""
+    Generate a formal 'Digital Asset Investment Report' for the domain: {name}
+    
+    Format the response using these sections:
+    1. EXECUTIVE SUMMARY: High-level overview of the asset.
+    2. VALUATION: Estimated market price in USD based on current trends.
+    3. BRANDING POTENTIAL: Pronounceability, length, and industry fit.
+    4. SEARCH ENGINE (SEO) SCORE: Ranking potential for primary keywords.
+    5. COMPARATIVE SALES: Mention 2 similar domains that sold recently.
+    6. ACQUISITION VERDICT: (Strong Buy, Hold, or Avoid).
+    
+    Style: Professional, analytical, and data-driven.
+    """
+    
     try:
         chat = client.chat.completions.create(
-            messages=[{"role": "user", "content": f"Analyze domain: {name}"}],
+            messages=[{"role": "system", "content": "You are a professional senior asset broker."},
+                      {"role": "user", "content": prompt}],
             model="llama3-8b-8192",
+            temperature=0.4,
         )
         return {"result": chat.choices[0].message.content}
     except Exception as e:
@@ -65,10 +82,14 @@ def analyze_asset(name: str = Query(...)):
 @app.get("/find_buyers")
 def find_buyers(name: str = Query(...)):
     if not client: return {"error": "GROQ_API_KEY Missing!"}
+    
+    prompt = f"Identify top 5 industry-specific buyers for '{name}' and draft a professional 2-sentence value proposition for each."
+    
     try:
         chat = client.chat.completions.create(
-            messages=[{"role": "user", "content": f"Buyers for: {name}"}],
+            messages=[{"role": "user", "content": prompt}],
             model="llama3-8b-8192",
+            temperature=0.5,
         )
         return {"result": chat.choices[0].message.content}
     except Exception as e:
