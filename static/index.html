@@ -3,60 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AssetPulse AI | Dashboard</title>
+    <title>AssetPulse AI | Terminal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0a0a0a; color: #00ff41; font-family: 'Courier New', Courier, monospace; }
-        .neon-border { border: 1px solid #00ff41; box-shadow: 0 0 10px #00ff41; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
+        body { background-color: #030303; color: #00ff41; font-family: 'Courier New', monospace; }
+        .neon-box { border: 1px solid #00ff41; background: rgba(0, 255, 65, 0.01); box-shadow: 0 0 10px rgba(0, 255, 65, 0.1); }
+        .neon-btn { border: 1px solid #00ff41; color: #00ff41; transition: 0.3s; text-transform: uppercase; font-weight: bold; }
+        .neon-btn:hover { background: #00ff41; color: #000; box-shadow: 0 0 20px #00ff41; }
+        input { background: #000 !important; border: 1px solid #003311 !important; color: #00ff41 !important; }
+        .asset-chip { border: 1px solid #004411; font-size: 10px; cursor: pointer; padding: 2px 8px; transition: 0.2s; }
+        .asset-chip:hover { border-color: #00ff41; background: #001100; }
+        .loading { animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
     </style>
 </head>
-<body class="p-5 md:p-20">
-    <div class="max-w-4xl mx-auto">
-        <h1 class="text-4xl font-bold mb-5 text-center tracking-widest uppercase">AssetPulse AI Engine</h1>
-        <p class="text-center mb-10 text-gray-400">Digital Asset Arbitrage & Analysis v1.0</p>
+<body class="min-h-screen flex flex-col items-center p-6 md:p-12">
+    <div class="w-full max-w-4xl">
+        <header class="mb-10 text-center">
+            <h1 class="text-5xl font-black italic tracking-tighter uppercase">AssetPulse AI</h1>
+            <div class="text-[10px] tracking-[0.6em] text-green-900 mt-2 font-bold">AUTONOMOUS ARBITRAGE SYSTEM LIVE</div>
+        </header>
 
-        <div class="glass p-8 rounded-lg neon-border">
-            <label class="block mb-2 text-sm uppercase">Enter Asset Name (Domain/Handle):</label>
-            <input type="text" id="assetName" placeholder="e.g. mantu-tech.ai" 
-                class="w-full p-3 bg-black border border-green-900 rounded mb-5 focus:outline-none focus:border-green-400 text-green-400">
-            
-            <button onclick="analyze()" id="btn" class="w-full bg-green-600 hover:bg-green-500 text-black font-bold py-3 rounded transition duration-300 uppercase">
-                Start AI Analysis
-            </button>
-        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="neon-box p-4 rounded-sm">
+                <div class="text-xs font-bold mb-4 uppercase border-b border-green-900 pb-2">Live Hunted Pool</div>
+                <div id="huntedList" class="flex flex-col gap-2">
+                    <div class="text-xs opacity-30 italic">Scanning internet...</div>
+                </div>
+            </div>
 
-        <div id="resultBox" class="hidden mt-10 p-8 glass rounded-lg border border-gray-800">
-            <h2 class="text-xl mb-4 underline">AI Analysis Result:</h2>
-            <div id="resultContent" class="whitespace-pre-wrap text-gray-300 leading-relaxed"></div>
+            <div class="lg:col-span-2 space-y-6">
+                <div class="neon-box p-6 rounded-sm">
+                    <div class="text-[10px] mb-2 text-green-800 uppercase">Target_Asset_Identifier //</div>
+                    <input type="text" id="assetInput" placeholder="ENTER DOMAIN NAME..." class="w-full p-4 mb-6 text-xl">
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="execute('analyze')" class="neon-btn py-4">[1] Analyze Value</button>
+                        <button onclick="execute('find_buyers')" class="neon-btn py-4 bg-[#00ff41] text-black">[2] Find Buyers</button>
+                    </div>
+                </div>
+
+                <div id="output" class="hidden neon-box p-6 bg-black min-h-[250px]">
+                    <div id="statusTag" class="text-[10px] font-bold text-green-800 mb-4 uppercase border-b border-green-900 pb-2">Output_Stream //</div>
+                    <div id="report" class="text-sm leading-relaxed whitespace-pre-wrap opacity-90"></div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        async function analyze() {
-            const name = document.getElementById('assetName').value;
-            const btn = document.getElementById('btn');
-            const resultBox = document.getElementById('resultBox');
-            const resultContent = document.getElementById('resultContent');
+        // Fetch background-hunted assets
+        async function fetchHunted() {
+            try {
+                const res = await fetch('/hunted');
+                const data = await res.json();
+                const list = document.getElementById('huntedList');
+                list.innerHTML = data.assets.map(a => 
+                    `<div onclick="document.getElementById('assetInput').value='${a}'" class="asset-chip">${a}</div>`
+                ).join('');
+            } catch (e) { console.error("Hunted fetch failed"); }
+        }
 
-            if(!name) return alert("Enter a name!");
+        async function execute(action) {
+            const input = document.getElementById('assetInput');
+            const report = document.getElementById('report');
+            const output = document.getElementById('output');
+            
+            if(!input.value) return;
 
-            btn.innerText = "Analyzing...";
-            btn.disabled = true;
+            output.classList.remove('hidden');
+            report.innerText = ">> INITIALIZING AI CORE...\n>> MATCHING MARKET DATA...";
+            report.classList.add('loading');
 
             try {
-                const response = await fetch(`/analyze?name=${name}`);
-                const data = await response.json();
-                
-                resultBox.classList.remove('hidden');
-                resultContent.innerText = data.analysis || data.error;
-            } catch (err) {
-                resultContent.innerText = "Error connecting to backend.";
-            } finally {
-                btn.innerText = "Start AI Analysis";
-                btn.disabled = false;
+                const res = await fetch(`/${action}?name=${encodeURIComponent(input.value)}`);
+                const data = await res.json();
+                report.classList.remove('loading');
+                report.innerText = data.result || data.error;
+            } catch (e) {
+                report.innerText = "FATAL ERROR: AI CORES DISCONNECTED.";
             }
         }
+
+        // Initialize
+        fetchHunted();
+        setInterval(fetchHunted, 60000); // Refresh every minute
     </script>
 </body>
 </html>
