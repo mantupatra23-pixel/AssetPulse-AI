@@ -6,58 +6,57 @@ from fastapi.responses import FileResponse
 from groq import Groq
 from apscheduler.schedulers.background import BackgroundScheduler
 
-# App Core
-app = FastAPI(title="AssetPulse AI - Autonomous Engine")
+app = FastAPI(title="AssetPulse AI")
 
 # AI Configuration
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 client = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
 
-# In-Memory Database for Hunted Assets
+# In-Memory Database
 HUNTED_POOL = ["vision-ai.tech", "quantum-scale.io", "mantu-labs.com"]
 
+# BACKGROUND TASK
 def auto_hunter():
-    """
-    Background Task: Automates the discovery of new assets.
-    """
-    print(">> [SYSTEM] Scanning for new undervalued assets...")
-    # Real-world logic: Here you'd add scraping from ExpiredDomains or Namecheap
-    # For now, we simulate finding new high-value domains
     simulated_finds = ["global-nexus.ai", "hyper-loop.net", "data-mind.io"]
     for asset in simulated_finds:
         if asset not in HUNTED_POOL:
             HUNTED_POOL.insert(0, asset)
-    if len(HUNTED_POOL) > 50: HUNTED_POOL.pop()
 
-# Start the background hunter every 1 hour
+# SCHEDULER (Error fix: handles multiple starts)
 scheduler = BackgroundScheduler()
 scheduler.add_job(auto_hunter, 'interval', hours=1)
-scheduler.start()
+if not scheduler.running:
+    scheduler.start()
 
-# Folder & Static Files Setup
-if not os.path.exists("static"):
-    os.makedirs("static")
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# STATIC FOLDER FIX: Render par path check
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+static_path = os.path.join(BASE_DIR, "static")
+
+# Agar folder nahi hai toh bana do (Crash hone se rokega)
+if not os.path.exists(static_path):
+    os.makedirs(static_path)
+
+# Mount static files safely
+app.mount("/static", StaticFiles(directory=static_path), name="static")
 
 @app.get("/")
 async def read_index():
-    return FileResponse('static/index.html')
+    index_file = os.path.join(static_path, "index.html")
+    if os.path.exists(index_file):
+        return FileResponse(index_file)
+    return {"message": "Dashboard file missing. Please ensure index.html is in static folder."}
 
 @app.get("/hunted")
 def get_hunted():
-    """Returns the latest 12 discovered assets."""
     return {"assets": HUNTED_POOL[:12]}
 
 @app.get("/analyze")
 def analyze_asset(name: str = Query(...)):
     if not client: return {"error": "GROQ_API_KEY Missing!"}
-    prompt = f"Expert domain flipping analysis for: {name}. Include USD value, niches, and verdict (BUY/SKIP)."
     try:
         chat = client.chat.completions.create(
-            messages=[{"role": "system", "content": "You are a professional digital asset broker."},
-                      {"role": "user", "content": prompt}],
+            messages=[{"role": "user", "content": f"Analyze domain: {name}"}],
             model="llama3-8b-8192",
-            temperature=0.6,
         )
         return {"result": chat.choices[0].message.content}
     except Exception as e:
@@ -66,10 +65,9 @@ def analyze_asset(name: str = Query(...)):
 @app.get("/find_buyers")
 def find_buyers(name: str = Query(...)):
     if not client: return {"error": "GROQ_API_KEY Missing!"}
-    prompt = f"Identify top 3 buyers and a 2-line sales pitch for: {name}."
     try:
         chat = client.chat.completions.create(
-            messages=[{"role": "user", "content": prompt}],
+            messages=[{"role": "user", "content": f"Buyers for: {name}"}],
             model="llama3-8b-8192",
         )
         return {"result": chat.choices[0].message.content}
@@ -77,4 +75,5 @@ def find_buyers(name: str = Query(...)):
         return {"error": str(e)}
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
