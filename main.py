@@ -1,95 +1,67 @@
 import os
-import requests
 from fastapi import FastAPI, Query
-from bs4 import BeautifulSoup
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from groq import Groq
-from typing import Optional
+import uvicorn
 
-# FastAPI app initialize
-app = FastAPI(title="AssetPulse AI - Digital Arbitrage Engine")
+# App Initialize
+app = FastAPI(title="AssetPulse AI")
 
-# Groq Client Setup
-# Yaad se Render ke Environment Variables mein GROQ_API_KEY daal dena
+# Groq AI Setup
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 client = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
 
-@app.get("/")
-def home():
-    return {
-        "status": "Online",
-        "engine": "AssetPulse AI v1.0",
-        "author": "Mantu Patra",
-        "endpoints": {
-            "/scan": "Scrape potential domains (Coming Soon: High-speed proxy)",
-            "/analyze": "AI-powered valuation of a specific asset"
-        }
-    }
+# Frontend folder setup
+# Ensure 'static' folder exists in your directory
+if not os.path.exists("static"):
+    os.makedirs("static")
 
-@app.get("/scan")
-def scan_assets(keyword: str = "ai"):
-    """
-    Experimental Scraper: Yeh basic keywords ke base par domain availability check karta hai.
-    """
-    # Note: Real production mein hum yahan Namecheap ya GoDaddy API use karenge
-    # Filhal ye ek base structure hai
-    return {
-        "search_query": keyword,
-        "suggested_assets": [
-            f"{keyword}-automation.ai",
-            f"smart-{keyword}.io",
-            f"the-{keyword}-agent.com"
-        ],
-        "message": "Use /analyze?name=domain.com to check value."
-    }
+# Static files mount (CSS/JS/HTML ke liye)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/")
+async def read_index():
+    # Jab koi main URL khole toh dashboard dikhe
+    return FileResponse('static/index.html')
 
 @app.get("/analyze")
-def analyze_asset(name: str = Query(..., description="Name of the domain or asset to analyze")):
+def analyze_asset(name: str = Query(..., description="Domain or Asset name")):
     """
-    AI Logic: Llama 3 se domain ki resale value aur demand analyze karwana.
+    AI Logic to analyze digital asset value.
     """
     if not client:
-        return {"error": "GROQ_API_KEY not found in environment variables."}
+        return {"error": "GROQ_API_KEY is not set in environment variables."}
 
     prompt = f"""
-    You are an expert Digital Asset Arbitrageur. 
-    Analyze the following domain name for its investment and resale potential.
-    
+    You are a high-end Digital Asset Broker. Analyze this domain for arbitrage:
     Domain: {name}
-    
-    Provide the following in short, crisp points:
-    1. Estimated Resale Value (in USD).
-    2. Why is it valuable? (Keywords, TLD, Trends).
-    3. Target Buyers (e.g., Tech startups, Finance firms).
-    4. Risk Level (Low/Medium/High).
-    5. Final Verdict: BUY or SKIP.
+
+    Provide:
+    1. Estimated Resale Price (USD).
+    2. Why it has value (Keywords/Trends).
+    3. Target Audience.
+    4. Verdict: BUY, HOLD, or SKIP.
+    Keep it professional and short.
     """
 
     try:
         chat_completion = client.chat.completions.create(
             messages=[
-                {
-                    "role": "system",
-                    "content": "You are a professional business analyst specializing in domain flipping."
-                },
-                {
-                    "role": "user",
-                    "content": prompt,
-                }
+                {"role": "system", "content": "You are a professional domain flipping expert."},
+                {"role": "user", "content": prompt}
             ],
             model="llama3-8b-8192",
-            temperature=0.7,
+            temperature=0.6,
         )
-        
-        analysis = chat_completion.choices[0].message.content
-        return {
-            "asset": name,
-            "analysis": analysis
-        }
+        return {"analysis": chat_completion.choices[0].message.content}
     except Exception as e:
-        return {"error": f"AI analysis failed: {str(e)}"}
+        return {"error": f"AI Error: {str(e)}"}
 
-# Local Testing ke liye
+@app.get("/health")
+def health_check():
+    return {"status": "running", "ai_connected": client is not None}
+
 if __name__ == "__main__":
-    import uvicorn
-    # Termux mein chalane ke liye port 8000 default rahega
+    # Local Termux testing ke liye
     uvicorn.run(app, host="0.0.0.0", port=8000)
