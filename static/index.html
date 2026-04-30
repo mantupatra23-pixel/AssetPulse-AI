@@ -3,96 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AssetPulse AI | Professional Dashboard</title>
+    <title>AssetPulse AI | Pro Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f9fafb; color: #111827; }
-        .card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        .btn-primary { background-color: #2563eb; color: white; transition: all 0.3s; }
-        .btn-primary:hover { background-color: #1d4ed8; }
-        .hunted-item { cursor: pointer; transition: 0.2s; border-bottom: 1px solid #f3f4f6; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .hunted-item { cursor: pointer; border-bottom: 1px solid #f1f5f9; transition: 0.2s; }
         .hunted-item:hover { background-color: #eff6ff; color: #2563eb; }
+        .btn-primary { background-color: #2563eb; color: white; border-radius: 8px; transition: 0.3s; }
+        .btn-primary:hover { background-color: #1d4ed8; }
+        .loader { border-top-color: #2563eb; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="min-h-screen p-6">
-    <div class="max-w-5xl mx-auto">
-        <header class="flex justify-between items-center mb-10 pb-5 border-b">
+<body class="p-4 md:p-10">
+    <div class="max-w-6xl mx-auto">
+        <header class="flex justify-between items-center border-b pb-6 mb-8">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900 tracking-tight">AssetPulse <span class="text-blue-600">AI</span></h1>
-                <p class="text-sm text-gray-500 font-medium">Digital Asset Valuation & Acquisition Engine</p>
+                <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">AssetPulse <span class="text-blue-600">AI</span></h1>
+                <p class="text-sm text-slate-500 font-medium uppercase tracking-widest">Autonomous Intelligence</p>
             </div>
-            <div class="text-right">
-                <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full uppercase">System Live</span>
-            </div>
+            <button onclick="fetchHunted()" class="text-[10px] font-bold bg-slate-200 px-3 py-1 rounded hover:bg-slate-300">FORCE REFRESH</button>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="card p-6 h-fit">
-                <h2 class="text-lg font-semibold mb-4 flex items-center">
-                    <span class="mr-2">🔍</span> Live Discoveries
-                </h2>
-                <div id="huntedList" class="space-y-1">
-                    <p class="text-sm text-gray-400 italic">Scanning new assets...</p>
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <div class="lg:col-span-1">
+                <div class="card p-5">
+                    <h2 class="text-xs font-bold text-slate-400 uppercase mb-4 flex justify-between">
+                        Live Discoveries
+                        <span id="syncStatus" class="text-green-500 text-[8px]">● SYNCED</span>
+                    </h2>
+                    <div id="huntedList" class="space-y-1 max-h-[500px] overflow-y-auto">
+                        <p class="text-xs text-slate-400 italic">Connecting to scanner...</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="lg:col-span-2 space-y-6">
-                <div class="card p-8">
-                    <label class="block text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wider">Target Asset Domain</label>
-                    <div class="flex gap-3">
-                        <input type="text" id="assetInput" placeholder="example-brand.ai" 
-                            class="flex-1 p-4 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg font-medium">
-                    </div>
-                    <div class="grid grid-cols-2 gap-4 mt-6">
-                        <button onclick="execute('analyze')" class="btn-primary py-4 rounded-lg font-bold shadow-lg">Generate Full Report</button>
-                        <button onclick="execute('find_buyers')" class="border-2 border-gray-900 py-4 rounded-lg font-bold hover:bg-gray-900 hover:text-white transition-all">Identify Buyers</button>
+            <div class="lg:col-span-3 space-y-6">
+                <div class="card p-6 md:p-8">
+                    <label class="text-[10px] font-bold text-slate-500 uppercase mb-3 block">Target Asset Domain</label>
+                    <div class="flex flex-col md:flex-row gap-3">
+                        <input type="text" id="assetInput" placeholder="e.g. neuro-link.ai" 
+                            class="flex-1 p-3 border border-slate-300 rounded-lg text-lg focus:ring-2 focus:ring-blue-400 focus:outline-none font-semibold">
+                        <button onclick="execute('analyze')" class="btn-primary px-8 py-3 font-bold text-sm uppercase">Generate Audit</button>
+                        <button onclick="execute('find_buyers')" class="border-2 border-slate-900 px-8 py-3 rounded-lg font-bold text-sm uppercase hover:bg-slate-900 hover:text-white transition">Find Buyers</button>
                     </div>
                 </div>
 
-                <div id="output" class="hidden card p-8 bg-white overflow-hidden">
-                    <div class="flex items-center justify-between mb-6 border-b pb-4">
-                        <h3 class="text-xl font-bold uppercase tracking-tight">Asset Documentation</h3>
+                <div id="outputBox" class="hidden card p-8 md:p-12">
+                    <div class="flex justify-between items-center mb-8 border-b pb-4">
+                        <h3 class="text-lg font-bold text-slate-800 uppercase tracking-tighter">AI Valuation Report</h3>
                         <button onclick="window.print()" class="text-xs font-bold text-blue-600 hover:underline">Download PDF</button>
                     </div>
-                    <div id="report" class="prose prose-blue max-w-none text-gray-700 leading-relaxed text-sm"></div>
+                    <div id="reportText" class="text-slate-700 leading-relaxed text-sm whitespace-pre-wrap">
+                        </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // Backend se hunted assets khichna
         async function fetchHunted() {
+            const syncStatus = document.getElementById('syncStatus');
+            syncStatus.innerText = "● SYNCING...";
+            syncStatus.classList.replace('text-green-500', 'text-yellow-500');
+
             try {
                 const res = await fetch('/hunted');
                 const data = await res.json();
                 const list = document.getElementById('huntedList');
-                list.innerHTML = data.assets.map(a => 
-                    `<div onclick="document.getElementById('assetInput').value='${a}'" class="hunted-item p-3 text-sm font-medium rounded-md">${a}</div>`
-                ).join('');
-            } catch (e) { console.error(e); }
-        }
-
-        async function execute(action) {
-            const input = document.getElementById('assetInput');
-            const report = document.getElementById('report');
-            const output = document.getElementById('output');
-            
-            if(!input.value) return;
-
-            output.classList.remove('hidden');
-            report.innerHTML = `<div class="flex items-center gap-2"><div class="animate-spin h-4 w-4 border-2 border-blue-600 border-t-transparent rounded-full"></div> Generating detailed documentation...</div>`;
-
-            try {
-                const res = await fetch(`/${action}?name=${encodeURIComponent(input.value)}`);
-                const data = await res.json();
-                // Format details for white theme
-                report.innerHTML = data.result.replace(/\n/g, '<br>');
+                
+                if (data.assets && data.assets.length > 0) {
+                    list.innerHTML = data.assets.map(a => 
+                        `<div onclick="selectDomain('${a}')" class="hunted-item p-3 text-sm font-semibold">${a}</div>`
+                    ).join('');
+                }
+                syncStatus.innerText = "● SYNCED";
+                syncStatus.classList.replace('text-yellow-500', 'text-green-500');
             } catch (e) {
-                report.innerText = "Error generating report.";
+                console.error("Fetch Error:", e);
+                syncStatus.innerText = "● OFFLINE";
+                syncStatus.classList.replace('text-yellow-500', 'text-red-500');
             }
         }
 
+        function selectDomain(name) {
+            document.getElementById('assetInput').value = name;
+        }
+
+        async function execute(action) {
+            const name = document.getElementById('assetInput').value;
+            const output = document.getElementById('outputBox');
+            const report = document.getElementById('reportText');
+
+            if(!name) return alert("Please enter or select a domain!");
+
+            output.classList.remove('hidden');
+            report.innerHTML = `<div class="flex items-center gap-2"><div class="loader h-4 w-4 border-2 border-slate-200 rounded-full"></div> Accessing AI Knowledge Base...</div>`;
+
+            try {
+                const res = await fetch(`/${action}?name=${encodeURIComponent(name)}`);
+                const data = await res.json();
+                report.innerText = data.result || data.error;
+            } catch (e) {
+                report.innerText = "CRITICAL ERROR: Could not connect to AI Engine.";
+            }
+        }
+
+        // Automatic Update every 60 seconds
         fetchHunted();
         setInterval(fetchHunted, 60000);
     </script>
