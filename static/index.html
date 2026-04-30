@@ -3,93 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AssetPulse AI | Global Discovery</title>
+    <title>AssetPulse AI | Multi-Asset Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
-        .card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .hunted-item:hover { background-color: #eff6ff; color: #2563eb; cursor: pointer; }
-        .badge-live { background-color: #dcfce7; color: #166534; font-size: 10px; padding: 2px 8px; border-radius: 99px; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; }
+        .hunted-item:hover { background: #f0f7ff; color: #2563eb; cursor: pointer; }
+        .loader { border-top-color: #2563eb; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="p-6 md:p-12">
+<body class="p-4 md:p-10 text-slate-900">
     <div class="max-w-6xl mx-auto">
-        <header class="flex justify-between items-center mb-10 pb-6 border-b">
+        <header class="flex justify-between items-center border-b pb-6 mb-8 no-print">
             <div>
-                <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">AssetPulse <span class="text-blue-600">AI</span></h1>
-                <p class="text-sm text-slate-500 font-medium uppercase tracking-widest">Autonomous Arbitrage Engine</p>
+                <h1 class="text-3xl font-extrabold tracking-tight">AssetPulse <span class="text-blue-600">AI</span></h1>
+                <p class="text-xs font-bold text-slate-500 uppercase">Autonomous Arbitrage Engine</p>
             </div>
-            <div class="flex items-center gap-2">
-                <span class="badge-live font-bold uppercase">System Synced</span>
-            </div>
+            <span class="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded">V2.0 MULTI-ASSET LIVE</span>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            <div class="lg:col-span-1">
+            <div class="lg:col-span-1 no-print">
                 <div class="card p-5">
-                    <h2 class="text-xs font-bold text-slate-400 uppercase mb-4 tracking-tighter">Live Discoveries</h2>
-                    <div id="huntedList" class="space-y-1">
-                        <div class="animate-pulse h-4 bg-slate-100 rounded w-full"></div>
-                    </div>
+                    <h2 class="text-[10px] font-black text-slate-400 uppercase mb-4 tracking-widest text-center">Live Asset Pool</h2>
+                    <div id="huntedList" class="space-y-1"></div>
                 </div>
             </div>
 
             <div class="lg:col-span-3 space-y-6">
-                <div class="card p-8">
-                    <label class="text-[10px] font-bold text-slate-500 uppercase mb-3 block tracking-widest">Target Asset Domain</label>
-                    <div class="flex flex-col md:flex-row gap-3">
-                        <input type="text" id="assetInput" placeholder="e.g. quantum-mantu.ai" 
-                            class="flex-1 p-3 border border-slate-300 rounded-lg text-lg focus:ring-2 focus:ring-blue-400 outline-none font-semibold">
-                        <button onclick="execute('analyze')" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-bold uppercase text-sm shadow-lg hover:bg-blue-700 transition">Analyze Value</button>
-                        <button onclick="execute('find_buyers')" class="border-2 border-slate-900 px-8 py-3 rounded-lg font-bold text-sm uppercase hover:bg-slate-900 hover:text-white transition">Buyers</button>
+                <div class="card p-8 no-print">
+                    <div class="flex gap-4 mb-6 justify-center">
+                        <label class="text-xs font-bold flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="assetType" value="domain" checked class="accent-blue-600"> Domain
+                        </label>
+                        <label class="text-xs font-bold flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="assetType" value="social" class="accent-blue-600"> Social Handle
+                        </label>
+                        <label class="text-xs font-bold flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="assetType" value="saas" class="accent-blue-600"> Micro-SaaS
+                        </label>
+                    </div>
+
+                    <input type="text" id="assetInput" placeholder="Enter name or handle..." 
+                        class="w-full p-4 border rounded-xl text-lg font-semibold focus:ring-2 focus:ring-blue-400 outline-none mb-6">
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="run('analyze')" class="bg-blue-600 text-white font-bold py-4 rounded-xl uppercase hover:bg-blue-700 transition">Analyze Value</button>
+                        <button onclick="run('leads')" class="border-2 border-slate-900 font-bold py-4 rounded-xl uppercase hover:bg-slate-900 hover:text-white transition">Get Sales Leads</button>
                     </div>
                 </div>
 
-                <div id="output" class="hidden card p-8 md:p-12 bg-white">
-                    <div class="flex justify-between items-center mb-8 border-b pb-4">
-                        <h3 class="text-lg font-bold text-slate-800 uppercase tracking-tighter">Investment Documentation</h3>
-                        <button onclick="window.print()" class="text-xs font-bold text-blue-600 hover:underline">Download PDF</button>
+                <div id="outBox" class="hidden card p-8 md:p-12">
+                    <div class="flex justify-between border-b pb-4 mb-6">
+                        <h3 id="outTitle" class="font-bold uppercase text-slate-800">Valuation Documentation</h3>
+                        <button onclick="downloadReport()" class="text-xs font-bold text-blue-600 underline no-print">SAVE AS PDF</button>
                     </div>
-                    <div id="report" class="text-slate-700 leading-relaxed text-sm whitespace-pre-wrap">
-                        </div>
+                    <div id="outText" class="text-sm leading-relaxed whitespace-pre-wrap text-slate-700"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        async function fetchHunted() {
+        async function fetchPool() {
             try {
                 const res = await fetch('/hunted');
                 const data = await res.json();
-                const list = document.getElementById('huntedList');
-                list.innerHTML = data.assets.map(a => 
-                    `<div onclick="document.getElementById('assetInput').value='${a}'" class="hunted-item p-3 text-sm font-semibold rounded-md border-b border-slate-50 last:border-0">${a}</div>`
+                document.getElementById('huntedList').innerHTML = data.assets.map(a => 
+                    `<div onclick="document.getElementById('assetInput').value='${a}'" class="hunted-item p-3 text-sm font-semibold rounded-lg">${a}</div>`
                 ).join('');
-            } catch (e) { console.error("Sync failed"); }
+            } catch (e) {}
         }
 
-        async function execute(action) {
+        async function run(mode) {
             const val = document.getElementById('assetInput').value;
-            const output = document.getElementById('output');
-            const report = document.getElementById('report');
+            const type = document.querySelector('input[name="assetType"]:checked').value;
+            const box = document.getElementById('outBox');
+            const txt = document.getElementById('outText');
             if(!val) return;
 
-            output.classList.remove('hidden');
-            report.innerHTML = `<div class="flex items-center gap-2"><div class="animate-spin h-4 w-4 border-2 border-blue-600 border-t-transparent rounded-full"></div> Accessing Global Market Data...</div>`;
+            box.classList.remove('hidden');
+            txt.innerHTML = "Processing multi-modal intelligence...";
 
             try {
-                const res = await fetch(`/${action}?name=${encodeURIComponent(val)}`);
+                const res = await fetch(`/${mode}?name=${encodeURIComponent(val)}&type=${type}`);
                 const data = await res.json();
-                report.innerText = data.result || "Error in processing data.";
-            } catch (e) {
-                report.innerText = "Connection failure with neural core.";
-            }
+                txt.innerText = data.result || data.error;
+                box.scrollIntoView({ behavior: 'smooth' });
+            } catch (e) { txt.innerText = "Connection failed."; }
         }
 
-        fetchHunted();
-        setInterval(fetchHunted, 30000); // Har 30 sec mein list refresh
+        function downloadReport() {
+            const element = document.getElementById('outBox');
+            const opt = { margin: 10, filename: 'AssetPulse_Audit.pdf', html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+            html2pdf().set(opt).from(element).save();
+        }
+
+        fetchPool();
+        setInterval(fetchPool, 60000);
     </script>
 </body>
 </html>
