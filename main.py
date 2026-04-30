@@ -1,99 +1,95 @@
 import os
 import uvicorn
+import cloudscraper
 from fastapi import FastAPI, Query
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from bs4 import BeautifulSoup
 from groq import Groq
 from apscheduler.schedulers.background import BackgroundScheduler
 
-# App Core
-app = FastAPI(title="AssetPulse AI - Professional Suite")
+app = FastAPI(title="AssetPulse AI - Pro Autonomous")
 
-# AI Configuration
+# AI Setup
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 client = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
 
-# In-Memory Database (Initial Assets)
-HUNTED_POOL = ["vision-ai.tech", "quantum-scale.io", "mantu-labs.com", "global-nexus.ai"]
+# Global Hunted Pool
+HUNTED_POOL = ["mantu-prime.ai", "fintech-flow.io", "bharat-nexus.in"]
 
-def auto_hunter():
-    """Background Task to simulate asset discovery."""
-    simulated_finds = ["nexus-pay.io", "aero-mesh.net", "data-vault.ai"]
-    for asset in simulated_finds:
-        if asset not in HUNTED_POOL:
-            HUNTED_POOL.insert(0, asset)
-    if len(HUNTED_POOL) > 30: HUNTED_POOL.pop()
+# --- AUTOMATIC SCRAPER LOGIC ---
+def autonomous_hunter():
+    global HUNTED_POOL
+    print(">> [SCANNER] Initiating Global Asset Hunt...")
+    scraper = cloudscraper.create_scraper()
+    
+    # Target URLs (Adjust filters on ExpiredDomains for better results)
+    sources = [
+        "https://www.expireddomains.net/expired-ai-domains/",
+        "https://www.expireddomains.net/expired-com-domains/",
+        "https://www.expireddomains.net/expired-io-domains/"
+    ]
+    
+    new_assets = []
+    try:
+        for url in sources:
+            res = scraper.get(url, timeout=10)
+            soup = BeautifulSoup(res.text, 'html.parser')
+            table = soup.find('table', class_='nametable')
+            if table:
+                rows = table.find_all('tr')[1:6] # Top 5 from each TLD
+                for row in rows:
+                    name = row.find('a').text
+                    if name not in HUNTED_POOL:
+                        new_assets.append(name)
+        
+        # Update Pool (Keep fresh 20 assets)
+        HUNTED_POOL = (new_assets + HUNTED_POOL)[:20]
+        print(f">> [SCANNER] Success. New pool size: {len(HUNTED_POOL)}")
+    except Exception as e:
+        print(f">> [SCANNER] Error: {e}")
 
-# Scheduler setup
+# Scheduler: Har 20 minute mein hunting
 scheduler = BackgroundScheduler()
-scheduler.add_job(auto_hunter, 'interval', hours=1)
-if not scheduler.running:
-    scheduler.start()
+scheduler.add_job(autonomous_hunter, 'interval', minutes=20)
+scheduler.start()
 
-# Static Folder Logic
+# --- SERVER CONFIG ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 static_path = os.path.join(BASE_DIR, "static")
-if not os.path.exists(static_path):
-    os.makedirs(static_path)
-
+if not os.path.exists(static_path): os.makedirs(static_path)
 app.mount("/static", StaticFiles(directory=static_path), name="static")
 
 @app.get("/")
-async def read_index():
-    index_file = os.path.join(static_path, "index.html")
-    if os.path.exists(index_file):
-        return FileResponse(index_file)
-    return {"error": "Dashboard (index.html) not found in static folder."}
+async def read_index(): return FileResponse(os.path.join(static_path, "index.html"))
 
 @app.get("/hunted")
-def get_hunted():
-    return {"assets": HUNTED_POOL[:15]}
+def get_hunted(): return {"assets": HUNTED_POOL}
 
 @app.get("/analyze")
 def analyze_asset(name: str = Query(...)):
-    if not client: return {"error": "GROQ_API_KEY Missing!"}
-    
-    # Professional Documentation Prompt
-    prompt = f"""
-    Generate a formal 'Digital Asset Investment Report' for the domain: {name}
-    
-    Format the response using these sections:
-    1. EXECUTIVE SUMMARY: High-level overview of the asset.
-    2. VALUATION: Estimated market price in USD based on current trends.
-    3. BRANDING POTENTIAL: Pronounceability, length, and industry fit.
-    4. SEARCH ENGINE (SEO) SCORE: Ranking potential for primary keywords.
-    5. COMPARATIVE SALES: Mention 2 similar domains that sold recently.
-    6. ACQUISITION VERDICT: (Strong Buy, Hold, or Avoid).
-    
-    Style: Professional, analytical, and data-driven.
-    """
-    
-    try:
-        chat = client.chat.completions.create(
-            messages=[{"role": "system", "content": "You are a professional senior asset broker."},
-                      {"role": "user", "content": prompt}],
-            model="llama3-8b-8192",
-            temperature=0.4,
-        )
-        return {"result": chat.choices[0].message.content}
-    except Exception as e:
-        return {"error": str(e)}
-
-@app.get("/find_buyers")
-def find_buyers(name: str = Query(...)):
-    if not client: return {"error": "GROQ_API_KEY Missing!"}
-    
-    prompt = f"Identify top 5 industry-specific buyers for '{name}' and draft a professional 2-sentence value proposition for each."
-    
+    if not client: return {"error": "API Key Missing"}
+    prompt = f"Professional investment report for domain: {name}. Include USD value and BUY/SKIP verdict."
     try:
         chat = client.chat.completions.create(
             messages=[{"role": "user", "content": prompt}],
             model="llama3-8b-8192",
-            temperature=0.5,
+            temperature=0.4
         )
         return {"result": chat.choices[0].message.content}
-    except Exception as e:
-        return {"error": str(e)}
+    except Exception as e: return {"error": str(e)}
+
+@app.get("/find_buyers")
+def find_buyers(name: str = Query(...)):
+    if not client: return {"error": "API Key Missing"}
+    prompt = f"Identify top 3 buyers for {name} and a pitch."
+    try:
+        chat = client.chat.completions.create(
+            messages=[{"role": "user", "content": prompt}],
+            model="llama3-8b-8192",
+        )
+        return {"result": chat.choices[0].message.content}
+    except Exception as e: return {"error": str(e)}
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
