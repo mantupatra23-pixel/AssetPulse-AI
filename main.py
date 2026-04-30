@@ -1,44 +1,42 @@
 import os
 import uvicorn
+import resend  # pip install resend
 from fastapi import FastAPI, Query
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from groq import Groq
 
 # Initialization
-app = FastAPI(title="AssetPulse Pro - Final Production")
+app = FastAPI(title="AssetPulse Pro - Autonomous Broker V5.0")
 
-# API Key Setup (Render Environment Variables se lega)
+# API Setup
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
+
 client = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
+if RESEND_API_KEY:
+    resend.api_key = RESEND_API_KEY
+
 MODEL_NAME = "llama-3.3-70b-versatile"
 
-# --- CONFIGURATION ---
-# Deep Link Fix: Seedha search result page par le jayega
+# GoDaddy Deep Link Fix
 MY_AFFILIATE_BASE = "https://www.godaddy.com/domainsearch/find?checkAvail=1&isc=cjccom311"
 
 HUNTED_POOL = []
 
 def asset_generator():
-    """Initial startup par 100 high-value assets generate karna"""
     global HUNTED_POOL
-    types = ["Domain", "Social Handle", "Micro-SaaS"]
     suffixes = [".ai", ".io", ".com", ".net"]
-    
     new_data = []
     for i in range(1, 101):
         ext = suffixes[i % 4]
-        # Professional naming convention
         name = f"nexus-cloud-{i}{ext}" if i % 2 == 0 else f"alpha-trade-{i}{ext}"
-        
-        # Tracking link with domain search parameter
         buy_url = f"{MY_AFFILIATE_BASE}&domainToCheck={name}"
-        
         new_data.append({
             "id": f"ASSET-{1000+i}",
             "name": name,
-            "type": types[i % 3],
-            "status": "Premium/Available",
+            "type": "Domain",
+            "status": "Available",
             "buy_url": buy_url
         })
     HUNTED_POOL = new_data
@@ -54,48 +52,56 @@ static_path = os.path.join(BASE_DIR, "static")
 app.mount("/static", StaticFiles(directory=static_path), name="static")
 
 @app.get("/")
-async def read_index():
-    return FileResponse(os.path.join(static_path, "index.html"))
+async def read_index(): return FileResponse(os.path.join(static_path, "index.html"))
 
 @app.get("/hunted")
-def get_hunted():
-    """Dashboard table ke liye assets provide karna"""
-    return {"assets": HUNTED_POOL}
+def get_hunted(): return {"assets": HUNTED_POOL}
 
 @app.get("/safe_report")
 def get_safe_report(name: str = Query(...)):
-    """AI Safe Mode: Domain name leak nahi karega"""
-    if not client:
-        return {"error": "GROQ_API_KEY is missing in Render settings."}
-    
-    prompt = f"""
-    Write a 200-word premium investment pitch for a digital asset in the {name.split('.')[-1]} niche.
-    
-    CRITICAL PRIVACY RULE:
-    - Never mention the name '{name}'.
-    - Use '[SECURE_ASSET_ID]' instead.
-    - Focus on market trends, ROI, and branding potential.
-    """
-    
-    try:
-        completion = client.chat.completions.create(
-            messages=[{"role": "user", "content": prompt}],
-            model=MODEL_NAME
-        )
-        raw_text = completion.choices[0].message.content
-        # Manual double check
-        safe_text = raw_text.replace(name, "[SECURE_ASSET_ID]")
-        return {"result": safe_text}
-    except Exception as e:
-        return {"error": f"AI Generation Failed: {str(e)}"}
+    if not client: return {"error": "Groq Key Missing"}
+    prompt = f"Write a 150-word investment pitch for a digital asset in the {name.split('.')[-1]} niche. HIDE name '{name}'."
+    completion = client.chat.completions.create(messages=[{"role": "user", "content": prompt}], model=MODEL_NAME)
+    return {"result": completion.choices[0].message.content.replace(name, "[IDENTITY_PROTECTED]")}
 
-@app.get("/analyze")
-def analyze(name: str = Query(...)):
-    """Full Technical SEO Audit"""
-    if not client: return {"error": "API Key Missing"}
-    prompt = f"Technical SEO audit and valuation analysis for: {name}. Highlight traffic potential."
-    res = client.chat.completions.create(messages=[{"role": "user", "content": prompt}], model=MODEL_NAME)
-    return {"result": res.choices[0].message.content}
+# --- AUTOMATIC EMAIL ENGINE ---
+@app.get("/auto_email")
+def auto_email(name: str = Query(...), target_email: str = Query(...)):
+    """AI report generate karke buyer ko auto-email karta hai"""
+    if not RESEND_API_KEY:
+        return {"error": "Resend API Key Missing"}
+    
+    # 1. Pehle AI se report nikalwao
+    report_data = get_safe_report(name)
+    pitch = report_data.get("result", "Strategic Asset Opportunity detected.")
+
+    # 2. Professional HTML Email bhejo
+    try:
+        params = {
+            "from": "Mantu AI <onboarding@resend.dev>", # Domain verify hone ke baad apna email use karein
+            "to": [target_email],
+            "subject": f"Investment Opportunity: Premium {name.split('.')[-1]} Asset",
+            "html": f"""
+                <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee;">
+                    <h2 style="color: #2563eb;">AssetPulse Pro - Strategic Intel</h2>
+                    <p>We have identified a high-ROI digital asset in your industry.</p>
+                    <div style="background: #f9f9f9; padding: 15px; border-radius: 10px; font-style: italic;">
+                        {pitch}
+                    </div>
+                    <p>To acquire this asset or view full valuation, visit our secure terminal.</p>
+                    <a href="https://your-render-url.onrender.com" 
+                       style="background: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                       Open Terminal
+                    </a>
+                    <br><br>
+                    <p>Regards,<br><b>Mantu Patra</b><br>Founder, Visora AI</p>
+                </div>
+            """
+        }
+        resend.Emails.send(params)
+        return {"status": "Success", "message": f"Pitch sent to {target_email}"}
+    except Exception as e:
+        return {"error": str(e)}
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))

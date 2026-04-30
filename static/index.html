@@ -46,28 +46,28 @@
         </div>
     </div>
 
-    <div id="reportModal" class="fixed inset-0 bg-black/90 hidden items-center justify-center z-[100] p-4 backdrop-blur-xl">
+    <div id="reportModal" class="fixed inset-0 bg-black/95 hidden items-center justify-center z-[100] p-4 backdrop-blur-xl">
         <div class="glass w-full max-w-2xl rounded-[2.5rem] p-10 relative modal-animate shadow-[0_0_100px_rgba(37,99,235,0.2)]">
             <button onclick="closeReport()" class="absolute top-6 right-8 text-gray-500 hover:text-white text-3xl font-light">&times;</button>
             
             <div class="mb-8">
                 <h2 class="text-blue-600 font-black text-2xl uppercase tracking-tighter">Strategic Analysis</h2>
-                <p id="modalSub" class="text-gray-500 text-[10px] uppercase font-bold mt-1 tracking-widest tracking-widest">Neural Pitch Generation Active</p>
+                <p id="modalSub" class="text-gray-500 text-[10px] uppercase font-bold mt-1 tracking-widest">Neural Pitch Generation Active</p>
             </div>
 
-            <div id="reportText" class="text-gray-300 leading-relaxed font-normal text-sm bg-blue-900/10 p-8 rounded-3xl border border-blue-500/20 max-h-[450px] overflow-y-auto italic">
+            <div id="reportText" class="text-gray-300 leading-relaxed font-normal text-sm bg-blue-900/10 p-8 rounded-3xl border border-blue-500/20 max-h-[400px] overflow-y-auto italic">
                 Awaiting secure stream...
             </div>
 
             <div class="mt-10 flex flex-wrap gap-4">
-                <button onclick="window.print()" class="bg-white text-black px-8 py-3 rounded-full font-black text-[10px] uppercase hover:bg-blue-600 hover:text-white transition-all shadow-lg">Export Portfolio PDF</button>
+                <button onclick="window.print()" class="bg-white text-black px-8 py-3 rounded-full font-black text-[10px] uppercase hover:bg-blue-600 hover:text-white transition-all">Export PDF</button>
                 <button onclick="closeReport()" class="border border-white/10 text-white px-8 py-3 rounded-full font-black text-[10px] uppercase hover:bg-white/10 transition-all">Close Console</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Load All 100 Assets
+        // 1. Assets Fetching
         async function loadAssets() {
             try {
                 const res = await fetch('/hunted');
@@ -93,29 +93,39 @@
                         </td>
                     </tr>
                 `).join('');
-            } catch (err) { console.error("Sync Error:", err); }
+            } catch (err) { 
+                console.error("Sync Error:", err); 
+            }
         }
 
-        // Professional Report Generation
+        // 2. Report Generation Logic
         async function generateReport(name) {
             const modal = document.getElementById('reportModal');
             const textDiv = document.getElementById('reportText');
             const subText = document.getElementById('modalSub');
             
+            // Modal Open
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            subText.innerText = "Processing Asset ID: " + name.substring(0,5) + "...";
-            textDiv.innerHTML = "Accessing encrypted valuation data...";
+            subText.innerText = "Processing Identity: " + name;
+            textDiv.innerHTML = "Accessing encrypted data from Neural Node...";
 
             try {
+                // Call backend safe_report API
                 const res = await fetch(`/safe_report?name=${encodeURIComponent(name)}`);
                 const data = await res.json();
-                textDiv.innerHTML = data.result || data.error;
+                
+                if (data.result) {
+                    textDiv.innerHTML = data.result;
+                } else {
+                    textDiv.innerHTML = "Error: " + (data.error || "Generation blocked.");
+                }
             } catch (err) {
-                textDiv.innerHTML = "Fatal Error: Connection to AI Node severed.";
+                textDiv.innerHTML = "Fatal Error: Connection to Groq API severed.";
             }
         }
 
+        // 3. Modal Close
         function closeReport() {
             document.getElementById('reportModal').classList.add('hidden');
             document.getElementById('reportModal').classList.remove('flex');
