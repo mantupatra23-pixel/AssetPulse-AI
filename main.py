@@ -13,39 +13,46 @@ GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 client = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
 MODEL_NAME = "llama-3.3-70b-versatile"
 
-# --- GLOBAL DATA POOL (100 Capacity) ---
-HUNTED_POOL = [
-    {"name": "agentic-mantu.ai", "type": "Domain", "status": "High-Value"},
-    {"name": "@mantu_fintech", "type": "Handle", "status": "Premium"},
-    {"name": "bharat-pay.io", "type": "Domain", "status": "Strategic"}
-]
+# --- GLOBAL DATA POOL ---
+HUNTED_POOL = []
 
 def asset_generator():
     global HUNTED_POOL
-    # Simulating 100 high-value assets for the professional table
+    print(">> Generating 100 High-Value Assets...")
     types = ["Domain", "Social Handle", "Micro-SaaS"]
-    statuses = ["Premium", "Scanned", "Available", "High-ROI"]
+    statuses = ["High-Value", "Premium", "Strategic", "Available"]
     
+    # 100 Assets Generate ho rahe hain
     new_data = []
-    for i in range(1, 98):
-        asset_name = f"neural-node-{i}.ai" if i % 2 == 0 else f"@crypto_lead_{i}"
+    for i in range(1, 101):
+        if i % 3 == 0:
+            name = f"nexus-cloud-{i}.ai"
+        elif i % 3 == 1:
+            name = f"@alpha_trade_{i}"
+        else:
+            name = f"mantu-bot-{i}.io"
+            
         new_data.append({
-            "name": asset_name,
+            "name": name,
             "type": types[i % 3],
             "status": statuses[i % 4]
         })
-    HUNTED_POOL = (HUNTED_POOL + new_data)[:100]
+    HUNTED_POOL = new_data
+    print(f">> Pool Synced. Size: {len(HUNTED_POOL)}")
 
-# Auto-sync every 15 mins
+# Server start hote hi 100 domains load honge
+@app.on_event("startup")
+async def startup_event():
+    asset_generator()
+
+# Periodic Refresh
 scheduler = BackgroundScheduler()
-scheduler.add_job(asset_generator, 'interval', minutes=15)
-if not scheduler.running:
-    scheduler.start()
+scheduler.add_job(asset_generator, 'interval', minutes=30)
+scheduler.start()
 
-# --- PATH SETUP ---
+# --- STATIC SETUP ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 static_path = os.path.join(BASE_DIR, "static")
-if not os.path.exists(static_path): os.makedirs(static_path)
 app.mount("/static", StaticFiles(directory=static_path), name="static")
 
 @app.get("/")
@@ -59,21 +66,24 @@ def get_hunted():
 @app.get("/analyze")
 def analyze_asset(name: str = Query(...)):
     if not client: return {"error": "GROQ_API_KEY Missing"}
-    prompt = f"Professional investment audit for: {name}. Provide Valuation in USD and a BUY/SKIP verdict."
     try:
-        res = client.chat.completions.create(messages=[{"role": "user", "content": prompt}], model=MODEL_NAME, temperature=0.3)
+        res = client.chat.completions.create(
+            messages=[{"role": "user", "content": f"Formal audit for: {name}. Valuation and Buy/Skip verdict."}],
+            model=MODEL_NAME
+        )
         return {"result": res.choices[0].message.content}
     except Exception as e: return {"error": str(e)}
 
 @app.get("/leads")
 def get_leads(name: str = Query(...)):
     if not client: return {"error": "GROQ_API_KEY Missing"}
-    prompt = f"Identify 3 potential buyers for {name} and a short LinkedIn pitch for their CEO."
     try:
-        res = client.chat.completions.create(messages=[{"role": "user", "content": prompt}], model=MODEL_NAME)
+        res = client.chat.completions.create(
+            messages=[{"role": "user", "content": f"Identify 3 buyers for {name} with CEO pitches."}],
+            model=MODEL_NAME
+        )
         return {"result": res.choices[0].message.content}
     except Exception as e: return {"error": str(e)}
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 8000)))
