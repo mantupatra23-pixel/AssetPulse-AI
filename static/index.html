@@ -7,30 +7,37 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: #ededed; }
-        .glass { background: rgba(23, 23, 23, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        .sticky-header { position: sticky; top: 0; z-index: 50; background: #000; border-bottom: 2px solid #2563eb; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #2563eb; border-radius: 10px; }
+        body { font-family: 'Inter', sans-serif; background-color: #050505; color: #ededed; }
+        .glass { background: rgba(15, 15, 15, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.05); }
+        .sticky-header { position: sticky; top: 0; z-index: 50; background: #000; border-bottom: 1px solid #1d4ed8; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #1d4ed8; border-radius: 10px; }
+        .modal-animate { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4 md:p-10 min-h-screen">
 
-    <div class="max-w-6xl mx-auto mb-10 text-center">
-        <h1 class="text-5xl font-black tracking-tighter text-blue-500 mb-2">ASSETPULSE PRO</h1>
-        <p class="text-gray-400 font-light">AI-Powered Premium Digital Asset Discovery & Valuation</p>
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-12 gap-4">
+        <div class="text-left">
+            <h1 class="text-4xl font-black tracking-tighter text-blue-600">ASSETPULSE PRO</h1>
+            <p class="text-gray-500 text-[10px] uppercase tracking-[0.2em]">Institutional Digital Asset Monitoring • v4.5 Active</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
+            <span class="text-[10px] font-bold text-green-500 uppercase">Neural Node Secured</span>
+        </div>
     </div>
 
-    <div class="max-w-6xl mx-auto glass rounded-2xl overflow-hidden shadow-2xl">
-        <div class="overflow-x-auto max-h-[700px] overflow-y-auto">
+    <div class="max-w-7xl mx-auto glass rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+        <div class="overflow-x-auto max-h-[750px] overflow-y-auto">
             <table class="w-full text-left border-collapse">
-                <thead class="sticky-header text-blue-400 uppercase text-[12px] font-bold">
+                <thead class="sticky-header text-blue-500 uppercase text-[11px] font-black">
                     <tr>
-                        <th class="px-6 py-4">ID</th>
-                        <th class="px-6 py-4">Asset Name</th>
-                        <th class="px-6 py-4">Type</th>
-                        <th class="px-6 py-4">Status</th>
-                        <th class="px-6 py-4 text-center">Actions</th>
+                        <th class="px-8 py-5">Asset Identity</th>
+                        <th class="px-8 py-5">Classification</th>
+                        <th class="px-8 py-5">Market Signal</th>
+                        <th class="px-8 py-5 text-center">Acquisition / Intel</th>
                     </tr>
                 </thead>
                 <tbody id="assetTable" class="divide-y divide-white/5">
@@ -39,78 +46,81 @@
         </div>
     </div>
 
-    <div id="modal" class="fixed inset-0 bg-black/90 hidden flex items-center justify-center p-4 z-[100]">
-        <div class="glass w-full max-w-2xl rounded-3xl p-8 relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModal()" class="absolute top-4 right-6 text-2xl font-bold text-gray-500 hover:text-white">&times;</button>
-            <div id="modalHeader" class="mb-6">
-                <h2 id="modalTitle" class="text-2xl font-black text-blue-500 uppercase">Generating...</h2>
-                <p id="modalSub" class="text-sm text-gray-400">Please wait while AI secures the asset data.</p>
+    <div id="reportModal" class="fixed inset-0 bg-black/90 hidden items-center justify-center z-[100] p-4 backdrop-blur-xl">
+        <div class="glass w-full max-w-2xl rounded-[2.5rem] p-10 relative modal-animate shadow-[0_0_100px_rgba(37,99,235,0.2)]">
+            <button onclick="closeReport()" class="absolute top-6 right-8 text-gray-500 hover:text-white text-3xl font-light">&times;</button>
+            
+            <div class="mb-8">
+                <h2 class="text-blue-600 font-black text-2xl uppercase tracking-tighter">Strategic Analysis</h2>
+                <p id="modalSub" class="text-gray-500 text-[10px] uppercase font-bold mt-1 tracking-widest tracking-widest">Neural Pitch Generation Active</p>
             </div>
-            <div id="modalContent" class="text-gray-300 leading-relaxed whitespace-pre-wrap italic border-l-4 border-blue-600 pl-4 bg-white/5 py-4">
-                Loading...
+
+            <div id="reportText" class="text-gray-300 leading-relaxed font-normal text-sm bg-blue-900/10 p-8 rounded-3xl border border-blue-500/20 max-h-[450px] overflow-y-auto italic">
+                Awaiting secure stream...
             </div>
-            <div class="mt-8 flex gap-4">
-                <button onclick="window.print()" class="bg-white text-black px-6 py-2 rounded-full font-bold text-sm uppercase hover:bg-gray-200">Download PDF</button>
-                <button onclick="closeModal()" class="border border-white/20 px-6 py-2 rounded-full font-bold text-sm uppercase hover:bg-white/10">Close</button>
+
+            <div class="mt-10 flex flex-wrap gap-4">
+                <button onclick="window.print()" class="bg-white text-black px-8 py-3 rounded-full font-black text-[10px] uppercase hover:bg-blue-600 hover:text-white transition-all shadow-lg">Export Portfolio PDF</button>
+                <button onclick="closeReport()" class="border border-white/10 text-white px-8 py-3 rounded-full font-black text-[10px] uppercase hover:bg-white/10 transition-all">Close Console</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Fetch and Render Assets
+        // Load All 100 Assets
         async function loadAssets() {
             try {
                 const res = await fetch('/hunted');
                 const data = await res.json();
                 const container = document.getElementById('assetTable');
+                
                 container.innerHTML = data.assets.map(a => `
-                    <tr class="hover:bg-white/5 transition-all">
-                        <td class="px-6 py-4 font-mono text-gray-500 text-sm">${a.id}</td>
-                        <td class="px-6 py-4 font-bold text-white">${a.name}</td>
-                        <td class="px-6 py-4 text-sm"><span class="bg-blue-900/30 text-blue-400 px-2 py-1 rounded text-[10px] uppercase font-bold">${a.type}</span></td>
-                        <td class="px-6 py-4 text-xs font-bold text-green-500">${a.status}</td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <button onclick="getSafeReport('${a.name}')" class="text-[10px] font-black bg-white text-black px-3 py-1.5 rounded uppercase hover:bg-blue-500 hover:text-white transition-all">Safe Pitch</button>
-                                <button onclick="analyzeAsset('${a.name}')" class="text-[10px] font-black border border-white/20 px-3 py-1.5 rounded uppercase hover:bg-white hover:text-black">Audit</button>
-                                <a href="${a.buy_url}" target="_blank" class="text-[10px] font-black bg-blue-600 text-white px-3 py-1.5 rounded uppercase hover:bg-blue-400 transition-all">Buy via Partner</a>
+                    <tr class="hover:bg-blue-600/[0.03] transition-colors border-b border-white/5">
+                        <td class="px-8 py-6 font-bold text-white tracking-tight">${a.name}</td>
+                        <td class="px-8 py-6">
+                            <span class="bg-blue-900/20 text-blue-400 border border-blue-500/20 px-2 py-1 rounded text-[9px] uppercase font-black">${a.type}</span>
+                        </td>
+                        <td class="px-8 py-6">
+                            <span class="text-[10px] font-bold text-green-500 uppercase flex items-center gap-2">
+                                <div class="h-1 w-1 bg-green-500 rounded-full"></div> Verified Expired
+                            </span>
+                        </td>
+                        <td class="px-8 py-6">
+                            <div class="flex items-center justify-center gap-3">
+                                <button onclick="generateReport('${a.name}')" class="bg-white text-black px-4 py-2 rounded-lg text-[9px] font-black uppercase hover:bg-blue-600 hover:text-white transition-all">Safe Pitch</button>
+                                <a href="${a.buy_url}" target="_blank" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-[9px] font-black uppercase hover:bg-blue-700 transition-all">Buy Partner</a>
                             </div>
                         </td>
                     </tr>
                 `).join('');
-            } catch (err) { console.error("Error loading data:", err); }
+            } catch (err) { console.error("Sync Error:", err); }
         }
 
-        // Stealth Report: No Identity Leak
-        async function getSafeReport(name) {
-            showModal("Generating Safe Report", "Protecting identity: " + name.replace(/./g, '*'));
-            const res = await fetch(`/safe_report?name=${encodeURIComponent(name)}`);
-            const data = await res.json();
-            document.getElementById('modalContent').innerHTML = data.result || data.error;
-            document.getElementById('modalTitle').innerText = "INVESTMENT PITCH (SECURE)";
+        // Professional Report Generation
+        async function generateReport(name) {
+            const modal = document.getElementById('reportModal');
+            const textDiv = document.getElementById('reportText');
+            const subText = document.getElementById('modalSub');
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            subText.innerText = "Processing Asset ID: " + name.substring(0,5) + "...";
+            textDiv.innerHTML = "Accessing encrypted valuation data...";
+
+            try {
+                const res = await fetch(`/safe_report?name=${encodeURIComponent(name)}`);
+                const data = await res.json();
+                textDiv.innerHTML = data.result || data.error;
+            } catch (err) {
+                textDiv.innerHTML = "Fatal Error: Connection to AI Node severed.";
+            }
         }
 
-        // Full SEO Audit
-        async function analyzeAsset(name) {
-            showModal("Full SEO Audit", "Analyzing metrics for: " + name);
-            const res = await fetch(`/analyze?name=${encodeURIComponent(name)}`);
-            const data = await res.json();
-            document.getElementById('modalContent').innerHTML = data.result || data.error;
-            document.getElementById('modalTitle').innerText = "TECHNICAL SEO AUDIT";
+        function closeReport() {
+            document.getElementById('reportModal').classList.add('hidden');
+            document.getElementById('reportModal').classList.remove('flex');
         }
 
-        function showModal(title, sub) {
-            document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalSub').innerText = sub;
-            document.getElementById('modalContent').innerText = "AI is thinking... please hold.";
-        }
-
-        function closeModal() {
-            document.getElementById('modal').classList.add('hidden');
-        }
-
-        // Initial Load
         window.onload = loadAssets;
     </script>
 </body>
