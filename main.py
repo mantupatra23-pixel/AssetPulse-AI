@@ -6,26 +6,25 @@ from fastapi.responses import FileResponse
 from groq import Groq
 from apscheduler.schedulers.background import BackgroundScheduler
 
-app = FastAPI(title="AssetPulse AI - Ultimate Business Suite")
+app = FastAPI(title="AssetPulse AI - Multi-Asset Suite")
 
 # --- CONFIGURATION ---
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 client = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
-# Latest Stable Model
 MODEL_NAME = "llama-3.3-70b-versatile"
 
-# Global Discovery Pool
+# Global Discovery Pool (Mix of Assets)
 HUNTED_POOL = [
     "agentic-mantu.ai", 
-    "neural-bharat.io", 
-    "fintech-pulse.in", 
+    "@mantu_ai_bot", 
+    "saas-audit-tool.io", 
     "quantum-logic.tech"
 ]
 
 def background_hunter():
     global HUNTED_POOL
-    # Simulating discovery of high-value 2026 assets
-    new_discovery = ["neo-growth.ai", "data-shell.io", "smart-contract.in"]
+    # Simulating discovery of domains, handles, and micro-SaaS
+    new_discovery = ["neural-nexus.ai", "@fintech_king", "auto-pitch-pro.com"]
     for item in new_discovery:
         if item not in HUNTED_POOL:
             HUNTED_POOL.insert(0, item)
@@ -51,23 +50,39 @@ async def read_index():
 def get_hunted():
     return {"assets": HUNTED_POOL}
 
-# --- AI ENGINES ---
+# --- MULTI-ASSET AI ENGINE ---
 
 @app.get("/analyze")
-def analyze_asset(name: str = Query(...)):
+def analyze_asset(name: str = Query(...), type: str = "domain"):
     if not client: return {"error": "GROQ_API_KEY Missing"}
-    prompt = f"Provide a formal investment audit for: {name}. Include Valuation, SEO Score, and Buy/Skip verdict."
+    
+    # Context-aware prompts
+    prompts = {
+        "domain": f"Professional audit for domain: {name}. Value in USD and Buy/Skip verdict.",
+        "social": f"Value analysis for Instagram/X handle: {name}. Consider brandability and niche potential.",
+        "saas": f"Valuation for a micro-SaaS project named {name}. Consider scalability and market demand."
+    }
+    
+    prompt = prompts.get(type, prompts["domain"])
+    
     try:
-        res = client.chat.completions.create(messages=[{"role": "user", "content": prompt}], model=MODEL_NAME, temperature=0.3)
+        res = client.chat.completions.create(
+            messages=[{"role": "user", "content": f"Formal Investment Report: {prompt}"}],
+            model=MODEL_NAME,
+            temperature=0.3
+        )
         return {"result": res.choices[0].message.content}
     except Exception as e: return {"error": str(e)}
 
 @app.get("/leads")
 def get_leads(name: str = Query(...)):
     if not client: return {"error": "GROQ_API_KEY Missing"}
-    prompt = f"For domain '{name}', identify 3 potential corporate buyers, their niche, and a 2-line LinkedIn pitch for their CEO."
+    prompt = f"For the asset '{name}', identify 3 potential corporate buyers and draft a high-conversion 2-line LinkedIn pitch for their CEO."
     try:
-        res = client.chat.completions.create(messages=[{"role": "user", "content": prompt}], model=MODEL_NAME)
+        res = client.chat.completions.create(
+            messages=[{"role": "user", "content": prompt}],
+            model=MODEL_NAME
+        )
         return {"result": res.choices[0].message.content}
     except Exception as e: return {"error": str(e)}
 
