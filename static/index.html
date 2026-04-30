@@ -3,184 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AssetPulse Pro | Stealth Brokerage Console</title>
+    <title>AssetPulse Pro | Premium AI Discovery</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfcfd; color: #101828; }
-        
-        /* Table Container for 100 Assets Scrolling */
-        .glass-table-container { 
-            background: white; 
-            border: 1px solid #eaecf0; 
-            border-radius: 16px; 
-            max-height: 600px; /* Fixed height for tablet scrolling */
-            overflow-y: auto;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
-
-        /* Sticky Table Header */
-        thead th {
-            position: sticky;
-            top: 0;
-            z-index: 30;
-            background: #f9fafb;
-            border-bottom: 2px solid #eaecf0;
-            font-size: 11px;
-            font-weight: 800;
-            color: #667085;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 16px 24px;
-        }
-
-        td { padding: 14px 24px; border-bottom: 1px solid #f2f4f7; font-size: 14px; vertical-align: middle; }
-        tr:hover { background: #f9fafb; cursor: pointer; }
-        
-        .status-pill { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; }
-        .status-emerald { background: #ecfdf3; color: #027a48; }
-        
-        .loader { border-top-color: #2563eb; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        /* Hide UI elements during PDF generation */
-        @media print { .no-print { display: none; } }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: #ededed; }
+        .glass { background: rgba(23, 23, 23, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .sticky-header { position: sticky; top: 0; z-index: 50; background: #000; border-bottom: 2px solid #2563eb; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #2563eb; border-radius: 10px; }
     </style>
 </head>
-<body class="p-4 md:p-10">
-    <div class="max-w-7xl mx-auto">
-        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 no-print">
-            <div>
-                <h1 class="text-3xl font-extrabold text-slate-900 tracking-tighter">AssetPulse <span class="text-blue-600">Pro</span></h1>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Autonomous Arbitrage & Stealth Brokerage</p>
-            </div>
-            <div class="flex items-center gap-3">
-                <span class="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded border border-green-100 italic">● NEURAL_SYNC_ACTIVE</span>
-                <button onclick="fetchPool()" class="p-2 bg-white border rounded-lg hover:bg-slate-50 transition shadow-sm">
-                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                </button>
-            </div>
-        </header>
+<body class="p-4 md:p-8">
 
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-8 no-print">
-            <div class="md:col-span-6 relative">
-                <input type="text" id="assetInput" placeholder="Select an identity from the pool..." 
-                    class="w-full p-4 bg-white border-2 border-slate-100 rounded-2xl font-bold text-slate-800 shadow-sm focus:border-blue-400 outline-none transition-all">
-            </div>
-            <button onclick="run('analyze')" class="md:col-span-2 bg-blue-600 text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-100 hover:bg-blue-700 transition active:scale-95 text-xs uppercase tracking-widest">Audit Value</button>
-            <button onclick="run('safe_report')" class="md:col-span-2 bg-emerald-600 text-white font-bold rounded-2xl py-4 shadow-lg shadow-emerald-100 hover:bg-emerald-700 transition active:scale-95 text-xs uppercase tracking-widest">Safe Pitch</button>
-            <button onclick="run('leads')" class="md:col-span-2 bg-slate-900 text-white font-bold rounded-2xl py-4 hover:bg-black transition active:scale-95 text-xs uppercase tracking-widest">Get Buyers</button>
-        </div>
+    <div class="max-w-6xl mx-auto mb-10 text-center">
+        <h1 class="text-5xl font-black tracking-tighter text-blue-500 mb-2">ASSETPULSE PRO</h1>
+        <p class="text-gray-400 font-light">AI-Powered Premium Digital Asset Discovery & Valuation</p>
+    </div>
 
-        <div class="glass-table-container no-print">
+    <div class="max-w-6xl mx-auto glass rounded-2xl overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto max-h-[700px] overflow-y-auto">
             <table class="w-full text-left border-collapse">
-                <thead>
+                <thead class="sticky-header text-blue-400 uppercase text-[12px] font-bold">
                     <tr>
-                        <th>Asset Identity</th>
-                        <th>Classification</th>
-                        <th>Discovery Status</th>
-                        <th>Acquisition</th>
+                        <th class="px-6 py-4">ID</th>
+                        <th class="px-6 py-4">Asset Name</th>
+                        <th class="px-6 py-4">Type</th>
+                        <th class="px-6 py-4">Status</th>
+                        <th class="px-6 py-4 text-center">Actions</th>
                     </tr>
                 </thead>
-                <tbody id="tableBody">
-                    <tr><td colspan="4" class="text-center py-20 text-slate-400 font-medium">Initializing 100+ Premium Assets...</td></tr>
-                </tbody>
+                <tbody id="assetTable" class="divide-y divide-white/5">
+                    </tbody>
             </table>
         </div>
+    </div>
 
-        <div id="modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
-            <div id="modalPrintArea" class="bg-white rounded-3xl shadow-2xl max-w-3xl w-full p-8 md:p-12 relative max-h-[90vh] overflow-y-auto">
-                <button onclick="document.getElementById('modal').classList.add('hidden')" class="absolute top-6 right-6 p-2 bg-slate-100 rounded-full hover:bg-slate-200 transition text-slate-500 no-print">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-                
-                <div class="border-b border-slate-100 pb-6 mb-8">
-                    <h2 id="modalTitle" class="text-2xl font-extrabold text-slate-900 uppercase tracking-tighter">Neural Intelligence Report</h2>
-                    <p class="text-[10px] font-bold text-blue-600 mt-2 uppercase tracking-[0.2em]">AssetPulse Secure Protocol v3.6</p>
-                </div>
-
-                <div id="modalContent" class="text-slate-700 leading-relaxed text-sm md:text-base whitespace-pre-wrap">
-                    </div>
-
-                <div class="mt-10 pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4 no-print">
-                    <button onclick="downloadPDF()" class="text-[10px] font-black text-slate-900 border-2 border-slate-900 px-6 py-2 rounded-full hover:bg-slate-900 hover:text-white transition uppercase">Export Official PDF</button>
-                    <span class="text-[9px] text-slate-300 font-bold uppercase italic tracking-widest">Confidential Brokerage Documentation</span>
-                </div>
+    <div id="modal" class="fixed inset-0 bg-black/90 hidden flex items-center justify-center p-4 z-[100]">
+        <div class="glass w-full max-w-2xl rounded-3xl p-8 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal()" class="absolute top-4 right-6 text-2xl font-bold text-gray-500 hover:text-white">&times;</button>
+            <div id="modalHeader" class="mb-6">
+                <h2 id="modalTitle" class="text-2xl font-black text-blue-500 uppercase">Generating...</h2>
+                <p id="modalSub" class="text-sm text-gray-400">Please wait while AI secures the asset data.</p>
+            </div>
+            <div id="modalContent" class="text-gray-300 leading-relaxed whitespace-pre-wrap italic border-l-4 border-blue-600 pl-4 bg-white/5 py-4">
+                Loading...
+            </div>
+            <div class="mt-8 flex gap-4">
+                <button onclick="window.print()" class="bg-white text-black px-6 py-2 rounded-full font-bold text-sm uppercase hover:bg-gray-200">Download PDF</button>
+                <button onclick="closeModal()" class="border border-white/20 px-6 py-2 rounded-full font-bold text-sm uppercase hover:bg-white/10">Close</button>
             </div>
         </div>
     </div>
 
     <script>
-        async function fetchPool() {
+        // Fetch and Render Assets
+        async function loadAssets() {
             try {
                 const res = await fetch('/hunted');
                 const data = await res.json();
-                const body = document.getElementById('tableBody');
-                
-                if (data.assets && data.assets.length > 0) {
-                    body.innerHTML = data.assets.map(a => `
-                        <tr onclick="selectAsset('${a.name}')">
-                            <td class="font-bold text-blue-600 tracking-tight">${a.name}</td>
-                            <td><span class="text-[10px] font-black text-slate-400 bg-slate-100 px-2 py-1 rounded uppercase">${a.type}</span></td>
-                            <td><span class="status-pill status-emerald">${a.status}</span></td>
-                            <td>
-                                <a href="https://www.godaddy.com/domainsearch/find?domainToCheck=${a.name}" 
-                                   target="_blank" class="text-[10px] font-black bg-slate-900 text-white px-3 py-1.5 rounded uppercase hover:bg-blue-600 transition" 
-                                   onclick="event.stopPropagation()">Price</a>
-                            </td>
-                        </tr>
-                    `).join('');
-                }
-            } catch (e) { console.error("Neural link interrupted."); }
+                const container = document.getElementById('assetTable');
+                container.innerHTML = data.assets.map(a => `
+                    <tr class="hover:bg-white/5 transition-all">
+                        <td class="px-6 py-4 font-mono text-gray-500 text-sm">${a.id}</td>
+                        <td class="px-6 py-4 font-bold text-white">${a.name}</td>
+                        <td class="px-6 py-4 text-sm"><span class="bg-blue-900/30 text-blue-400 px-2 py-1 rounded text-[10px] uppercase font-bold">${a.type}</span></td>
+                        <td class="px-6 py-4 text-xs font-bold text-green-500">${a.status}</td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center justify-center gap-2">
+                                <button onclick="getSafeReport('${a.name}')" class="text-[10px] font-black bg-white text-black px-3 py-1.5 rounded uppercase hover:bg-blue-500 hover:text-white transition-all">Safe Pitch</button>
+                                <button onclick="analyzeAsset('${a.name}')" class="text-[10px] font-black border border-white/20 px-3 py-1.5 rounded uppercase hover:bg-white hover:text-black">Audit</button>
+                                <a href="${a.buy_url}" target="_blank" class="text-[10px] font-black bg-blue-600 text-white px-3 py-1.5 rounded uppercase hover:bg-blue-400 transition-all">Buy via Partner</a>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (err) { console.error("Error loading data:", err); }
         }
 
-        function selectAsset(name) {
-            document.getElementById('assetInput').value = name;
-            const input = document.getElementById('assetInput');
-            input.classList.add('border-blue-400', 'bg-blue-50');
-            setTimeout(() => input.classList.remove('bg-blue-50'), 400);
+        // Stealth Report: No Identity Leak
+        async function getSafeReport(name) {
+            showModal("Generating Safe Report", "Protecting identity: " + name.replace(/./g, '*'));
+            const res = await fetch(`/safe_report?name=${encodeURIComponent(name)}`);
+            const data = await res.json();
+            document.getElementById('modalContent').innerHTML = data.result || data.error;
+            document.getElementById('modalTitle').innerText = "INVESTMENT PITCH (SECURE)";
         }
 
-        async function run(mode) {
-            const val = document.getElementById('assetInput').value;
-            if(!val) return alert("Please select an asset from the pool.");
-
-            const modal = document.getElementById('modal');
-            const content = document.getElementById('modalContent');
-            const title = document.getElementById('modalTitle');
-
-            modal.classList.remove('hidden');
-            title.innerText = mode === 'analyze' ? "Valuation Audit" : (mode === 'safe_report' ? "Stealth Sales Pitch" : "Buyer Strategy");
-            
-            content.innerHTML = `<div class="flex flex-col items-center py-12 gap-4">
-                <div class="loader h-10 w-10 border-4 border-slate-200 rounded-full"></div>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest animate-pulse">Consulting Market Intelligence...</p>
-            </div>`;
-
-            try {
-                const res = await fetch(`/${mode}?name=${encodeURIComponent(val)}`);
-                const data = await res.json();
-                content.innerText = data.result || data.error;
-            } catch (e) { content.innerText = "Connection failure with AI core."; }
+        // Full SEO Audit
+        async function analyzeAsset(name) {
+            showModal("Full SEO Audit", "Analyzing metrics for: " + name);
+            const res = await fetch(`/analyze?name=${encodeURIComponent(name)}`);
+            const data = await res.json();
+            document.getElementById('modalContent').innerHTML = data.result || data.error;
+            document.getElementById('modalTitle').innerText = "TECHNICAL SEO AUDIT";
         }
 
-        function downloadPDF() {
-            const element = document.getElementById('modalPrintArea');
-            const opt = {
-                margin: 10,
-                filename: 'AssetPulse_Premium_Report.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(element).save();
+        function showModal(title, sub) {
+            document.getElementById('modal').classList.remove('hidden');
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalSub').innerText = sub;
+            document.getElementById('modalContent').innerText = "AI is thinking... please hold.";
         }
 
-        // Initialize table
-        window.onload = fetchPool;
-        // Refresh every 30 seconds
-        setInterval(fetchPool, 30000);
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+
+        // Initial Load
+        window.onload = loadAssets;
     </script>
 </body>
 </html>
