@@ -3,65 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AssetPulse AI | Multi-Asset Suite</title>
+    <title>AssetPulse AI | Discovery Table</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        .card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; }
-        .hunted-item:hover { background: #f0f7ff; color: #2563eb; cursor: pointer; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfcfd; color: #101828; }
+        .glass-table { background: white; border: 1px solid #eaecf0; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        th { background: #f9fafb; color: #667085; font-size: 12px; font-weight: 600; text-transform: uppercase; padding: 12px 24px; text-align: left; border-bottom: 1px solid #eaecf0; }
+        td { padding: 16px 24px; border-bottom: 1px solid #eaecf0; font-size: 14px; }
+        tr:hover { background: #f9fafb; cursor: pointer; }
+        .status-pill { padding: 2px 10px; border-radius: 16px; font-size: 12px; font-weight: 600; background: #ecfdf3; color: #027a48; }
         .loader { border-top-color: #2563eb; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="p-4 md:p-10 text-slate-900">
-    <div class="max-w-6xl mx-auto">
-        <header class="flex justify-between items-center border-b pb-6 mb-8 no-print">
+<body class="p-4 md:p-10">
+    <div class="max-w-7xl mx-auto">
+        <header class="flex justify-between items-end mb-10">
             <div>
-                <h1 class="text-3xl font-extrabold tracking-tight">AssetPulse <span class="text-blue-600">AI</span></h1>
-                <p class="text-xs font-bold text-slate-500 uppercase">Autonomous Arbitrage Engine</p>
+                <h1 class="text-2xl font-bold tracking-tight text-slate-900">AssetPulse <span class="text-blue-600">Pro</span></h1>
+                <p class="text-sm text-slate-500">Real-time monitoring of 100+ premium digital assets</p>
             </div>
-            <span class="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded">V2.0 MULTI-ASSET LIVE</span>
+            <div class="text-right flex items-center gap-3">
+                <span class="status-pill">System Live: Syncing</span>
+            </div>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            <div class="lg:col-span-1 no-print">
-                <div class="card p-5">
-                    <h2 class="text-[10px] font-black text-slate-400 uppercase mb-4 tracking-widest text-center">Live Asset Pool</h2>
-                    <div id="huntedList" class="space-y-1"></div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <input type="text" id="assetInput" placeholder="Selected asset identity..." 
+                class="md:col-span-2 p-4 border border-slate-200 rounded-xl font-bold focus:ring-2 focus:ring-blue-500 outline-none shadow-sm">
+            <button onclick="runTask('analyze')" class="bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition shadow-lg shadow-blue-100">AUDIT VALUE</button>
+            <button onclick="runTask('leads')" class="bg-slate-900 text-white font-bold rounded-xl hover:bg-black transition">GET BUYERS</button>
+        </div>
+
+        <div class="glass-table overflow-hidden overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr>
+                        <th>Asset Name</th>
+                        <th>Classification</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    </tbody>
+            </table>
+        </div>
+
+        <div id="modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 relative max-h-[85vh] overflow-y-auto">
+                <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 font-bold hover:text-slate-900">ESC</button>
+                <div class="border-b pb-4 mb-6">
+                    <h2 id="modalTitle" class="text-xl font-bold text-slate-800 uppercase tracking-tight">AI Report</h2>
                 </div>
-            </div>
-
-            <div class="lg:col-span-3 space-y-6">
-                <div class="card p-8 no-print">
-                    <div class="flex gap-4 mb-6 justify-center">
-                        <label class="text-xs font-bold flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="assetType" value="domain" checked class="accent-blue-600"> Domain
-                        </label>
-                        <label class="text-xs font-bold flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="assetType" value="social" class="accent-blue-600"> Social Handle
-                        </label>
-                        <label class="text-xs font-bold flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="assetType" value="saas" class="accent-blue-600"> Micro-SaaS
-                        </label>
-                    </div>
-
-                    <input type="text" id="assetInput" placeholder="Enter name or handle..." 
-                        class="w-full p-4 border rounded-xl text-lg font-semibold focus:ring-2 focus:ring-blue-400 outline-none mb-6">
-                    
-                    <div class="grid grid-cols-2 gap-4">
-                        <button onclick="run('analyze')" class="bg-blue-600 text-white font-bold py-4 rounded-xl uppercase hover:bg-blue-700 transition">Analyze Value</button>
-                        <button onclick="run('leads')" class="border-2 border-slate-900 font-bold py-4 rounded-xl uppercase hover:bg-slate-900 hover:text-white transition">Get Sales Leads</button>
-                    </div>
-                </div>
-
-                <div id="outBox" class="hidden card p-8 md:p-12">
-                    <div class="flex justify-between border-b pb-4 mb-6">
-                        <h3 id="outTitle" class="font-bold uppercase text-slate-800">Valuation Documentation</h3>
-                        <button onclick="downloadReport()" class="text-xs font-bold text-blue-600 underline no-print">SAVE AS PDF</button>
-                    </div>
-                    <div id="outText" class="text-sm leading-relaxed whitespace-pre-wrap text-slate-700"></div>
+                <div id="modalContent" class="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap"></div>
+                <div class="mt-8 pt-4 border-t flex justify-between">
+                    <button onclick="window.print()" class="text-xs font-bold text-blue-600">Download Official PDF</button>
+                    <button onclick="closeModal()" class="text-xs font-bold text-slate-400">Close Audit</button>
                 </div>
             </div>
         </div>
@@ -69,41 +68,45 @@
 
     <script>
         async function fetchPool() {
-            try {
-                const res = await fetch('/hunted');
-                const data = await res.json();
-                document.getElementById('huntedList').innerHTML = data.assets.map(a => 
-                    `<div onclick="document.getElementById('assetInput').value='${a}'" class="hunted-item p-3 text-sm font-semibold rounded-lg">${a}</div>`
-                ).join('');
-            } catch (e) {}
+            const res = await fetch('/hunted');
+            const data = await res.json();
+            const body = document.getElementById('tableBody');
+            body.innerHTML = data.assets.map(a => `
+                <tr onclick="selectAsset('${a.name}')">
+                    <td class="font-bold text-blue-600">${a.name}</td>
+                    <td class="text-slate-500 text-xs font-medium uppercase">${a.type}</td>
+                    <td><span class="status-pill">${a.status}</span></td>
+                    <td class="text-xs font-bold text-slate-300">CLICK TO SELECT</td>
+                </tr>
+            `).join('');
         }
 
-        async function run(mode) {
+        function selectAsset(name) {
+            document.getElementById('assetInput').value = name;
+        }
+
+        async function runTask(mode) {
             const val = document.getElementById('assetInput').value;
-            const type = document.querySelector('input[name="assetType"]:checked').value;
-            const box = document.getElementById('outBox');
-            const txt = document.getElementById('outText');
             if(!val) return;
+            
+            const modal = document.getElementById('modal');
+            const content = document.getElementById('modalContent');
+            const title = document.getElementById('modalTitle');
 
-            box.classList.remove('hidden');
-            txt.innerHTML = "Processing multi-modal intelligence...";
+            modal.classList.remove('hidden');
+            title.innerText = mode === 'analyze' ? "Valuation Audit" : "Sales Strategy & Leads";
+            content.innerHTML = `<div class="flex items-center gap-2"><div class="loader h-4 w-4 border-2 border-slate-200 rounded-full"></div> Analyzing market data...</div>`;
 
             try {
-                const res = await fetch(`/${mode}?name=${encodeURIComponent(val)}&type=${type}`);
+                const res = await fetch(`/${mode}?name=${encodeURIComponent(val)}`);
                 const data = await res.json();
-                txt.innerText = data.result || data.error;
-                box.scrollIntoView({ behavior: 'smooth' });
-            } catch (e) { txt.innerText = "Connection failed."; }
+                content.innerText = data.result || data.error;
+            } catch (e) { content.innerText = "Connection error."; }
         }
 
-        function downloadReport() {
-            const element = document.getElementById('outBox');
-            const opt = { margin: 10, filename: 'AssetPulse_Audit.pdf', html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
-            html2pdf().set(opt).from(element).save();
-        }
+        function closeModal() { document.getElementById('modal').classList.add('hidden'); }
 
         fetchPool();
-        setInterval(fetchPool, 60000);
     </script>
 </body>
 </html>

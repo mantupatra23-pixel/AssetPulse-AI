@@ -6,37 +6,43 @@ from fastapi.responses import FileResponse
 from groq import Groq
 from apscheduler.schedulers.background import BackgroundScheduler
 
-app = FastAPI(title="AssetPulse AI - Multi-Asset Suite")
+app = FastAPI(title="AssetPulse AI - Pro Suite")
 
-# --- CONFIGURATION ---
+# --- AI CONFIG ---
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 client = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
 MODEL_NAME = "llama-3.3-70b-versatile"
 
-# Global Discovery Pool (Mix of Assets)
+# --- GLOBAL DATA POOL (100 Capacity) ---
 HUNTED_POOL = [
-    "agentic-mantu.ai", 
-    "@mantu_ai_bot", 
-    "saas-audit-tool.io", 
-    "quantum-logic.tech"
+    {"name": "agentic-mantu.ai", "type": "Domain", "status": "High-Value"},
+    {"name": "@mantu_fintech", "type": "Handle", "status": "Premium"},
+    {"name": "bharat-pay.io", "type": "Domain", "status": "Strategic"}
 ]
 
-def background_hunter():
+def asset_generator():
     global HUNTED_POOL
-    # Simulating discovery of domains, handles, and micro-SaaS
-    new_discovery = ["neural-nexus.ai", "@fintech_king", "auto-pitch-pro.com"]
-    for item in new_discovery:
-        if item not in HUNTED_POOL:
-            HUNTED_POOL.insert(0, item)
-    HUNTED_POOL = list(dict.fromkeys(HUNTED_POOL))[:25]
+    # Simulating 100 high-value assets for the professional table
+    types = ["Domain", "Social Handle", "Micro-SaaS"]
+    statuses = ["Premium", "Scanned", "Available", "High-ROI"]
+    
+    new_data = []
+    for i in range(1, 98):
+        asset_name = f"neural-node-{i}.ai" if i % 2 == 0 else f"@crypto_lead_{i}"
+        new_data.append({
+            "name": asset_name,
+            "type": types[i % 3],
+            "status": statuses[i % 4]
+        })
+    HUNTED_POOL = (HUNTED_POOL + new_data)[:100]
 
-# Scheduler Start
+# Auto-sync every 15 mins
 scheduler = BackgroundScheduler()
-scheduler.add_job(background_hunter, 'interval', minutes=15)
+scheduler.add_job(asset_generator, 'interval', minutes=15)
 if not scheduler.running:
     scheduler.start()
 
-# --- PATH & STATIC SETUP ---
+# --- PATH SETUP ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 static_path = os.path.join(BASE_DIR, "static")
 if not os.path.exists(static_path): os.makedirs(static_path)
@@ -50,39 +56,21 @@ async def read_index():
 def get_hunted():
     return {"assets": HUNTED_POOL}
 
-# --- MULTI-ASSET AI ENGINE ---
-
 @app.get("/analyze")
-def analyze_asset(name: str = Query(...), type: str = "domain"):
+def analyze_asset(name: str = Query(...)):
     if not client: return {"error": "GROQ_API_KEY Missing"}
-    
-    # Context-aware prompts
-    prompts = {
-        "domain": f"Professional audit for domain: {name}. Value in USD and Buy/Skip verdict.",
-        "social": f"Value analysis for Instagram/X handle: {name}. Consider brandability and niche potential.",
-        "saas": f"Valuation for a micro-SaaS project named {name}. Consider scalability and market demand."
-    }
-    
-    prompt = prompts.get(type, prompts["domain"])
-    
+    prompt = f"Professional investment audit for: {name}. Provide Valuation in USD and a BUY/SKIP verdict."
     try:
-        res = client.chat.completions.create(
-            messages=[{"role": "user", "content": f"Formal Investment Report: {prompt}"}],
-            model=MODEL_NAME,
-            temperature=0.3
-        )
+        res = client.chat.completions.create(messages=[{"role": "user", "content": prompt}], model=MODEL_NAME, temperature=0.3)
         return {"result": res.choices[0].message.content}
     except Exception as e: return {"error": str(e)}
 
 @app.get("/leads")
 def get_leads(name: str = Query(...)):
     if not client: return {"error": "GROQ_API_KEY Missing"}
-    prompt = f"For the asset '{name}', identify 3 potential corporate buyers and draft a high-conversion 2-line LinkedIn pitch for their CEO."
+    prompt = f"Identify 3 potential buyers for {name} and a short LinkedIn pitch for their CEO."
     try:
-        res = client.chat.completions.create(
-            messages=[{"role": "user", "content": prompt}],
-            model=MODEL_NAME
-        )
+        res = client.chat.completions.create(messages=[{"role": "user", "content": prompt}], model=MODEL_NAME)
         return {"result": res.choices[0].message.content}
     except Exception as e: return {"error": str(e)}
 
