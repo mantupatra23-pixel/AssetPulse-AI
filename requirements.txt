@@ -6,3 +6,4 @@ groq
 jinja2
 apscheduler
 cloudscraper
+resend
