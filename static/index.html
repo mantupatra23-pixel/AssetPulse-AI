@@ -3,53 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AssetPulse Pro | Brokerage Suite</title>
+    <title>AssetPulse Pro | Stealth Brokerage Console</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfcfd; }
-        .glass-table { background: white; border: 1px solid #eaecf0; border-radius: 16px; max-height: 550px; overflow-y: auto; }
-        thead th { position: sticky; top: 0; z-index: 20; background: #f9fafb; font-size: 11px; font-weight: 700; color: #667085; text-transform: uppercase; padding: 16px 24px; }
-        td { padding: 16px 24px; border-bottom: 1px solid #f2f4f7; font-size: 14px; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfcfd; color: #101828; }
+        
+        /* Table Container for 100 Assets Scrolling */
+        .glass-table-container { 
+            background: white; 
+            border: 1px solid #eaecf0; 
+            border-radius: 16px; 
+            max-height: 600px; /* Fixed height for tablet scrolling */
+            overflow-y: auto;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Sticky Table Header */
+        thead th {
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            background: #f9fafb;
+            border-bottom: 2px solid #eaecf0;
+            font-size: 11px;
+            font-weight: 800;
+            color: #667085;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 16px 24px;
+        }
+
+        td { padding: 14px 24px; border-bottom: 1px solid #f2f4f7; font-size: 14px; vertical-align: middle; }
         tr:hover { background: #f9fafb; cursor: pointer; }
-        .btn-action { transition: 0.2s; font-weight: 700; text-transform: uppercase; font-size: 10px; padding: 12px; border-radius: 12px; }
+        
+        .status-pill { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+        .status-emerald { background: #ecfdf3; color: #027a48; }
+        
+        .loader { border-top-color: #2563eb; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* Hide UI elements during PDF generation */
+        @media print { .no-print { display: none; } }
     </style>
 </head>
-<body class="p-4 md:p-10 text-slate-900">
+<body class="p-4 md:p-10">
     <div class="max-w-7xl mx-auto">
-        <header class="flex justify-between items-center mb-8 no-print">
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 no-print">
             <div>
-                <h1 class="text-3xl font-extrabold tracking-tighter">AssetPulse <span class="text-blue-600">Pro</span></h1>
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Autonomous Stealth Brokerage Console</p>
+                <h1 class="text-3xl font-extrabold text-slate-900 tracking-tighter">AssetPulse <span class="text-blue-600">Pro</span></h1>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Autonomous Arbitrage & Stealth Brokerage</p>
             </div>
-            <span class="text-[10px] font-black text-green-600 bg-green-50 px-3 py-1 rounded">V3.5 BUSINESS_MODE_ACTIVE</span>
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded border border-green-100 italic">● NEURAL_SYNC_ACTIVE</span>
+                <button onclick="fetchPool()" class="p-2 bg-white border rounded-lg hover:bg-slate-50 transition shadow-sm">
+                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                </button>
+            </div>
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-8 no-print">
-            <input type="text" id="assetInput" placeholder="Selected Identity..." class="md:col-span-6 p-4 border-2 border-slate-100 rounded-2xl outline-none focus:border-blue-400 font-bold shadow-sm">
-            <button onclick="run('analyze')" class="md:col-span-2 btn-action bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-100">Audit Value</button>
-            <button onclick="run('safe_report')" class="md:col-span-2 btn-action bg-emerald-600 text-white hover:bg-emerald-700 shadow-lg shadow-emerald-100">Safe Pitch</button>
-            <button onclick="run('leads')" class="md:col-span-2 btn-action bg-slate-900 text-white hover:bg-black">Get Buyers</button>
+            <div class="md:col-span-6 relative">
+                <input type="text" id="assetInput" placeholder="Select an identity from the pool..." 
+                    class="w-full p-4 bg-white border-2 border-slate-100 rounded-2xl font-bold text-slate-800 shadow-sm focus:border-blue-400 outline-none transition-all">
+            </div>
+            <button onclick="run('analyze')" class="md:col-span-2 bg-blue-600 text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-100 hover:bg-blue-700 transition active:scale-95 text-xs uppercase tracking-widest">Audit Value</button>
+            <button onclick="run('safe_report')" class="md:col-span-2 bg-emerald-600 text-white font-bold rounded-2xl py-4 shadow-lg shadow-emerald-100 hover:bg-emerald-700 transition active:scale-95 text-xs uppercase tracking-widest">Safe Pitch</button>
+            <button onclick="run('leads')" class="md:col-span-2 bg-slate-900 text-white font-bold rounded-2xl py-4 hover:bg-black transition active:scale-95 text-xs uppercase tracking-widest">Get Buyers</button>
         </div>
 
-        <div class="glass-table shadow-sm no-print">
-            <table class="w-full text-left">
+        <div class="glass-table-container no-print">
+            <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr><th>Asset Identity</th><th>Class</th><th>Market Signal</th><th>Acquire</th></tr>
+                    <tr>
+                        <th>Asset Identity</th>
+                        <th>Classification</th>
+                        <th>Discovery Status</th>
+                        <th>Acquisition</th>
+                    </tr>
                 </thead>
-                <tbody id="tableBody"></tbody>
+                <tbody id="tableBody">
+                    <tr><td colspan="4" class="text-center py-20 text-slate-400 font-medium">Initializing 100+ Premium Assets...</td></tr>
+                </tbody>
             </table>
         </div>
 
-        <div id="modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
-            <div class="bg-white rounded-3xl shadow-2xl max-w-3xl w-full p-8 md:p-12 relative max-h-[90vh] overflow-y-auto">
-                <button onclick="document.getElementById('modal').classList.add('hidden')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-900">CLOSE</button>
-                <h2 id="modalTitle" class="text-2xl font-black uppercase tracking-tighter border-b pb-4 mb-6 text-slate-800">Intelligence Report</h2>
-                <div id="modalContent" class="text-sm leading-relaxed whitespace-pre-wrap text-slate-700"></div>
-                <div class="mt-8 pt-6 border-t flex justify-between items-center">
-                    <button onclick="downloadPDF()" class="text-xs font-bold text-blue-600 underline">SAVE PDF REPORT</button>
-                    <span class="text-[10px] text-slate-400 font-bold uppercase italic">AssetPulse Secure Protocol</span>
+        <div id="modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
+            <div id="modalPrintArea" class="bg-white rounded-3xl shadow-2xl max-w-3xl w-full p-8 md:p-12 relative max-h-[90vh] overflow-y-auto">
+                <button onclick="document.getElementById('modal').classList.add('hidden')" class="absolute top-6 right-6 p-2 bg-slate-100 rounded-full hover:bg-slate-200 transition text-slate-500 no-print">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                
+                <div class="border-b border-slate-100 pb-6 mb-8">
+                    <h2 id="modalTitle" class="text-2xl font-extrabold text-slate-900 uppercase tracking-tighter">Neural Intelligence Report</h2>
+                    <p class="text-[10px] font-bold text-blue-600 mt-2 uppercase tracking-[0.2em]">AssetPulse Secure Protocol v3.6</p>
+                </div>
+
+                <div id="modalContent" class="text-slate-700 leading-relaxed text-sm md:text-base whitespace-pre-wrap">
+                    </div>
+
+                <div class="mt-10 pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4 no-print">
+                    <button onclick="downloadPDF()" class="text-[10px] font-black text-slate-900 border-2 border-slate-900 px-6 py-2 rounded-full hover:bg-slate-900 hover:text-white transition uppercase">Export Official PDF</button>
+                    <span class="text-[9px] text-slate-300 font-bold uppercase italic tracking-widest">Confidential Brokerage Documentation</span>
                 </div>
             </div>
         </div>
@@ -57,38 +113,74 @@
 
     <script>
         async function fetchPool() {
-            const res = await fetch('/hunted');
-            const data = await res.json();
-            document.getElementById('tableBody').innerHTML = data.assets.map(a => `
-                <tr onclick="document.getElementById('assetInput').value='${a.name}'">
-                    <td class="font-bold text-blue-600">${a.name}</td>
-                    <td><span class="text-[10px] font-black text-slate-400 bg-slate-100 px-2 py-1 rounded uppercase">${a.type}</span></td>
-                    <td><span class="text-xs font-bold text-emerald-600">${a.status}</span></td>
-                    <td><a href="https://www.godaddy.com/domainsearch/find?domainToCheck=${a.name}" target="_blank" class="text-[10px] font-black bg-slate-900 text-white px-3 py-1 rounded uppercase" onclick="event.stopPropagation()">Price</a></td>
-                </tr>
-            `).join('');
+            try {
+                const res = await fetch('/hunted');
+                const data = await res.json();
+                const body = document.getElementById('tableBody');
+                
+                if (data.assets && data.assets.length > 0) {
+                    body.innerHTML = data.assets.map(a => `
+                        <tr onclick="selectAsset('${a.name}')">
+                            <td class="font-bold text-blue-600 tracking-tight">${a.name}</td>
+                            <td><span class="text-[10px] font-black text-slate-400 bg-slate-100 px-2 py-1 rounded uppercase">${a.type}</span></td>
+                            <td><span class="status-pill status-emerald">${a.status}</span></td>
+                            <td>
+                                <a href="https://www.godaddy.com/domainsearch/find?domainToCheck=${a.name}" 
+                                   target="_blank" class="text-[10px] font-black bg-slate-900 text-white px-3 py-1.5 rounded uppercase hover:bg-blue-600 transition" 
+                                   onclick="event.stopPropagation()">Price</a>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (e) { console.error("Neural link interrupted."); }
+        }
+
+        function selectAsset(name) {
+            document.getElementById('assetInput').value = name;
+            const input = document.getElementById('assetInput');
+            input.classList.add('border-blue-400', 'bg-blue-50');
+            setTimeout(() => input.classList.remove('bg-blue-50'), 400);
         }
 
         async function run(mode) {
             const val = document.getElementById('assetInput').value;
-            if(!val) return;
+            if(!val) return alert("Please select an asset from the pool.");
+
             const modal = document.getElementById('modal');
-            const txt = document.getElementById('modalContent');
+            const content = document.getElementById('modalContent');
+            const title = document.getElementById('modalTitle');
+
             modal.classList.remove('hidden');
-            txt.innerText = "Consulting neural market data...";
+            title.innerText = mode === 'analyze' ? "Valuation Audit" : (mode === 'safe_report' ? "Stealth Sales Pitch" : "Buyer Strategy");
+            
+            content.innerHTML = `<div class="flex flex-col items-center py-12 gap-4">
+                <div class="loader h-10 w-10 border-4 border-slate-200 rounded-full"></div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest animate-pulse">Consulting Market Intelligence...</p>
+            </div>`;
+
             try {
                 const res = await fetch(`/${mode}?name=${encodeURIComponent(val)}`);
                 const data = await res.json();
-                txt.innerText = data.result || data.error;
-            } catch (e) { txt.innerText = "System error."; }
+                content.innerText = data.result || data.error;
+            } catch (e) { content.innerText = "Connection failure with AI core."; }
         }
 
         function downloadPDF() {
-            const element = document.getElementById('modal');
-            html2pdf().from(element).save('AssetPulse_Report.pdf');
+            const element = document.getElementById('modalPrintArea');
+            const opt = {
+                margin: 10,
+                filename: 'AssetPulse_Premium_Report.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
         }
 
-        fetchPool();
+        // Initialize table
+        window.onload = fetchPool;
+        // Refresh every 30 seconds
+        setInterval(fetchPool, 30000);
     </script>
 </body>
 </html>
