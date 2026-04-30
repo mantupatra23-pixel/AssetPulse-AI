@@ -3,118 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AssetPulse AI | Pro Dashboard</title>
+    <title>AssetPulse AI | Professional Business Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
-        .card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .hunted-item { cursor: pointer; border-bottom: 1px solid #f1f5f9; transition: 0.2s; }
-        .hunted-item:hover { background-color: #eff6ff; color: #2563eb; }
+        .hunted-item:hover { background-color: #f0f7ff; color: #2563eb; }
         .btn-primary { background-color: #2563eb; color: white; border-radius: 8px; transition: 0.3s; }
-        .btn-primary:hover { background-color: #1d4ed8; }
+        .btn-primary:hover { background-color: #1d4ed8; transform: translateY(-1px); }
         .loader { border-top-color: #2563eb; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @media print { .no-print { display: none; } }
     </style>
 </head>
 <body class="p-4 md:p-10">
     <div class="max-w-6xl mx-auto">
-        <header class="flex justify-between items-center border-b pb-6 mb-8">
+        <header class="flex justify-between items-center border-b pb-6 mb-8 no-print">
             <div>
                 <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">AssetPulse <span class="text-blue-600">AI</span></h1>
-                <p class="text-sm text-slate-500 font-medium uppercase tracking-widest">Autonomous Intelligence</p>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em]">Autonomous Arbitrage Engine</p>
             </div>
-            <button onclick="fetchHunted()" class="text-[10px] font-bold bg-slate-200 px-3 py-1 rounded hover:bg-slate-300">FORCE REFRESH</button>
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-black text-green-600 bg-green-50 px-2 py-1 rounded">SYSTEM_LIVE</span>
+                <button onclick="fetchPool()" class="text-[10px] font-bold bg-slate-100 px-3 py-1 rounded hover:bg-slate-200 transition">REFRESH POOL</button>
+            </div>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            <div class="lg:col-span-1">
+            <div class="lg:col-span-1 no-print">
                 <div class="card p-5">
-                    <h2 class="text-xs font-bold text-slate-400 uppercase mb-4 flex justify-between">
-                        Live Discoveries
-                        <span id="syncStatus" class="text-green-500 text-[8px]">● SYNCED</span>
+                    <h2 class="text-[10px] font-black text-slate-400 uppercase mb-4 tracking-widest flex justify-between">
+                        Recent Discoveries
                     </h2>
                     <div id="huntedList" class="space-y-1 max-h-[500px] overflow-y-auto">
-                        <p class="text-xs text-slate-400 italic">Connecting to scanner...</p>
+                        <p class="text-xs text-slate-400 italic">Syncing with neural hunter...</p>
                     </div>
                 </div>
             </div>
 
             <div class="lg:col-span-3 space-y-6">
-                <div class="card p-6 md:p-8">
-                    <label class="text-[10px] font-bold text-slate-500 uppercase mb-3 block">Target Asset Domain</label>
-                    <div class="flex flex-col md:flex-row gap-3">
-                        <input type="text" id="assetInput" placeholder="e.g. neuro-link.ai" 
-                            class="flex-1 p-3 border border-slate-300 rounded-lg text-lg focus:ring-2 focus:ring-blue-400 focus:outline-none font-semibold">
-                        <button onclick="execute('analyze')" class="btn-primary px-8 py-3 font-bold text-sm uppercase">Generate Audit</button>
-                        <button onclick="execute('find_buyers')" class="border-2 border-slate-900 px-8 py-3 rounded-lg font-bold text-sm uppercase hover:bg-slate-900 hover:text-white transition">Find Buyers</button>
+                <div class="card p-6 md:p-8 no-print">
+                    <label class="text-[10px] font-black text-slate-500 uppercase mb-3 block">Target Asset Identifier</label>
+                    <input type="text" id="assetInput" placeholder="e.g. agentic-solutions.ai" 
+                        class="w-full p-4 border border-slate-200 rounded-xl text-xl font-bold focus:ring-2 focus:ring-blue-400 focus:outline-none mb-6 shadow-sm">
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="execute('analyze')" class="btn-primary py-4 font-bold text-sm uppercase shadow-lg shadow-blue-100">
+                            Generate Valuation Audit
+                        </button>
+                        <button onclick="execute('leads')" class="border-2 border-slate-900 py-4 rounded-lg font-bold text-sm uppercase hover:bg-slate-900 hover:text-white transition-all">
+                            Identify Buyer Leads
+                        </button>
                     </div>
                 </div>
 
-                <div id="outputBox" class="hidden card p-8 md:p-12">
-                    <div class="flex justify-between items-center mb-8 border-b pb-4">
-                        <h3 class="text-lg font-bold text-slate-800 uppercase tracking-tighter">AI Valuation Report</h3>
-                        <button onclick="window.print()" class="text-xs font-bold text-blue-600 hover:underline">Download PDF</button>
-                    </div>
-                    <div id="reportText" class="text-slate-700 leading-relaxed text-sm whitespace-pre-wrap">
+                <div id="outputBox" class="hidden card p-8 md:p-12 min-h-[400px]">
+                    <div class="flex justify-between items-center mb-8 border-b pb-6">
+                        <div>
+                            <h3 id="reportTitle" class="text-xl font-black text-slate-800 uppercase tracking-tighter">Asset Documentation</h3>
+                            <p id="reportSub" class="text-[10px] text-slate-400 font-bold mt-1 uppercase">Generated by Llama-3.3 Intelligence</p>
                         </div>
+                        <button onclick="downloadPDF()" class="no-print text-xs font-bold bg-blue-50 text-blue-600 px-4 py-2 rounded-lg border border-blue-100 hover:bg-blue-100 transition">
+                            Download Official PDF
+                        </button>
+                    </div>
+                    
+                    <div id="reportContent" class="text-slate-700 leading-relaxed text-sm whitespace-pre-wrap">
+                        </div>
+
+                    <div class="mt-12 pt-6 border-t border-slate-100 text-[10px] text-slate-300 italic">
+                        Disclaimer: This AI-generated valuation is based on real-time market trends and historical domain sales data.
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Backend se hunted assets khichna
-        async function fetchHunted() {
-            const syncStatus = document.getElementById('syncStatus');
-            syncStatus.innerText = "● SYNCING...";
-            syncStatus.classList.replace('text-green-500', 'text-yellow-500');
-
+        // Fetch background-hunted assets
+        async function fetchPool() {
             try {
                 const res = await fetch('/hunted');
                 const data = await res.json();
                 const list = document.getElementById('huntedList');
-                
-                if (data.assets && data.assets.length > 0) {
+                if(data.assets && data.assets.length > 0) {
                     list.innerHTML = data.assets.map(a => 
-                        `<div onclick="selectDomain('${a}')" class="hunted-item p-3 text-sm font-semibold">${a}</div>`
+                        `<div onclick="selectAsset('${a}')" class="hunted-item p-3 text-sm font-semibold rounded-lg">${a}</div>`
                     ).join('');
                 }
-                syncStatus.innerText = "● SYNCED";
-                syncStatus.classList.replace('text-yellow-500', 'text-green-500');
-            } catch (e) {
-                console.error("Fetch Error:", e);
-                syncStatus.innerText = "● OFFLINE";
-                syncStatus.classList.replace('text-yellow-500', 'text-red-500');
-            }
+            } catch (e) { console.error("Sync failed"); }
         }
 
-        function selectDomain(name) {
+        function selectAsset(name) {
             document.getElementById('assetInput').value = name;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        async function execute(action) {
-            const name = document.getElementById('assetInput').value;
-            const output = document.getElementById('outputBox');
-            const report = document.getElementById('reportText');
+        async function execute(mode) {
+            const val = document.getElementById('assetInput').value;
+            const box = document.getElementById('outputBox');
+            const content = document.getElementById('reportContent');
+            const title = document.getElementById('reportTitle');
 
-            if(!name) return alert("Please enter or select a domain!");
+            if(!val) return alert("System Requires Asset Identity");
 
-            output.classList.remove('hidden');
-            report.innerHTML = `<div class="flex items-center gap-2"><div class="loader h-4 w-4 border-2 border-slate-200 rounded-full"></div> Accessing AI Knowledge Base...</div>`;
+            box.classList.remove('hidden');
+            title.innerText = mode === 'analyze' ? "Valuation Audit Report" : "Strategic Sales Leads";
+            content.innerHTML = `<div class="flex items-center gap-3"><div class="loader h-4 w-4 border-2 border-slate-200 rounded-full"></div> Processing Neural Data...</div>`;
 
             try {
-                const res = await fetch(`/${action}?name=${encodeURIComponent(name)}`);
+                const endpoint = mode === 'analyze' ? `/analyze?name=${encodeURIComponent(val)}` : `/leads?name=${encodeURIComponent(val)}`;
+                const res = await fetch(endpoint);
                 const data = await res.json();
-                report.innerText = data.result || data.error;
+                content.innerText = data.result || data.error;
+                
+                // Smooth scroll to results
+                box.scrollIntoView({ behavior: 'smooth' });
             } catch (e) {
-                report.innerText = "CRITICAL ERROR: Could not connect to AI Engine.";
+                content.innerText = "CRITICAL_ERROR: Failed to establish neural link.";
             }
         }
 
-        // Automatic Update every 60 seconds
-        fetchHunted();
-        setInterval(fetchHunted, 60000);
+        function downloadPDF() {
+            const element = document.getElementById('outputBox');
+            const assetName = document.getElementById('assetInput').value || 'Report';
+            const opt = {
+                margin: 10,
+                filename: `AssetPulse_${assetName}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+
+        // Initialize and refresh pool
+        fetchPool();
+        setInterval(fetchPool, 60000);
     </script>
 </body>
 </html>
