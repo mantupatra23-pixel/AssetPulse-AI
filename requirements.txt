@@ -8,3 +8,4 @@ jinja2
 apscheduler
 cloudscraper
 resend
+stripe
