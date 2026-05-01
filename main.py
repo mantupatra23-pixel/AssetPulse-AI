@@ -18,18 +18,16 @@ app = FastAPI(title="AssetPulse AI - Stealth Predator")
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
 RENDER_URL = os.environ.get("RENDER_EXTERNAL_URL", "https://assetpulse-ai.onrender.com")
-# GMAIL CONFIG (App Password zaroori hai)
+# GMAIL CONFIG
 GMAIL_USER = os.environ.get("GMAIL_USER") 
 GMAIL_PASSWORD = os.environ.get("GMAIL_PASSWORD") 
 
 stripe.api_key = STRIPE_SECRET_KEY
-# Groq Client Initialization
 client = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
 
 # --- SYSTEM MEMORY ---
 HUNTED_POOL = []
-SOCIAL_FEED = []
-LEAD_DATABASE = [] # Leads yahan store honge
+LEAD_DATABASE = []
 
 # --- 1. ANTI-SLEEP ENGINE (24/7 Pulse) ---
 async def keep_alive():
@@ -52,7 +50,6 @@ def ai_asset_discovery():
     for i in range(1, 101):
         ext = random.choice(extensions)
         sector = random.choice(sectors)
-        # Asali domain name memory mein rahega par frontend ko nahi dikhega
         real_name = f"{random.choice(prefixes)}{random.randint(10,99)}{ext}".lower()
         new_pool.append({
             "id": f"ASSET-{2000+i}",
@@ -60,17 +57,17 @@ def ai_asset_discovery():
             "real_name": real_name
         })
     HUNTED_POOL = new_pool
-    print(f"[V28.0] 100 Strategic Assets Shielded in Memory.")
+    print(f"[V28.2] 100 Strategic Assets Shielded in Memory.")
 
-# --- 3. GMAIL OUTREACH SNIPER ---
+# --- 3. GMAIL OUTREACH SNIPER (RENDER COMPATIBLE FIX) ---
 async def apollo_outreach_sniper():
-    """Founders ko Gmail se auto-pitch bhejta hai"""
+    """Founders ko Gmail se auto-pitch bhejta hai - Port 587 Fix"""
     while True:
         try:
             if HUNTED_POOL and GMAIL_USER and GMAIL_PASSWORD:
                 target = random.choice(HUNTED_POOL)
                 # Founder Discovery Simulation
-                founder_email = "mantupatra168@gmail.com" # Har ghante aapko mail aayega test ke liye
+                founder_email = "mantupatra168@gmail.com" # Test mail receiver
                 
                 subject = f"Institutional Acquisition Signal: {target['sector']} Node"
                 body = f"""
@@ -93,13 +90,16 @@ AssetPulse AI Acquisition Bot
                 msg['From'] = GMAIL_USER
                 msg['To'] = founder_email
 
-                # Gmail SMTP Server Connection
-                with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-                    server.login(GMAIL_USER, GMAIL_PASSWORD)
-                    server.send_message(msg)
+                # FIX: Render compatible SMTP connection
+                server = smtplib.SMTP('smtp.gmail.com', 587)
+                server.starttls() # Secure the connection
+                server.login(GMAIL_USER, GMAIL_PASSWORD)
+                server.send_message(msg)
+                server.quit()
+                
                 print(f"[SNIPER] Gmail Outreach dispatched for {target['id']}")
             
-            await asyncio.sleep(3600) # 1 hour gap to avoid spam
+            await asyncio.sleep(3600) # 1 hour gap
         except Exception as e:
             print(f"[SNIPER ERROR] {e}")
             await asyncio.sleep(60)
@@ -114,7 +114,6 @@ async def startup():
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 static_path = os.path.join(BASE_DIR, "static")
 
-# Static files mounting fix
 if os.path.exists(static_path):
     app.mount("/static", StaticFiles(directory=static_path), name="static")
 
@@ -123,11 +122,10 @@ async def read_index():
     index_file = os.path.join(static_path, "index.html")
     if os.path.exists(index_file):
         return FileResponse(index_file)
-    return HTMLResponse("<h1>Static/index.html missing. Please upload.</h1>")
+    return HTMLResponse("<h1>Static/index.html missing.</h1>")
 
 @app.get("/hunted")
 def get_hunted():
-    # Stealth Mode: Frontend ko real_name kabhi nahi bhejte
     return {"assets": [{"id": a["id"], "sector": a["sector"]} for a in HUNTED_POOL]}
 
 @app.get("/safe_report")
@@ -135,7 +133,7 @@ async def get_safe_report(asset_id: str = Query(...), lang: str = "English"):
     asset = next((a for a in HUNTED_POOL if a["id"] == asset_id), None)
     if not asset: return {"error": "Node Offline"}
     
-    prompt = f"Write a professional 1200-word Institutional VC Audit for a {asset['sector']} startup. Focus on market gap and ROI. Language: {lang}. Do NOT mention the domain name."
+    prompt = f"Write a professional 1200-word Institutional VC Audit for a {asset['sector']} startup. Language: {lang}. Do NOT mention real names."
     try:
         comp = client.chat.completions.create(
             messages=[{"role": "user", "content": prompt}],
@@ -168,27 +166,20 @@ async def create_checkout(asset_id: str):
 
 @app.get("/admin-mantu")
 async def admin_dashboard(session_id: str = None, asset_id: str = None):
-    # Payment ke baad admin yahan real name dekh sakta hai
     html = f"""
     <body style='background:#0f172a; color:white; font-family:sans-serif; padding:40px;'>
         <h1 style='color:#3b82f6;'>Mantu's Predator Admin</h1>
         <hr style='border:1px solid #1e293b;'>
         <h3>System Status: <span style='color:#22c55e;'>ONLINE</span></h3>
-        
-        <div style='background:#1e293b; padding:20px; border-radius:15px; margin-top:20px;'>
-            <h4>Recent Unlocks (Success Data)</h4>
-            <p>Session: {session_id if session_id else "N/A"}</p>
-            <p>Target ID: {asset_id if asset_id else "N/A"}</p>
-        </div>
+        <p>Recent Asset Unlocked: <b>{asset_id if asset_id else "No recent payment"}</b></p>
 
-        <h4>Node Identity Ledger (Internal Only)</h4>
+        <h4>Node Identity Ledger</h4>
         <table border='1' style='width:100%; border-collapse:collapse; margin-top:20px;'>
             <tr style='background:#3b82f6;'>
                 <th style='padding:10px;'>ID</th><th>Sector</th><th>REAL_DOMAIN_NAME</th>
             </tr>
     """
-    # Sirf pehle 20 nodes dikhao admin ko
-    for a in HUNTED_POOL[:20]:
+    for a in HUNTED_POOL[:30]:
         html += f"<tr><td style='padding:10px;'>{a['id']}</td><td>{a['sector']}</td><td style='color:#22c55e;'>{a['real_name']}</td></tr>"
     
     html += "</table></body>"

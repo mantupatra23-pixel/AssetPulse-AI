@@ -17,17 +17,18 @@
             overflow-x: hidden; 
         }
 
-        /* UI FIX: Full Screen Coverage */
+        /* UI FIX: Full Screen Coverage - No Side Gaps */
         .full-wrapper {
-            width: 100%;
+            width: 100vw;
             padding: 20px;
+            margin: 0;
         }
 
         .premium-card { 
             background: white; 
             border: 1px solid #e2e8f0; 
             border-radius: 1.5rem; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            transition: all 0.3s ease; 
             width: 100%;
             display: flex;
             flex-direction: column;
@@ -59,7 +60,7 @@
 <body class="w-full">
 
     <div class="ticker-bar py-3.5 sticky top-0 z-[100] border-b border-white/5 backdrop-blur-md bg-opacity-95">
-        <div class="marquee-content">
+        <div class="marquee-content text-center">
             <span class="mx-10 text-green-400">● ASSET ACQUIRED BY TECH-GROUP FOR $12,500</span>
             <span class="mx-10 text-blue-400">● STRATEGIC NODE DISCOVERED IN FINTECH SECTOR</span>
             <span class="mx-10 text-yellow-400">● ENCRYPTED BY GLOBAL BANKING STANDARDS</span>
@@ -73,13 +74,13 @@
                 <p class="text-slate-500 font-bold mt-2">Institutional Strategic Discovery & Valuation Engine</p>
             </div>
             <div class="hidden md:block bg-white px-6 py-3 rounded-2xl border border-slate-100 shadow-sm">
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Global Marketplace Status</p>
-                <p class="text-green-600 font-bold">● 142 ACTIVE BUYERS MONITORING</p>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Global Status</p>
+                <p class="text-green-600 font-bold">● LIVE BUYER MONITORING ACTIVE</p>
             </div>
         </header>
 
         <div class="mb-10 px-4">
-            <input type="text" id="searchInput" onkeyup="filterAssets()" placeholder="Filter Strategic Sectors (FinTech, SaaS, Web3)..." 
+            <input type="text" id="searchInput" onkeyup="filterAssets()" placeholder="Filter Strategic Sectors..." 
                    class="w-full premium-card px-8 py-6 text-xl font-bold outline-none border-none shadow-2xl">
         </div>
 
@@ -87,23 +88,21 @@
             </div>
     </div>
 
-    <div id="activity-toast" class="fixed z-[150] bg-white/95 border border-slate-200 p-4 rounded-2xl shadow-2xl flex items-center gap-3 bottom-32 left-1/2 -translate-x-1/2 opacity-0 transition-all">
-        <div class="h-2 w-2 rounded-full bg-green-500 animate-ping"></div>
-        <p id="toast-msg" class="text-[11px] font-bold text-slate-600 uppercase"></p>
-    </div>
-
     <div id="reportModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-3xl hidden z-[200] items-center justify-center p-3">
         <div class="bg-white w-full max-w-5xl rounded-[3rem] shadow-2xl flex flex-col max-h-[92vh] overflow-hidden relative border-8 border-blue-600/10">
             <button onclick="closeReport()" class="absolute top-6 right-8 text-5xl font-light text-slate-300 hover:text-slate-900 z-[210]">&times;</button>
             <div class="p-8 border-b border-slate-100 bg-white flex justify-between items-center">
                 <h3 id="modalSub" class="text-2xl font-black text-slate-900 italic uppercase">SECURE_NODE</h3>
-                <div class="bg-slate-50 px-5 py-2 rounded-2xl border border-slate-100"><p id="timer" class="text-xl font-bold text-red-500">15:00</p></div>
+                <div class="bg-slate-50 px-5 py-2 rounded-2xl border border-slate-100">
+                    <p id="timer" class="text-xl font-bold text-red-500 font-mono">15:00</p>
+                </div>
             </div>
             <div class="p-8 md:p-14 overflow-y-auto flex-1 no-scrollbar bg-slate-50/40 relative">
                 <div id="clearText" class="text-slate-900 font-bold mb-8 text-xl border-l-4 border-blue-600 pl-6 leading-relaxed italic"></div>
                 <div id="reportText" class="text-slate-700 leading-relaxed text-base italic font-medium blur-text"></div>
+                
                 <div id="paywall" class="absolute inset-x-0 bottom-0 top-44 flex items-center justify-center z-[205] bg-gradient-to-t from-white via-white/95 to-transparent">
-                    <div class="bg-white p-12 rounded-[3rem] shadow-2xl border border-blue-100 text-center max-w-sm">
+                    <div class="bg-white p-10 rounded-[3rem] shadow-2xl border border-blue-100 text-center max-w-sm">
                         <h4 class="text-3xl font-black mb-4 italic">Unlock Protocol</h4>
                         <button onclick="instantBuy()" class="btn-action w-full py-6 rounded-[2rem] font-black text-[12px] uppercase tracking-widest shadow-2xl">Reveal Identity ($99)</button>
                     </div>
@@ -112,15 +111,16 @@
         </div>
     </div>
 
-    <nav class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[94%] max-w-lg bg-white/95 backdrop-blur-3xl p-4.5 flex justify-between items-center z-[110] rounded-[2.5rem] border border-slate-200 shadow-2xl">
+    <nav class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[94%] max-w-md bg-white/95 backdrop-blur-3xl p-4 flex justify-between items-center z-[110] rounded-[2.5rem] border border-slate-200 shadow-2xl">
         <button onclick="location.reload()" class="p-3 text-slate-400 font-black">↻</button>
-        <button class="btn-action px-14 py-4.5 rounded-[2rem] text-[11px] font-black uppercase italic tracking-widest">Global Scan Active</button>
+        <button class="btn-action px-12 py-4 rounded-[2rem] text-[11px] font-black uppercase italic tracking-widest">Global Scan Active</button>
         <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="p-3 text-slate-400 font-black">↑</button>
     </nav>
 
     <script>
         let allAssets = [];
         let currentAsset = null;
+        let timerInterval = null;
 
         async function loadAssets() {
             try {
@@ -140,15 +140,28 @@
                     <div>
                         <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">${a.sector}</span>
                         <p class="text-[10px] text-slate-400 font-bold mt-4 uppercase tracking-[0.2em] mb-1">${a.id}</p>
-                        <h2 class="text-2xl font-black text-slate-900 italic uppercase leading-tight tracking-tighter">Strategic Acquisition Node</h2>
-                        <div class="mt-6 flex flex-col gap-2">
-                            <p class="text-[11px] text-slate-500 font-bold uppercase tracking-widest italic">VALUATION: <span class="text-green-600 font-black">$${randomVal.toLocaleString()}+</span></p>
-                            <p class="text-[11px] text-slate-500 font-bold uppercase tracking-widest italic">SEARCH VOL: <span class="text-blue-600 font-black">${searchVol}+ /mo</span></p>
+                        <h2 class="text-2xl font-black text-slate-900 italic uppercase leading-tight tracking-tighter uppercase">Strategic Node</h2>
+                        <div class="mt-6">
+                            <p class="text-[11px] text-slate-500 font-bold italic uppercase tracking-widest">VALUATION: <span class="text-green-600">$${randomVal.toLocaleString()}+</span></p>
+                            <p class="text-[11px] text-slate-500 font-bold italic uppercase tracking-widest">SEARCH: <span class="text-blue-600">${searchVol}+</span></p>
                         </div>
                     </div>
-                    <button onclick="openModal('${a.id}')" class="btn-action w-full py-5 rounded-[1.5rem] font-black text-[11px] uppercase tracking-widest italic mt-6">Generate Audit</button>
+                    <button onclick="openModal('${a.id}')" class="btn-action w-full py-5 rounded-[1.5rem] font-black text-[11px] uppercase italic mt-6">Generate Audit</button>
                 </div>`;
             }).join('');
+        }
+
+        // TIMER LOGIC: 15 minutes countdown
+        function startTimer() {
+            let time = 15 * 60;
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                let mins = Math.floor(time / 60);
+                let secs = time % 60;
+                document.getElementById('timer').innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                if (time <= 0) clearInterval(timerInterval);
+                else time--;
+            }, 1000);
         }
 
         async function openModal(id) {
@@ -158,6 +171,8 @@
             document.getElementById('modalSub').innerText = id;
             document.getElementById('reportText').innerHTML = '<div class="flex justify-center py-20"><div class="loader-spin"></div></div>';
             
+            startTimer(); // Timer starts when modal opens
+            
             const res = await fetch(`/safe_report?asset_id=${id}`);
             const data = await res.json();
             const text = data.result;
@@ -165,12 +180,18 @@
             document.getElementById('reportText').innerText = text.substring(180);
         }
 
-        function closeReport() { document.getElementById('reportModal').style.display = 'none'; document.body.style.overflow = 'auto'; }
+        function closeReport() { 
+            document.getElementById('reportModal').style.display = 'none'; 
+            document.body.style.overflow = 'auto'; 
+            clearInterval(timerInterval);
+        }
+
         async function instantBuy() {
             const res = await fetch(`/create_checkout?asset_id=${currentAsset.id}`);
             const data = await res.json();
             if(data.checkout_url) window.open(data.checkout_url, '_blank');
         }
+
         window.onload = loadAssets;
     </script>
 </body>
