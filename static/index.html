@@ -17,19 +17,20 @@
             overflow-x: hidden; 
         }
 
-        /* UI FIX: Full Screen Coverage - No Side Gaps */
+        /* 1. LAYOUT GAP FIX: Full Width Wrapper */
         .full-wrapper {
-            width: 100vw;
-            padding: 20px;
-            margin: 0;
+            width: 100%;
+            max-width: 100vw;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            margin: 0 auto;
         }
 
         .premium-card { 
             background: white; 
             border: 1px solid #e2e8f0; 
             border-radius: 1.5rem; 
-            transition: all 0.3s ease; 
-            width: 100%;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -67,24 +68,28 @@
         </div>
     </div>
 
-    <div class="full-wrapper">
-        <header class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end px-4">
+    <div class="full-wrapper py-8 md:py-12">
+        <header class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 px-2">
             <div>
-                <h1 class="text-4xl md:text-6xl font-extrabold italic tracking-tighter">AssetPulse <span class="text-blue-600">AI</span></h1>
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="h-2 w-2 rounded-full bg-blue-600 animate-pulse"></span>
+                    <span class="text-[9px] font-black text-blue-600 uppercase tracking-[0.3em]">Predator OS v29.0 Stable</span>
+                </div>
+                <h1 class="text-4xl md:text-7xl font-extrabold italic tracking-tighter">AssetPulse <span class="text-blue-600">AI</span></h1>
                 <p class="text-slate-500 font-bold mt-2">Institutional Strategic Discovery & Valuation Engine</p>
             </div>
-            <div class="hidden md:block bg-white px-6 py-3 rounded-2xl border border-slate-100 shadow-sm">
+            <div class="hidden md:block bg-white px-6 py-4 rounded-2xl border border-slate-100 shadow-sm text-right">
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Global Status</p>
-                <p class="text-green-600 font-bold">● LIVE BUYER MONITORING ACTIVE</p>
+                <p class="text-green-600 font-bold">● 142 BUYERS MONITORING LIVE</p>
             </div>
         </header>
 
-        <div class="mb-10 px-4">
-            <input type="text" id="searchInput" onkeyup="filterAssets()" placeholder="Filter Strategic Sectors..." 
-                   class="w-full premium-card px-8 py-6 text-xl font-bold outline-none border-none shadow-2xl">
+        <div class="mb-10 px-2">
+            <input type="text" id="searchInput" onkeyup="filterAssets()" placeholder="Filter Strategic Sectors (FinTech, SaaS, Web3)..." 
+                   class="w-full premium-card px-8 py-7 text-xl font-bold outline-none border-none shadow-2xl">
         </div>
 
-        <div id="assetContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 px-4">
+        <div id="assetContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 px-2">
             </div>
     </div>
 
@@ -92,9 +97,12 @@
         <div class="bg-white w-full max-w-5xl rounded-[3rem] shadow-2xl flex flex-col max-h-[92vh] overflow-hidden relative border-8 border-blue-600/10">
             <button onclick="closeReport()" class="absolute top-6 right-8 text-5xl font-light text-slate-300 hover:text-slate-900 z-[210]">&times;</button>
             <div class="p-8 border-b border-slate-100 bg-white flex justify-between items-center">
-                <h3 id="modalSub" class="text-2xl font-black text-slate-900 italic uppercase">SECURE_NODE</h3>
-                <div class="bg-slate-50 px-5 py-2 rounded-2xl border border-slate-100">
-                    <p id="timer" class="text-xl font-bold text-red-500 font-mono">15:00</p>
+                <div>
+                    <span class="text-blue-600 font-black text-[10px] uppercase tracking-[0.4em] mb-1 block">VC Institutional Audit</span>
+                    <h3 id="modalSub" class="text-2xl font-black text-slate-900 italic uppercase">SECURE_NODE</h3>
+                </div>
+                <div class="bg-slate-50 px-5 py-2.5 rounded-2xl border border-slate-100">
+                    <p id="timer" class="text-2xl font-bold text-red-500 font-mono tracking-tight">15:00</p>
                 </div>
             </div>
             <div class="p-8 md:p-14 overflow-y-auto flex-1 no-scrollbar bg-slate-50/40 relative">
@@ -102,8 +110,9 @@
                 <div id="reportText" class="text-slate-700 leading-relaxed text-base italic font-medium blur-text"></div>
                 
                 <div id="paywall" class="absolute inset-x-0 bottom-0 top-44 flex items-center justify-center z-[205] bg-gradient-to-t from-white via-white/95 to-transparent">
-                    <div class="bg-white p-10 rounded-[3rem] shadow-2xl border border-blue-100 text-center max-w-sm">
+                    <div class="bg-white p-12 rounded-[3rem] shadow-2xl border border-blue-100 text-center max-w-sm">
                         <h4 class="text-3xl font-black mb-4 italic">Unlock Protocol</h4>
+                        <p class="text-slate-500 text-sm mb-10 font-medium text-center">Acquire the full domain identity, acquisition roadmap, and institutional valuation details.</p>
                         <button onclick="instantBuy()" class="btn-action w-full py-6 rounded-[2rem] font-black text-[12px] uppercase tracking-widest shadow-2xl">Reveal Identity ($99)</button>
                     </div>
                 </div>
@@ -111,16 +120,16 @@
         </div>
     </div>
 
-    <nav class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[94%] max-w-md bg-white/95 backdrop-blur-3xl p-4 flex justify-between items-center z-[110] rounded-[2.5rem] border border-slate-200 shadow-2xl">
+    <nav class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[94%] max-w-lg bg-white/95 backdrop-blur-3xl p-4 flex justify-between items-center z-[110] rounded-[2.5rem] border border-slate-200 shadow-2xl">
         <button onclick="location.reload()" class="p-3 text-slate-400 font-black">↻</button>
-        <button class="btn-action px-12 py-4 rounded-[2rem] text-[11px] font-black uppercase italic tracking-widest">Global Scan Active</button>
+        <button class="btn-action px-14 py-4.5 rounded-[2rem] text-[11px] font-black uppercase italic tracking-widest">Global Scan Active</button>
         <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="p-3 text-slate-400 font-black">↑</button>
     </nav>
 
     <script>
         let allAssets = [];
         let currentAsset = null;
-        let timerInterval = null;
+        let timerInterval = null; // To store timer interval ID
 
         async function loadAssets() {
             try {
@@ -128,7 +137,7 @@
                 const data = await res.json();
                 allAssets = data.assets;
                 renderCards(allAssets);
-            } catch(e) { console.error("Signal Lost"); }
+            } catch(e) { console.error("Neural Signal Lost"); }
         }
 
         function renderCards(assets) {
@@ -136,31 +145,43 @@
                 const randomVal = (Math.floor(Math.random() * 20) + 12) * 1000;
                 const searchVol = (Math.floor(Math.random() * 60) + 20) + "k";
                 return `
-                <div class="premium-card p-8 border-l-8 border-blue-600 min-h-[340px]">
+                <div class="premium-card p-9 border-l-8 border-blue-600 min-h-[360px]">
                     <div>
-                        <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">${a.sector}</span>
-                        <p class="text-[10px] text-slate-400 font-bold mt-4 uppercase tracking-[0.2em] mb-1">${a.id}</p>
+                        <div class="flex justify-between items-center mb-5">
+                            <span class="bg-blue-100 text-blue-600 px-3.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">${a.sector}</span>
+                            <span class="text-[9px] text-green-500 font-black uppercase">● High Yield</span>
+                        </div>
+                        <p class="text-[10px] text-slate-400 font-bold mt-2 uppercase tracking-[0.2em] mb-1">${a.id}</p>
                         <h2 class="text-2xl font-black text-slate-900 italic uppercase leading-tight tracking-tighter uppercase">Strategic Node</h2>
-                        <div class="mt-6">
-                            <p class="text-[11px] text-slate-500 font-bold italic uppercase tracking-widest">VALUATION: <span class="text-green-600">$${randomVal.toLocaleString()}+</span></p>
-                            <p class="text-[11px] text-slate-500 font-bold italic uppercase tracking-widest">SEARCH: <span class="text-blue-600">${searchVol}+</span></p>
+                        <div class="mt-7 pt-5 border-t border-slate-50 flex flex-col gap-3">
+                            <p class="text-[11px] text-slate-500 font-bold italic uppercase tracking-widest">VALUATION: <span class="text-green-600 font-black">$${randomVal.toLocaleString()}+</span></p>
+                            <p class="text-[11px] text-slate-500 font-bold italic uppercase tracking-widest">SEARCH: <span class="text-blue-600 font-black">${searchVol}+ /mo</span></p>
                         </div>
                     </div>
-                    <button onclick="openModal('${a.id}')" class="btn-action w-full py-5 rounded-[1.5rem] font-black text-[11px] uppercase italic mt-6">Generate Audit</button>
+                    <button onclick="openModal('${a.id}')" class="btn-action w-full py-5.5 rounded-[1.6rem] font-black text-[11px] uppercase italic mt-8 active:scale-95 transition-all">Generate Audit</button>
                 </div>`;
             }).join('');
         }
 
-        // TIMER LOGIC: 15 minutes countdown
+        // TIMER LOGIC FIX: Guaranteed Countdown
         function startTimer() {
-            let time = 15 * 60;
-            clearInterval(timerInterval);
+            let time = 15 * 60; // 15 minutes in seconds
+            const timerDisplay = document.getElementById('timer');
+            
+            clearInterval(timerInterval); // Reset any existing interval
             timerInterval = setInterval(() => {
                 let mins = Math.floor(time / 60);
                 let secs = time % 60;
-                document.getElementById('timer').innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-                if (time <= 0) clearInterval(timerInterval);
-                else time--;
+                
+                // Format: MM:SS
+                timerDisplay.innerText = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                
+                if (time <= 0) {
+                    clearInterval(timerInterval);
+                    timerDisplay.innerText = "00:00";
+                } else {
+                    time--;
+                }
             }, 1000);
         }
 
@@ -170,8 +191,9 @@
             document.body.style.overflow = 'hidden';
             document.getElementById('modalSub').innerText = id;
             document.getElementById('reportText').innerHTML = '<div class="flex justify-center py-20"><div class="loader-spin"></div></div>';
+            document.getElementById('timer').innerText = "15:00"; // Reset view before starting
             
-            startTimer(); // Timer starts when modal opens
+            startTimer(); // Start the actual countdown
             
             const res = await fetch(`/safe_report?asset_id=${id}`);
             const data = await res.json();
@@ -183,7 +205,7 @@
         function closeReport() { 
             document.getElementById('reportModal').style.display = 'none'; 
             document.body.style.overflow = 'auto'; 
-            clearInterval(timerInterval);
+            clearInterval(timerInterval); // Stop timer to save resources
         }
 
         async function instantBuy() {

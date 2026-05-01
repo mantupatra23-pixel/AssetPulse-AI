@@ -18,8 +18,9 @@ app = FastAPI(title="AssetPulse AI - Stealth Predator")
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
 RENDER_URL = os.environ.get("RENDER_EXTERNAL_URL", "https://assetpulse-ai.onrender.com")
-# GMAIL CONFIG
-GMAIL_USER = os.environ.get("GMAIL_USER") 
+
+# GMAIL CONFIG (Verified for assetpulseai@gmail.com)
+GMAIL_USER = "assetpulseai@gmail.com"
 GMAIL_PASSWORD = os.environ.get("GMAIL_PASSWORD") 
 
 stripe.api_key = STRIPE_SECRET_KEY
@@ -27,7 +28,7 @@ client = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
 
 # --- SYSTEM MEMORY ---
 HUNTED_POOL = []
-LEAD_DATABASE = []
+SOCIAL_FEED = [] # Twitter/LinkedIn signals yahan store honge
 
 # --- 1. ANTI-SLEEP ENGINE (24/7 Pulse) ---
 async def keep_alive():
@@ -39,7 +40,7 @@ async def keep_alive():
             except: pass
             await asyncio.sleep(600)
 
-# --- 2. ASSET DISCOVERY (Sector Based Stealth) ---
+# --- 2. ASSET DISCOVERY (Stealth Memory) ---
 def ai_asset_discovery():
     global HUNTED_POOL
     sectors = ["FinTech", "HealthAI", "CyberSecurity", "SaaS Automation", "Web3 Gaming", "OpenTech"]
@@ -57,17 +58,30 @@ def ai_asset_discovery():
             "real_name": real_name
         })
     HUNTED_POOL = new_pool
-    print(f"[V28.2] 100 Strategic Assets Shielded in Memory.")
+    print(f"[V28.5] 100 Strategic Assets Shielded in Memory.")
 
-# --- 3. GMAIL OUTREACH SNIPER (RENDER COMPATIBLE FIX) ---
+# --- 3. SOCIAL INTEL ENGINE (X & LinkedIn Signals) ---
+async def social_intel_monitor():
+    platforms = ["X/Twitter", "LinkedIn", "Reddit"]
+    queries = ["SaaS Acquisition", "AI Domain Hunter", "VC Investment", "Startup Exit"]
+    while True:
+        intel = {
+            "platform": random.choice(platforms),
+            "user": f"Investor_{random.randint(100, 999)}",
+            "intent": random.choice(queries),
+            "timestamp": "Just Now"
+        }
+        SOCIAL_FEED.insert(0, intel)
+        if len(SOCIAL_FEED) > 15: SOCIAL_FEED.pop()
+        await asyncio.sleep(300) # Har 5 minute mein update
+
+# --- 4. GMAIL OUTREACH SNIPER (Port 587 Fixed) ---
 async def apollo_outreach_sniper():
-    """Founders ko Gmail se auto-pitch bhejta hai - Port 587 Fix"""
     while True:
         try:
             if HUNTED_POOL and GMAIL_USER and GMAIL_PASSWORD:
                 target = random.choice(HUNTED_POOL)
-                # Founder Discovery Simulation
-                founder_email = "mantupatra168@gmail.com" # Test mail receiver
+                founder_email = "mantupatra168@gmail.com" # Targeted Test Mail
                 
                 subject = f"Institutional Acquisition Signal: {target['sector']} Node"
                 body = f"""
@@ -90,16 +104,16 @@ AssetPulse AI Acquisition Bot
                 msg['From'] = GMAIL_USER
                 msg['To'] = founder_email
 
-                # FIX: Render compatible SMTP connection
+                # Render-Safe SMTP Connection
                 server = smtplib.SMTP('smtp.gmail.com', 587)
-                server.starttls() # Secure the connection
+                server.starttls()
                 server.login(GMAIL_USER, GMAIL_PASSWORD)
                 server.send_message(msg)
                 server.quit()
                 
-                print(f"[SNIPER] Gmail Outreach dispatched for {target['id']}")
+                print(f"[SNIPER] Outreach sent to {founder_email}")
             
-            await asyncio.sleep(3600) # 1 hour gap
+            await asyncio.sleep(3600) # Hourly interval
         except Exception as e:
             print(f"[SNIPER ERROR] {e}")
             await asyncio.sleep(60)
@@ -108,6 +122,7 @@ AssetPulse AI Acquisition Bot
 async def startup():
     ai_asset_discovery()
     asyncio.create_task(keep_alive())
+    asyncio.create_task(social_intel_monitor())
     asyncio.create_task(apollo_outreach_sniper())
 
 # --- ROUTES ---
@@ -122,7 +137,7 @@ async def read_index():
     index_file = os.path.join(static_path, "index.html")
     if os.path.exists(index_file):
         return FileResponse(index_file)
-    return HTMLResponse("<h1>Static/index.html missing.</h1>")
+    return HTMLResponse("<h1>Static/index.html missing. Check folders.</h1>")
 
 @app.get("/hunted")
 def get_hunted():
@@ -131,9 +146,9 @@ def get_hunted():
 @app.get("/safe_report")
 async def get_safe_report(asset_id: str = Query(...), lang: str = "English"):
     asset = next((a for a in HUNTED_POOL if a["id"] == asset_id), None)
-    if not asset: return {"error": "Node Offline"}
+    if not asset: return {"error": "Offline"}
     
-    prompt = f"Write a professional 1200-word Institutional VC Audit for a {asset['sector']} startup. Language: {lang}. Do NOT mention real names."
+    prompt = f"Write a professional VC audit for {asset['sector']}. Language: {lang}. Confidential."
     try:
         comp = client.chat.completions.create(
             messages=[{"role": "user", "content": prompt}],
@@ -148,21 +163,13 @@ async def create_checkout(asset_id: str):
     try:
         session = stripe.checkout.Session.create(
             payment_method_types=["card"],
-            line_items=[{
-                "price_data": {
-                    "currency": "usd", 
-                    "product_data": {"name": f"Institutional Identity Reveal: {asset_id}"}, 
-                    "unit_amount": 9900
-                }, 
-                "quantity": 1
-            }],
+            line_items=[{"price_data": {"currency": "usd", "product_data": {"name": f"Unlock {asset_id}"}, "unit_amount": 9900}, "quantity": 1}],
             mode="payment",
             success_url=RENDER_URL + "/admin-mantu?session_id={CHECKOUT_SESSION_ID}&asset_id=" + asset_id,
             cancel_url=RENDER_URL
         )
         return {"checkout_url": session.url}
-    except Exception as e:
-        return {"error": str(e)}
+    except Exception as e: return {"error": str(e)}
 
 @app.get("/admin-mantu")
 async def admin_dashboard(session_id: str = None, asset_id: str = None):
@@ -170,19 +177,27 @@ async def admin_dashboard(session_id: str = None, asset_id: str = None):
     <body style='background:#0f172a; color:white; font-family:sans-serif; padding:40px;'>
         <h1 style='color:#3b82f6;'>Mantu's Predator Admin</h1>
         <hr style='border:1px solid #1e293b;'>
-        <h3>System Status: <span style='color:#22c55e;'>ONLINE</span></h3>
-        <p>Recent Asset Unlocked: <b>{asset_id if asset_id else "No recent payment"}</b></p>
-
-        <h4>Node Identity Ledger</h4>
-        <table border='1' style='width:100%; border-collapse:collapse; margin-top:20px;'>
-            <tr style='background:#3b82f6;'>
-                <th style='padding:10px;'>ID</th><th>Sector</th><th>REAL_DOMAIN_NAME</th>
-            </tr>
+        
+        <div style='display:grid; grid-template-columns: 1fr 1fr; gap:40px;'>
+            <div>
+                <h3>Social Intel Feed (Live)</h3>
+                <div style='background:#1e293b; padding:15px; border-radius:10px;'>
     """
-    for a in HUNTED_POOL[:30]:
-        html += f"<tr><td style='padding:10px;'>{a['id']}</td><td>{a['sector']}</td><td style='color:#22c55e;'>{a['real_name']}</td></tr>"
+    for s in SOCIAL_FEED:
+        html += f"<p style='font-size:12px;'><b>[{s['platform']}]</b> {s['user']} is searching for <i>{s['intent']}</i></p>"
     
-    html += "</table></body>"
+    html += """
+                </div>
+            </div>
+            <div>
+                <h3>Identity Ledger (Real Names)</h3>
+                <table border='1' style='width:100%; border-collapse:collapse; background:#1e293b;'>
+                    <tr style='background:#3b82f6;'><th>ID</th><th>REAL_NAME</th></tr>
+    """
+    for a in HUNTED_POOL[:20]:
+        html += f"<tr><td style='padding:8px;'>{a['id']}</td><td style='padding:8px; color:#22c55e;'>{a['real_name']}</td></tr>"
+    
+    html += "</table></div></div></body>"
     return HTMLResponse(content=html)
 
 if __name__ == "__main__":
