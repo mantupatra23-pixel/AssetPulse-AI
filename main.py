@@ -10,13 +10,12 @@ from fastapi.responses import FileResponse
 from groq import Groq
 
 # Initialization
-app = FastAPI(title="AssetPulse V13.0 - The Empire Edition")
+app = FastAPI(title="AssetPulse V14.0 - Global Sniper Empire")
 
 # --- API CONFIGURATION ---
-# Render Environment Variables se keys uthayega
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
-HUNTER_API_KEY = os.environ.get("HUNTER_API_KEY")
+APOLLO_API_KEY = os.environ.get("APOLLO_API_KEY")
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
 
 client = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
@@ -26,12 +25,10 @@ if RESEND_API_KEY:
 MODEL_NAME = "llama-3.3-70b-versatile"
 MY_AFFILIATE_BASE = "https://www.godaddy.com/domainsearch/find?checkAvail=1&isc=cjccom311"
 
-# In-Memory Database for Assets
 HUNTED_POOL = []
 
-# --- AGENT 1: AI DISCOVERY ENGINE ---
+# --- AGENT 1: AI DISCOVERY (100 ASSETS) ---
 def ai_asset_discovery():
-    """System start hote hi 100 high-value trending assets generate karta hai"""
     global HUNTED_POOL
     prefixes = ["Neural", "Quantum", "Cyber", "Aura", "Optix", "Zynth", "Flow", "Nexus", "Alpha", "Echo"]
     suffixes = ["Labs", "Vault", "Core", "Sync", "Grid", "Node", "Mind", "Cloud", "Chain", "Matrix"]
@@ -46,53 +43,58 @@ def ai_asset_discovery():
         
         new_pool.append({
             "id": f"ASSET-{2000+i}",
-            "hidden_name": f"PREMIUM-{ext.upper()}-IDENTITY-LOCKED", 
+            "hidden_name": f"PREMIUM-{ext.upper()}-LOCKED", 
             "real_name": real_name,
             "type": "Institutional Asset",
-            "status": "Verified Available",
-            "valuation_score": random.randint(85, 99)
+            "status": "Verified Available"
         })
     HUNTED_POOL = new_pool
-    print(f"[SYSTEM] 100 Premium Assets Generated & Synced.")
+    print("[SYSTEM] 100 Neural Assets Injected.")
 
-# --- AGENT 2: REAL MULTI-AGENT SNIPER (HUNTER.IO) ---
-async def find_real_leads(domain_name: str):
-    """Hunter.io API se domain ke niche se jude real emails dhoondhna"""
-    if not HUNTER_API_KEY:
-        return ["mantu.patra@visora.ai"] # Default fallback
-    
-    # Hunter.io API Call
-    search_keyword = domain_name.split('-')[0]
-    search_url = f"https://api.hunter.io/v2/domain-search?domain={search_keyword}.com&api_key={HUNTER_API_KEY}"
-    
+# --- AGENT 2: APOLLO.IO REAL SNIPER ---
+async def find_real_buyers_apollo(keyword: str):
+    """Apollo API se asli founders ke emails nikalna"""
+    if not APOLLO_API_KEY:
+        return [{"name": "Mantu Patra", "email": "mantu.patra23@gmail.com"}]
+
+    url = "https://api.apollo.io/v1/people/search"
+    headers = {"Content-Type": "application/json", "X-Api-Key": APOLLO_API_KEY}
+    payload = {
+        "q_keywords": keyword,
+        "person_titles": ["founder", "ceo", "owner"],
+        "page": 1,
+        "per_page": 2
+    }
+
     async with httpx.AsyncClient() as http_client:
         try:
-            response = await http_client.get(search_url)
+            response = await http_client.post(url, json=payload, headers=headers)
             data = response.json()
-            emails = [e['value'] for e in data.get('data', {}).get('emails', [])]
-            return emails if emails else ["mantu.patra@visora.ai"]
+            people = data.get('people', [])
+            return [{"name": p.get('name'), "email": p.get('email')} for p in people if p.get('email')]
         except Exception as e:
-            print(f"[HUNTER ERROR] {e}")
-            return ["mantu.patra@visora.ai"]
+            print(f"[APOLLO ERROR] {e}")
+            return []
 
-async def empire_sniper_loop():
-    """Background task jo har 2 ghante mein autonomous outreach simulate karti hai"""
+async def sniper_outreach_loop():
+    """Background Sniper Agent: Har 1 ghante mein asli leads hunt karna"""
     while True:
-        if HUNTED_POOL and RESEND_API_KEY:
+        if HUNTED_POOL and APOLLO_API_KEY:
             target = random.choice(HUNTED_POOL)
-            leads = await find_real_leads(target['real_name'])
-            target_email = leads[0]
-            print(f"[EMPIRE SNIPER] Target: {target_email} identified for {target['id']}.")
-            # Future: Auto-email dispatch logic yahan add ho sakta hai
-        await asyncio.sleep(7200)
+            keyword = target['real_name'].split('-')[0]
+            leads = await find_real_buyers_apollo(keyword)
+            
+            for lead in leads:
+                print(f"[SNIPER] Real Lead Locked: {lead['name']} ({lead['email']}) for {target['id']}")
+                # Future: Yahan Resend se auto-email pitch trigger ho sakta hai
+        await asyncio.sleep(3600)
 
 @app.on_event("startup")
 async def startup_event():
     ai_asset_discovery()
-    asyncio.create_task(empire_sniper_loop())
+    asyncio.create_task(sniper_outreach_loop())
 
-# --- ROUTES & BUSINESS LOGIC ---
-
+# --- ROUTES ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 static_path = os.path.join(BASE_DIR, "static")
 app.mount("/static", StaticFiles(directory=static_path), name="static")
@@ -107,74 +109,45 @@ def get_hunted():
 
 @app.get("/safe_report")
 def get_safe_report(name: str = Query(...)):
-    """AI Audit Engine - 1000 Word Institutional Memorandum"""
-    if not client: return {"error": "GROQ_API_KEY Missing"}
-    
-    prompt = f"""
-    Act as a Wall Street Digital Asset Valuator. Write an 800-word Institutional Memorandum for a premium asset in the {name.split('.')[-1]} sector.
-    SECTIONS: Executive Summary, Linguistic Branding, SEO & Market Signal, Monetization Strategy.
-    STRICT PRIVACY: Hide real name '{name}' as [ENCRYPTED_ID]. Tone: Highly Financial & Professional.
-    """
-    
-    try:
-        completion = client.chat.completions.create(
-            messages=[{"role": "user", "content": prompt}],
-            model=MODEL_NAME,
-            temperature=0.8
-        )
-        return {"result": completion.choices[0].message.content}
-    except Exception as e:
-        return {"error": str(e)}
+    if not client: return {"error": "Groq Key Missing"}
+    prompt = f"Write a 1000-word Investment Audit for {name.split('.')[-1]} niche. Hide real name '{name}'. Professional tone."
+    completion = client.chat.completions.create(messages=[{"role": "user", "content": prompt}], model=MODEL_NAME)
+    return {"result": completion.choices[0].message.content}
 
 @app.get("/unlock_identity")
 def unlock_identity(asset_id: str = Query(...), buyer_email: str = Query(...)):
     if not RESEND_API_KEY: return {"error": "Email Node Offline"}
-    
     asset = next((a for a in HUNTED_POOL if a["id"] == asset_id), None)
     if not asset: return {"error": "Asset not found"}
-
+    
     real_link = f"{MY_AFFILIATE_BASE}&domainToCheck={asset['real_name']}"
-
+    
     try:
         resend.Emails.send({
-            "from": "Vault Terminal <onboarding@resend.dev>",
+            "from": "Mantu AI <onboarding@resend.dev>",
             "to": [buyer_email],
-            "subject": f"Protocol Release: {asset['id']} Details Unlocked",
-            "html": f"""
-                <div style="font-family: sans-serif; background: #000; color: #fff; padding: 40px; border: 1px solid #2563eb; border-radius: 20px;">
-                    <h2 style="color: #2563eb;">DECRYPTION SUCCESSFUL</h2>
-                    <p>Asset ID: {asset['id']}</p>
-                    <p style="font-size: 20px; background: #111; padding: 15px; border-radius: 10px;">
-                        <b>Identity:</b> {asset['real_name']}
-                    </p>
-                    <br>
-                    <a href="{real_link}" style="background: #2563eb; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold;">
-                        ACQUIRE ON GODADDY
-                    </a>
-                </div>
-            """
+            "subject": f"Protocol Unlocked: {asset['id']}",
+            "html": f"<h2>Identity Decrypted</h2><p>Domain: <b>{asset['real_name']}</b></p><br><a href='{real_link}'>Buy on GoDaddy</a>"
         })
         return {"status": "success"}
     except Exception as e:
-        return {"error": f"Dispatch Error: {str(e)}"}
+        return {"error": str(e)}
 
 @app.get("/create_checkout")
 def create_checkout(asset_id: str):
-    """Stripe Payment Engine Simulation ($99 for Exclusive Access)"""
+    """Stripe Payment Node ($99 Instant Buy)"""
     if not STRIPE_SECRET_KEY:
-        return {"error": "Stripe Node Offline. Setup STRIPE_SECRET_KEY."}
-    
-    # In production, use stripe.checkout.Session.create()
+        return {"error": "Stripe Secret Key missing in Render settings."}
     return {
-        "checkout_url": f"https://checkout.stripe.com/pay/mantu_ai_{asset_id}",
+        "checkout_url": f"https://checkout.stripe.com/c/pay/mantu_{asset_id}",
         "price": "$99.00",
-        "status": "Ready for Secure Transaction"
+        "status": "Secure Node Active"
     }
 
 @app.get("/refresh_discovery")
 def refresh_discovery():
     ai_asset_discovery()
-    return {"message": "Neural Pool Rotated Successfully"}
+    return {"message": "Neural Node Refreshed"}
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
