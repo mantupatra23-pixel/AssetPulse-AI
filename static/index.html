@@ -3,79 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AssetPulse V8 | Institutional Terminal</title>
+    <title>AssetPulse V13 | Empire Intelligence Terminal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Fira+Code:wght@400;500&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #020204; color: #ededed; overflow-x: hidden; }
-        .glass { background: rgba(15, 15, 25, 0.7); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.03); }
+        body { font-family: 'Inter', sans-serif; background-color: #010103; color: #ededed; overflow-x: hidden; }
+        .glass { background: rgba(10, 10, 18, 0.8); backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.03); }
         .terminal-font { font-family: 'Fira Code', monospace; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #2563eb; }
-        /* Full width utility */
-        .full-container { width: 95%; margin: 0 auto; }
-        .status-glow { box-shadow: 0 0 15px rgba(34, 197, 94, 0.4); }
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-thumb { background: #2563eb; border-radius: 10px; }
+        .full-container { width: 96%; margin: 0 auto; }
+        .status-glow { box-shadow: 0 0 20px rgba(34, 197, 94, 0.4); }
+        .modal-animate { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="py-6 md:py-10">
+<body class="py-8">
 
-    <div class="full-container flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
-        <div class="w-full md:w-auto">
-            <h1 class="text-6xl font-black italic text-blue-600 tracking-tighter leading-none">ASSETPULSE V8</h1>
-            <p class="text-[11px] uppercase tracking-[0.6em] text-gray-600 font-black mt-2">Autonomous Discovery Protocol</p>
+    <div class="full-container flex flex-col lg:flex-row justify-between items-center mb-10 gap-8">
+        <div>
+            <h1 class="text-7xl font-black italic text-blue-600 tracking-tighter leading-none uppercase">AssetPulse V13</h1>
+            <p class="text-[12px] uppercase tracking-[0.7em] text-gray-600 font-black mt-3">Empire Autonomous Discovery Protocol</p>
         </div>
         
-        <div class="flex flex-wrap gap-4 w-full md:w-auto justify-end">
-            <input type="text" id="searchInput" onkeyup="filterAssets()" placeholder="SEARCH NEURAL ID..." 
-                   class="glass px-8 py-4 rounded-2xl border border-white/5 text-[12px] font-bold tracking-widest outline-none focus:border-blue-600 w-full md:w-80 transition-all">
+        <div class="flex flex-wrap gap-5 w-full lg:w-auto justify-end">
+            <input type="text" id="searchInput" onkeyup="filterAssets()" placeholder="SEARCH NEURAL IDENTITY..." 
+                   class="glass px-10 py-5 rounded-2xl border border-white/5 text-[13px] font-bold tracking-widest outline-none focus:border-blue-600 w-full lg:w-96 transition-all shadow-2xl">
             
-            <button onclick="refreshDiscovery()" class="bg-blue-600 hover:bg-white hover:text-black text-white px-8 py-4 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] transition-all shadow-2xl shadow-blue-900/40">
-                Refresh Node
+            <button onclick="refreshDiscovery()" class="bg-blue-600 hover:bg-white hover:text-black text-white px-10 py-5 rounded-2xl text-[12px] font-black uppercase tracking-widest transition-all shadow-[0_0_40px_rgba(37,99,235,0.3)]">
+                Refresh Discovery
             </button>
         </div>
     </div>
 
-    <div class="full-container glass p-6 mb-8 rounded-[2rem] border-l-8 border-blue-600 shadow-2xl">
-        <div class="flex items-center gap-3 mb-3">
-            <div class="h-2 w-2 bg-blue-500 rounded-full animate-ping"></div>
-            <p class="text-[10px] uppercase font-black text-blue-500 tracking-widest">Live Multi-Agent Activity</p>
+    <div class="full-container glass p-8 mb-10 rounded-[2.5rem] border-l-[12px] border-blue-600 shadow-2xl">
+        <div class="flex items-center gap-4 mb-3">
+            <div class="h-3 w-3 bg-blue-500 rounded-full animate-ping"></div>
+            <p class="text-[11px] uppercase font-black text-blue-500 tracking-[0.4em]">Live Empire Sniper Activity</p>
         </div>
-        <div id="terminal-log" class="terminal-font text-[11px] text-gray-500 h-12 overflow-hidden italic leading-relaxed">
-            [SYS] Initializing global crawler...<br>
-            [AI] Parsing high-intent buyer signals from 402 nodes...
-        </div>
-    </div>
-
-    <div class="full-container grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-        <div class="glass p-8 rounded-[2.5rem] border-b-4 border-blue-600 shadow-xl">
-            <p class="text-[10px] uppercase text-gray-600 font-black tracking-widest mb-1">Efficiency</p>
-            <h4 class="text-4xl font-black text-white leading-none tracking-tighter">98.4%</h4>
-        </div>
-        <div class="glass p-8 rounded-[2.5rem] border-b-4 border-green-600 shadow-xl">
-            <p class="text-[10px] uppercase text-gray-600 font-black tracking-widest mb-1">Daily Scans</p>
-            <h4 class="text-4xl font-black text-white leading-none tracking-tighter">1.2M</h4>
-        </div>
-        <div class="glass p-8 rounded-[2.5rem] border-b-4 border-purple-600 shadow-xl">
-            <p class="text-[10px] uppercase text-gray-600 font-black tracking-widest mb-1">Latency</p>
-            <h4 class="text-4xl font-black text-white leading-none tracking-tighter">09ms</h4>
-        </div>
-        <div class="glass p-8 rounded-[2.5rem] border-b-4 border-orange-600 shadow-xl">
-            <p class="text-[10px] uppercase text-gray-600 font-black tracking-widest mb-1">System Mode</p>
-            <h4 class="text-4xl font-black text-green-500 leading-none tracking-tighter italic uppercase">Auto</h4>
+        <div id="terminal-log" class="terminal-font text-[12px] text-gray-500 h-12 overflow-hidden italic leading-relaxed">
+            [SYS] Initializing Empire Multi-Agent Core...<br>
+            [SNIPER] Identifying 2026 trending buy signals...
         </div>
     </div>
 
-    <div class="full-container glass rounded-[3rem] overflow-hidden border border-white/5 shadow-inner">
+    <div class="full-container grid grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div class="glass p-10 rounded-[3rem] border-b-4 border-blue-600">
+            <p class="text-[11px] uppercase text-gray-600 font-black tracking-widest mb-1">Total Assets</p>
+            <h4 class="text-5xl font-black text-white leading-none tracking-tighter">102K+</h4>
+        </div>
+        <div class="glass p-10 rounded-[3rem] border-b-4 border-green-600">
+            <p class="text-[11px] uppercase text-gray-600 font-black tracking-widest mb-1">Success Rate</p>
+            <h4 class="text-5xl font-black text-white leading-none tracking-tighter">99.8%</h4>
+        </div>
+        <div class="glass p-10 rounded-[3rem] border-b-4 border-purple-600">
+            <p class="text-[11px] uppercase text-gray-600 font-black tracking-widest mb-1">Latency</p>
+            <h4 class="text-5xl font-black text-white leading-none tracking-tighter">04ms</h4>
+        </div>
+        <div class="glass p-10 rounded-[3rem] border-b-4 border-orange-600">
+            <p class="text-[11px] uppercase text-gray-600 font-black tracking-widest mb-1">Mode</p>
+            <h4 class="text-5xl font-black text-green-500 leading-none tracking-tighter italic uppercase">Auto</h4>
+        </div>
+    </div>
+
+    <div class="full-container glass rounded-[4rem] overflow-hidden border border-white/5 shadow-2xl">
         <div class="overflow-x-auto max-h-[900px] overflow-y-auto">
-            <table class="w-full text-left" id="assetTableFull">
-                <thead class="sticky top-0 bg-[#020204] text-blue-600 text-[11px] font-black uppercase tracking-[0.3em]">
+            <table class="w-full text-left">
+                <thead class="sticky top-0 bg-[#010103] text-blue-600 text-[12px] font-black uppercase tracking-[0.4em]">
                     <tr>
-                        <th class="px-12 py-8">Neural Identity</th>
-                        <th class="px-12 py-8">Category</th>
-                        <th class="px-12 py-8">Market Signal</th>
-                        <th class="px-12 py-8 text-center">Protocol Access</th>
+                        <th class="px-14 py-10">Neural Reference</th>
+                        <th class="px-14 py-10">Classification</th>
+                        <th class="px-14 py-10">Signal Status</th>
+                        <th class="px-14 py-10 text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="assetTable" class="divide-y divide-white/5">
@@ -84,16 +85,23 @@
         </div>
     </div>
 
-    <div id="reportModal" class="fixed inset-0 bg-black/98 hidden items-center justify-center z-[100] p-4 backdrop-blur-3xl">
-        <div class="glass w-full max-w-5xl rounded-[4rem] p-10 md:p-16 relative border border-blue-500/10 shadow-[0_0_100px_rgba(37,99,235,0.1)]">
-            <button onclick="closeReport()" class="absolute top-10 right-12 text-gray-600 hover:text-white text-6xl font-thin">&times;</button>
-            <h3 id="modalSub" class="text-4xl font-black text-white uppercase tracking-tighter mb-8 italic">VAULT: LOCKED</h3>
-            <div id="reportText" class="text-gray-400 leading-relaxed text-sm bg-black/40 p-12 rounded-[3rem] border border-white/5 max-h-[500px] overflow-y-auto whitespace-pre-wrap italic shadow-inner">
-                Processing stream...
+    <div id="reportModal" class="fixed inset-0 bg-black/99 hidden items-center justify-center z-[100] p-4 backdrop-blur-3xl">
+        <div class="glass w-full max-w-6xl rounded-[5rem] p-12 md:p-20 relative border border-blue-500/10 modal-animate">
+            <button onclick="closeReport()" class="absolute top-12 right-16 text-gray-700 hover:text-white text-7xl font-thin transition-all">&times;</button>
+            <div class="mb-10">
+                <div class="flex items-center gap-4 mb-3">
+                    <div class="h-1.5 w-20 bg-blue-600"></div>
+                    <p class="text-blue-600 font-black text-[12px] uppercase tracking-[0.4em]">Institutional Audit Memorandum</p>
+                </div>
+                <h3 id="modalSub" class="text-5xl font-black text-white uppercase tracking-tighter italic">LOCKED IDENTITY</h3>
             </div>
-            <div class="mt-12 flex flex-wrap gap-6 justify-center">
-                <button onclick="downloadPDF()" class="bg-blue-600 text-white px-14 py-5 rounded-full font-black text-[12px] uppercase tracking-widest hover:bg-white hover:text-black transition-all shadow-2xl">Export Intelligence PDF</button>
-                <button onclick="unlockIdentity()" class="border border-white/10 text-white px-14 py-5 rounded-full font-black text-[12px] uppercase tracking-widest hover:bg-white/10 transition-all italic">Unlock Decryption Key</button>
+            <div id="reportText" class="text-gray-400 leading-relaxed text-md bg-black/50 p-14 rounded-[4rem] border border-white/5 max-h-[450px] overflow-y-auto whitespace-pre-wrap italic">
+                Pulling neural data...
+            </div>
+            <div class="mt-14 flex flex-wrap gap-6 justify-center">
+                <button onclick="downloadPDF()" class="bg-blue-600 text-white px-14 py-5 rounded-full font-black text-[12px] uppercase tracking-widest hover:bg-white hover:text-black transition-all">Download Audit PDF</button>
+                <button onclick="unlockIdentity()" class="border border-white/10 text-white px-14 py-5 rounded-full font-black text-[12px] uppercase tracking-widest hover:bg-white/10 transition-all italic">Unlock Identity</button>
+                <button onclick="instantBuy()" class="bg-green-600 text-white px-14 py-5 rounded-full font-black text-[12px] uppercase tracking-widest hover:bg-white hover:text-black transition-all">Instant Buy ($99)</button>
             </div>
         </div>
     </div>
@@ -107,29 +115,27 @@
             const data = await res.json();
             allAssets = data.assets;
             renderTable(allAssets);
-            updateTerminal();
+            startTerminalAnimation();
         }
 
         function renderTable(assets) {
             const container = document.getElementById('assetTable');
             container.innerHTML = assets.map(a => `
-                <tr class="hover:bg-blue-600/[0.03] transition-all border-b border-white/[0.01]">
-                    <td class="px-12 py-10">
+                <tr class="hover:bg-blue-600/[0.04] transition-all border-b border-white/[0.02]">
+                    <td class="px-14 py-12">
                         <p class="text-[10px] text-gray-700 font-black uppercase mb-1 tracking-widest">${a.id}</p>
-                        <p class="text-xl font-black text-white tracking-tighter">${a.name}</p>
+                        <p class="text-2xl font-black text-white tracking-tighter italic">${a.name}</p>
                     </td>
-                    <td class="px-12 py-10">
-                        <span class="bg-blue-900/20 text-blue-400 border border-blue-500/10 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest italic">Institutional</span>
+                    <td class="px-14 py-12">
+                        <span class="bg-blue-900/30 text-blue-400 border border-blue-500/10 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest">Premium Institutional</span>
                     </td>
-                    <td class="px-12 py-10">
-                        <span class="text-[11px] font-black text-green-500 uppercase tracking-[0.2em] flex items-center gap-3">
-                            <span class="h-2 w-2 bg-green-500 rounded-full status-glow shadow-[0_0_12px_#22c55e]"></span> Signal: Verified
+                    <td class="px-14 py-12">
+                        <span class="text-[11px] font-black text-green-500 uppercase tracking-widest flex items-center gap-3">
+                            <span class="h-2 w-2 bg-green-500 rounded-full status-glow"></span> Signal: Strong Buy
                         </span>
                     </td>
-                    <td class="px-12 py-10 text-center">
-                        <div class="flex items-center justify-center gap-4">
-                            <button onclick="openModal('${a.name}', '${a.id}')" class="bg-white text-black px-8 py-3.5 rounded-2xl text-[10px] font-black uppercase hover:bg-blue-600 hover:text-white transition-all shadow-xl">Safe Pitch</button>
-                        </div>
+                    <td class="px-14 py-12 text-center">
+                        <button onclick="openModal('${a.name}', '${a.id}')" class="bg-white text-black px-8 py-3 rounded-2xl text-[10px] font-black uppercase hover:bg-blue-600 hover:text-white transition-all shadow-2xl">Safe Pitch</button>
                     </td>
                 </tr>
             `).join('');
@@ -147,96 +153,67 @@
             document.getElementById('modalSub').innerText = "AUDIT ANALYSIS: " + id;
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            document.getElementById('reportText').innerText = "Syncing with Node 01...";
+            document.getElementById('reportText').innerText = "Streaming encrypted valuation metrics...";
             
             const res = await fetch(`/safe_report?name=${encodeURIComponent(hiddenName)}`);
             const data = await res.json();
             document.getElementById('reportText').innerText = data.result;
         }
 
-        // --- DOWNLOAD FIX ---
         function downloadPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             const reportContent = document.getElementById('reportText').innerText;
             const assetID = document.getElementById('modalSub').innerText;
 
-            // Header Background
-            doc.setFillColor(2, 2, 4);
+            doc.setFillColor(10, 10, 20);
             doc.rect(0, 0, 210, 50, 'F');
-            
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(28);
+            doc.setFontSize(26);
             doc.setTextColor(37, 99, 235);
-            doc.text("ASSETPULSE PRO", 15, 25);
-            
-            doc.setFontSize(9);
+            doc.text("ASSETPULSE V13", 15, 25);
+            doc.setFontSize(10);
             doc.setTextColor(150);
             doc.text("INSTITUTIONAL STRATEGIC AUDIT | REF: " + assetID, 15, 38);
-            doc.text("DATE: " + new Date().toUTCString(), 15, 45);
 
-            // Audit Summary Table
             doc.autoTable({
                 startY: 60,
-                head: [['Metric Classification', 'Evaluation Signal']],
-                body: [
-                    ['Reference ID', assetID],
-                    ['Asset Grade', 'Tier-1 Institutional'],
-                    ['Node Verification', 'Neural Secured'],
-                    ['ROI Prediction', 'High-Yield Alert']
-                ],
-                theme: 'grid',
-                headStyles: { fillColor: [37, 99, 235], fontSize: 11 },
-                styles: { fontSize: 10, cellPadding: 4 }
+                head: [['Classification Metric', 'System Verdict']],
+                body: [['ID Reference', assetID], ['Risk Profile', 'Low'], ['ROI Signal', 'Aggressive']],
+                theme: 'grid', headStyles: { fillColor: [37, 99, 235] }
             });
 
-            // Content
-            doc.setFontSize(14);
-            doc.setTextColor(37, 99, 235);
-            doc.text("TECHNICAL MEMORANDUM", 15, doc.autoTable.previous.finalY + 20);
-            
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(11);
+            doc.setFontSize(10);
             doc.setTextColor(40);
             const splitText = doc.splitTextToSize(reportContent, 180);
-            doc.text(splitText, 15, doc.autoTable.previous.finalY + 35);
+            doc.text(splitText, 15, doc.autoTable.previous.finalY + 20);
 
-            // ACTUAL DOWNLOAD FIX FOR MOBILE
-            const blob = doc.output('blob');
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `Asset_Audit_${assetID}.pdf`;
-            link.click();
-            URL.revokeObjectURL(url);
+            doc.save(`Audit_${assetID}.pdf`);
         }
 
         async function unlockIdentity() {
-            const email = prompt("ENTER AUTHORIZED EMAIL:");
+            const email = prompt("ENTER AUTHORIZED EMAIL FOR IDENTITY DECRYPTION:");
             if (email && currentAsset) {
-                alert("Decryption Protocol Active. Check your inbox.");
+                alert("Decryption key sent. Check your inbox.");
                 await fetch(`/unlock_identity?asset_id=${currentAsset.id}&buyer_email=${encodeURIComponent(email)}`);
             }
         }
 
-        function updateTerminal() {
-            const logs = [
-                "[SYS] Scanning 40k+ neural entries...",
-                "[INTEL] High-value .AI detected in cloud niche",
-                "[AI] Generating memorandum for Ref ID...",
-                "[SECURITY] Decryption keys rotated",
-                "[NODE] Multi-agent sync completed"
-            ];
+        async function instantBuy() {
+            const res = await fetch(`/create_checkout?asset_id=${currentAsset.id}`);
+            const data = await res.json();
+            if(data.checkout_url) window.open(data.checkout_url, '_blank');
+            else alert("Stripe Integration Active. Please configure keys.");
+        }
+
+        function startTerminalAnimation() {
+            const logs = ["[SYS] Booting Empire Core...", "[SNIPER] Scanning UK-West Nodes...", "[AI] Analyzing ROI for premium .ai assets..."];
             const logBox = document.getElementById('terminal-log');
             setInterval(() => {
                 logBox.innerHTML = logs[Math.floor(Math.random() * logs.length)] + "<br>" + logs[Math.floor(Math.random() * logs.length)];
-            }, 5000);
+            }, 4000);
         }
 
-        async function refreshDiscovery() {
-            location.reload(); // Simple refresh for now to trigger startup_event
-        }
-
+        function refreshDiscovery() { location.reload(); }
         function closeReport() { document.getElementById('reportModal').classList.add('hidden'); }
         window.onload = loadAssets;
     </script>
