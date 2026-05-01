@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AssetPulse AI | Global Strategic Discovery</title>
+    <title>AssetPulse AI | Strategic Acquisition Node</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
@@ -22,14 +22,14 @@
             background: white; 
             border: 1px solid #e2e8f0; 
             border-radius: 1.5rem; 
-            transition: all 0.3s ease; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
             width: 100%; 
         }
         
         .premium-card:hover { 
             transform: translateY(-5px); 
             border-color: #3b82f6; 
-            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.08); 
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.1); 
         }
         
         .btn-action { 
@@ -38,134 +38,103 @@
             box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.3); 
         }
         
-        /* Blur Effect for Professional Paywall */
-        .blur-text { 
-            filter: blur(8px); 
-            user-select: none; 
-            pointer-events: none; 
-        }
+        .blur-text { filter: blur(12px); user-select: none; pointer-events: none; }
         
-        /* Activity Toast */
         #activity-toast { 
             bottom: 140px; 
             left: 50%; 
             transform: translateX(-50%) translateY(20px); 
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+            transition: all 0.5s ease; 
             opacity: 0; 
-            width: 90%;
-            max-width: 320px;
+            width: 90%; 
+            max-width: 320px; 
         }
-        #activity-toast.show { 
-            opacity: 1; 
-            transform: translateX(-50%) translateY(0); 
-        }
-
-        .ticker-bar { 
-            background: #0f172a; 
-            color: #f1f5f9; 
-            font-size: 10px; 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            letter-spacing: 1.5px; 
-        }
+        #activity-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
         
+        .ticker-bar { background: #0f172a; color: #f1f5f9; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; }
         @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
         .marquee-content { display: inline-block; white-space: nowrap; animation: marquee 35s linear infinite; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-
-        .loader-spin {
-            border: 3px solid #f1f5f9;
-            border-top: 3px solid #3b82f6;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
+        .loader-spin { border: 3px solid #f1f5f9; border-top: 3px solid #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="w-full">
 
-    <div id="activity-toast" class="fixed z-[150] bg-white/90 backdrop-blur-md border border-slate-200 p-4 rounded-2xl shadow-2xl flex items-center gap-3">
+    <div id="activity-toast" class="fixed z-[150] bg-white/95 border border-slate-200 p-4 rounded-2xl shadow-2xl flex items-center gap-3">
         <div class="h-2 w-2 rounded-full bg-green-500 animate-ping"></div>
         <p id="toast-msg" class="text-[11px] font-bold text-slate-600 uppercase tracking-tighter"></p>
     </div>
 
     <div class="ticker-bar py-3.5 sticky top-0 z-[100] border-b border-white/5 backdrop-blur-md bg-opacity-95">
         <div class="marquee-content">
-            <span class="mx-10 text-green-400">● ASSET-2088 ACQUIRED BY VC GROUP ($99)</span>
-            <span class="mx-10 text-blue-400">● NEW DISCOVERY IN SECTOR: FINTECH</span>
-            <span class="mx-10 text-yellow-400">● ENCRYPTED BY GROQ NEURAL NODE & STRIPE</span>
+            <span class="mx-10 text-green-400">● ASSET ACQUIRED BY INSTITUTIONAL NODE ($99)</span>
+            <span class="mx-10 text-blue-400">● NEW DISCOVERY IN FINTECH SECTOR ACTIVE</span>
+            <span class="mx-10 text-yellow-400">● ENCRYPTED BY GLOBAL BANKING STANDARDS</span>
         </div>
     </div>
 
-    <div class="p-4 md:p-12 w-full max-w-7xl mx-auto">
-        <header class="mb-10 text-center md:text-left">
+    <div class="p-4 md:p-12 w-full max-w-[1550px] mx-auto">
+        <header class="mb-12 text-center md:text-left">
             <div class="flex items-center justify-center md:justify-start gap-2 mb-3">
                 <span class="h-2 w-2 rounded-full bg-blue-600 animate-pulse"></span>
-                <span class="text-[9px] font-black text-blue-600 uppercase tracking-[0.3em]">Predator OS v25.0</span>
+                <span class="text-[9px] font-black text-blue-600 uppercase tracking-[0.3em]">Predator OS v26.1 Stable</span>
             </div>
             <h1 class="text-4xl md:text-6xl font-extrabold italic tracking-tighter">AssetPulse <span class="text-blue-600">AI</span></h1>
-            <p class="text-slate-500 font-semibold mt-2">Institutional Strategic Discovery Engine</p>
+            <p class="text-slate-500 font-semibold mt-2 italic">Autonomous VC Audit & Discovery Engine</p>
         </header>
 
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10 px-2">
-            <div class="premium-card p-5 text-center">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12 px-2">
+            <div class="premium-card p-6 text-center">
                 <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest mb-1">Nodes Locked</p>
-                <h4 class="text-xl font-bold">100</h4>
+                <h4 class="text-2xl font-bold">100</h4>
             </div>
-            <div class="premium-card p-5 text-center border-b-4 border-blue-600">
-                <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest mb-1">Discovery</p>
-                <h4 class="text-xl font-bold text-blue-600">99.9%</h4>
+            <div class="premium-card p-6 text-center border-b-4 border-blue-600">
+                <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest mb-1">Status</p>
+                <h4 class="text-2xl font-bold text-blue-600 italic">ACTIVE</h4>
             </div>
         </div>
 
-        <div class="sticky top-16 z-[90] mb-10 px-2">
-            <input type="text" id="searchInput" onkeyup="filterAssets()" placeholder="Search institutional sectors (FinTech, SaaS)..." 
-                   class="w-full premium-card px-6 py-5 text-base font-bold outline-none focus:ring-4 ring-blue-500/10 shadow-xl border-none">
+        <div class="sticky top-16 z-[90] mb-12 px-2">
+            <input type="text" id="searchInput" onkeyup="filterAssets()" placeholder="Filter Strategic Sectors..." 
+                   class="w-full premium-card px-8 py-6 text-lg font-bold outline-none border-none shadow-2xl">
         </div>
 
-        <div id="assetContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6 px-2"></div>
+        <div id="assetContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 px-2"></div>
     </div>
 
     <div class="w-full bg-slate-50 py-12 border-t border-slate-200 mt-10 mb-20 text-center">
-        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-8">Institutional Security Partners</p>
-        <div class="flex flex-wrap justify-center gap-10 opacity-40 grayscale">
-            <span class="font-black text-2xl">STRIPE</span>
-            <span class="font-black text-2xl">GROQ</span>
-            <span class="font-black text-2xl">APOLLO</span>
-            <span class="font-black text-2xl">RESEND</span>
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-8">Institutional Security Stack</p>
+        <div class="flex flex-wrap justify-center gap-10 opacity-30 grayscale font-black text-xl italic">
+            <span>NEURAL_ENGINE</span><span>PAYMENT_GATEWAY</span><span>SECURE_AUDIT</span><span>VC_INSIGHTS</span>
         </div>
     </div>
 
     <div id="reportModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-2xl hidden z-[200] items-center justify-center p-3">
         <div class="bg-white w-full max-w-5xl rounded-[3rem] shadow-2xl flex flex-col max-h-[92vh] overflow-hidden relative border-8 border-blue-600/10">
-            <button onclick="closeReport()" class="absolute top-5 right-7 text-4xl font-light text-slate-300 hover:text-slate-900 z-[210]">&times;</button>
-            
+            <button onclick="closeReport()" class="absolute top-5 right-7 text-4xl font-light text-slate-300">&times;</button>
             <div class="p-7 md:p-10 border-b border-slate-100 bg-white flex justify-between items-center">
-                <div>
-                    <span class="text-blue-600 font-black text-[10px] uppercase tracking-[0.4em] mb-1 block">Institutional Audit</span>
-                    <h3 id="modalSub" class="text-2xl font-black text-slate-900 italic uppercase">SECURE_NODE</h3>
-                </div>
-                <div class="bg-slate-50 px-5 py-2 rounded-2xl border border-slate-100">
-                    <p id="timer" class="text-xl font-bold text-red-500">15:00</p>
-                </div>
+                <h3 id="modalSub" class="text-2xl font-black text-slate-900 italic uppercase">SECURE_NODE</h3>
+                <div class="bg-slate-50 px-5 py-2 rounded-2xl border border-slate-100"><p id="timer" class="text-xl font-bold text-red-500">15:00</p></div>
             </div>
             
             <div class="p-7 md:p-14 overflow-y-auto flex-1 no-scrollbar bg-slate-50/40 relative">
-                <div id="clearText" class="text-slate-900 font-bold mb-6 text-lg border-l-4 border-blue-600 pl-4 leading-relaxed"></div>
+                <div class="flex gap-2 mb-8 overflow-x-auto no-scrollbar pb-2">
+                    <button onclick="changeLang('English')" class="lang-btn bg-blue-600 text-white px-6 py-2 rounded-xl text-[10px] font-black uppercase">English</button>
+                    <button onclick="changeLang('Hindi')" class="lang-btn bg-slate-100 text-slate-500 px-6 py-2 rounded-xl text-[10px] font-black uppercase">Hindi</button>
+                    <button onclick="changeLang('Arabic')" class="lang-btn bg-slate-100 text-slate-500 px-6 py-2 rounded-xl text-[10px] font-black uppercase">Arabic</button>
+                </div>
                 
+                <div id="clearText" class="text-slate-900 font-bold mb-6 text-lg border-l-4 border-blue-600 pl-4"></div>
                 <div id="reportText" class="text-slate-700 leading-relaxed text-sm md:text-base italic font-medium blur-text"></div>
                 
-                <div id="paywall" class="absolute inset-x-0 bottom-0 top-32 flex items-center justify-center z-[205] bg-gradient-to-t from-white via-white/80 to-transparent">
-                    <div class="bg-white p-10 rounded-[2.5rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] border border-blue-100 text-center max-w-sm mx-auto">
-                        <div class="mb-4 flex justify-center">
-                            <div class="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
-                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
-                            </div>
+                <div id="paywall" class="absolute inset-x-0 bottom-0 top-44 flex items-center justify-center z-[205] bg-gradient-to-t from-white via-white/95 to-transparent">
+                    <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl border border-blue-100 text-center max-w-sm">
+                        <div class="mb-4 text-blue-600 flex justify-center">
+                            <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
                         </div>
-                        <h4 class="text-2xl font-black mb-3">Unlock Protocol</h4>
-                        <p class="text-slate-500 text-sm mb-8 font-medium leading-relaxed">Identity, Full Valuation & Acquisition strategy is currently encrypted.</p>
+                        <h4 class="text-2xl font-black mb-3 italic">Unlock Asset</h4>
+                        <p class="text-slate-500 text-sm mb-8 font-medium">Identity and full VC audit is encrypted. Payment required for handshake.</p>
                         <button onclick="instantBuy()" class="btn-action w-full py-5 rounded-2xl font-black text-[11px] uppercase tracking-widest shadow-2xl">Reveal Identity ($99)</button>
                     </div>
                 </div>
@@ -173,37 +142,30 @@
             
             <div class="p-7 md:p-10 bg-white border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <button onclick="downloadPDF()" class="bg-slate-900 text-white py-5 rounded-[1.5rem] font-black text-[10px] uppercase tracking-widest">Download Preview</button>
-                <button onclick="instantBuy()" class="btn-action py-5 rounded-[1.5rem] font-black text-[11px] uppercase italic tracking-widest">Acquire Asset ($99)</button>
+                <button onclick="instantBuy()" class="btn-action py-5 rounded-[1.5rem] font-black text-[10px] uppercase italic tracking-widest">Acquire Asset ($99)</button>
             </div>
         </div>
     </div>
 
     <nav class="fixed bottom-7 left-1/2 -translate-x-1/2 w-[94%] max-w-md bg-white/95 backdrop-blur-3xl p-4 flex justify-between items-center z-[110] rounded-[2.5rem] border border-slate-200 shadow-2xl">
         <button onclick="location.reload()" class="p-3 text-slate-400 font-black">↻</button>
-        <button onclick="alert('Scanning Global Nodes...')" class="btn-action px-12 py-4 rounded-[1.8rem] text-[10px] font-black uppercase italic tracking-widest">Deep Scan</button>
+        <button onclick="alert('Scanning Global Data Nodes...')" class="btn-action px-12 py-4 rounded-[1.8rem] text-[10px] font-black uppercase italic">Deep Scan</button>
         <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="p-3 text-slate-400 font-black">↑</button>
     </nav>
 
     <script>
         let allAssets = [];
         let currentAsset = null;
+        let currentLang = "English";
 
-        // --- GLOBAL ACTIVITY SIMULATOR ---
         function showActivity() {
-            const msgs = [
-                "INVESTOR (USA) VIEWED ASSET-2102",
-                "FINTECH NODE 2045 REVEALED IN LONDON",
-                "NEW SIGNAL DETECTED: SINGAPORE HUB",
-                "DUBAI VENTURES ANALYZING WEB3 GAMING",
-                "PAYMENT SUCCESSFUL: ASSET-2081",
-                "SNIPER DETECTED HIGH-VALUE FOUNDER IN BERLIN"
-            ];
+            const msgs = ["INVESTOR VIEWED NODE-2102", "IDENTITY REVEALED IN LONDON HUB", "NEW ASSET LOCKED IN FINTECH SECTOR", "VC GROUP ANALYZING STRATEGIC DATA"];
             const toast = document.getElementById('activity-toast');
             document.getElementById('toast-msg').innerText = msgs[Math.floor(Math.random() * msgs.length)];
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 4500);
         }
-        setInterval(showActivity, 9000);
+        setInterval(showActivity, 8000);
 
         async function loadAssets() {
             try {
@@ -211,57 +173,51 @@
                 const data = await res.json();
                 allAssets = data.assets;
                 renderCards(allAssets);
-            } catch(e) { console.error("Neural Node Offline"); }
+            } catch(e) { console.error("Signal Lost"); }
         }
 
         function renderCards(assets) {
-            document.getElementById('assetContainer').innerHTML = assets.map(a => `
+            document.getElementById('assetContainer').innerHTML = assets.map(a => {
+                const randomVal = (Math.floor(Math.random() * 20) + 8) * 1000;
+                return `
                 <div class="premium-card p-8 md:p-10 border-l-8 border-blue-600 flex flex-col gap-6">
-                    <div class="flex justify-between items-start">
-                        <div class="max-w-[75%]">
-                            <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">${a.sector} SECTOR</span>
-                            <p class="text-[10px] text-slate-400 font-bold mt-4 uppercase tracking-[0.2em] mb-1">${a.id}</p>
-                            <h2 class="text-2xl md:text-3xl font-black text-slate-900 italic uppercase leading-tight">High-Liquidity Asset Node</h2>
-                            <p class="text-[11px] text-green-600 font-black italic mt-3 underline tracking-widest uppercase">EST. VALUE: $8,500+</p>
-                        </div>
-                        <div class="bg-blue-50 px-2 py-1.5 rounded-full border border-blue-100">
-                            <span class="text-[9px] text-blue-600 font-black uppercase">Locked</span>
-                        </div>
+                    <div>
+                        <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">${a.sector}</span>
+                        <p class="text-[10px] text-slate-400 font-bold mt-4 uppercase tracking-[0.2em] mb-1">${a.id}</p>
+                        <h2 class="text-2xl md:text-3xl font-black text-slate-900 italic uppercase leading-tight">High-Liquidity Asset Node</h2>
+                        <p class="text-[11px] text-green-600 font-black italic mt-3 underline tracking-widest">VALUATION: $${randomVal.toLocaleString()}+</p>
                     </div>
-                    <button onclick="openModal('${a.id}')" class="btn-action w-full py-5 rounded-[1.5rem] font-black text-[11px] uppercase tracking-widest italic transition-all active:scale-95">Generate Institutional Audit</button>
-                </div>
-            `).join('');
-        }
-
-        function filterAssets() {
-            const val = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = allAssets.filter(a => a.sector.toLowerCase().includes(val) || a.id.toLowerCase().includes(val));
-            renderCards(filtered);
+                    <button onclick="openModal('${a.id}')" class="btn-action w-full py-5 rounded-[1.5rem] font-black text-[11px] uppercase tracking-widest italic">Initiate Strategy Audit</button>
+                </div>`;
+            }).join('');
         }
 
         async function openModal(id) {
             currentAsset = { id };
-            const modal = document.getElementById('reportModal');
-            modal.style.display = 'flex';
+            document.getElementById('reportModal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
             document.getElementById('modalSub').innerText = id;
-            document.getElementById('reportText').innerHTML = '<div class="flex flex-col items-center justify-center py-32"><div class="loader-spin"></div></div>';
-            document.getElementById('clearText').innerText = "Establishing Neural Handshake...";
+            document.getElementById('reportText').innerHTML = '<div class="flex justify-center py-24"><div class="loader-spin"></div></div>';
             
-            const res = await fetch(`/safe_report?asset_id=${id}`);
+            const res = await fetch(`/safe_report?asset_id=${id}&lang=${currentLang}`);
             const data = await res.json();
-            
             const text = data.result;
-            // First 180 chars clear, rest blurred
             document.getElementById('clearText').innerText = "EXECUTIVE SUMMARY: " + text.substring(0, 180) + "...";
             document.getElementById('reportText').innerText = text.substring(180);
         }
 
-        function closeReport() { 
-            document.getElementById('reportModal').style.display = 'none'; 
-            document.body.style.overflow = 'auto';
+        function changeLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(b => {
+                b.classList.remove('bg-blue-600', 'text-white');
+                b.classList.add('bg-slate-100', 'text-slate-500');
+            });
+            event.target.classList.add('bg-blue-600', 'text-white');
+            openModal(currentAsset.id);
         }
 
+        function closeReport() { document.getElementById('reportModal').style.display = 'none'; document.body.style.overflow = 'auto'; }
+        
         async function instantBuy() {
             const res = await fetch(`/create_checkout?asset_id=${currentAsset.id}`);
             const data = await res.json();
@@ -270,13 +226,10 @@
 
         function downloadPDF() {
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('p', 'mm', 'a4');
-            const summary = document.getElementById('clearText').innerText;
-            doc.setFont("helvetica", "bold");
-            doc.text("PREVIEW AUDIT: " + currentAsset.id, 15, 20);
-            doc.setFontSize(10);
-            const splitText = doc.splitTextToSize(summary + "\n\n[FULL REPORT ENCRYPTED - PAYMENT REQUIRED]", 180);
-            doc.text(splitText, 15, 30);
+            const doc = new jsPDF();
+            doc.text("PREVIEW: " + currentAsset.id, 15, 20);
+            const split = doc.splitTextToSize(document.getElementById('clearText').innerText + "\n\n[ENCRYPTED]", 180);
+            doc.text(split, 15, 30);
             doc.save(`Preview_${currentAsset.id}.pdf`);
         }
 
