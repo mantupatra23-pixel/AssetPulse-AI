@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AssetPulse AI | Global Strategic Acquisition Node</title>
+    <title>AssetPulse AI | Institutional Acquisition Node</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
@@ -14,7 +14,7 @@
             background: #f8fafc;
             color: #0f172a;
             margin: 0;
-            padding-bottom: 140px; /* Space for Bottom Nav */
+            padding-bottom: 140px; 
         }
 
         .premium-card {
@@ -26,14 +26,14 @@
 
         .premium-card:hover { 
             transform: translateY(-5px); 
-            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.05); 
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.08); 
             border-color: #3b82f6;
         }
 
         .btn-action {
             background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             color: white;
-            box-shadow: 0 8px 15px -3px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.3);
         }
 
         .ticker-bar {
@@ -75,7 +75,7 @@
             <span class="mx-10 text-green-400">● ASSET-2088 ACQUIRED BY DUBAI VENTURES ($99)</span>
             <span class="mx-10 text-blue-400">● NEW HIGH-INTENT SIGNAL: SINGAPORE NODE</span>
             <span class="mx-10 text-green-400">● ASSET-2041 IDENTITY REVEALED (LONDON, UK)</span>
-            <span class="mx-10 text-yellow-400">● AUDIT PROTOCOL: HINDI & ARABIC ACTIVE</span>
+            <span class="mx-10 text-yellow-400">● AUDIT PROTOCOL: MULTI-LANG ACTIVE</span>
         </div>
     </div>
 
@@ -83,7 +83,7 @@
         <header class="mb-12">
             <div class="flex items-center gap-2 mb-3">
                 <span class="h-2.5 w-2.5 rounded-full bg-blue-600 animate-pulse"></span>
-                <span class="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em]">Predator OS v23.5 Stable</span>
+                <span class="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em]">Predator OS v24.0 Stable</span>
             </div>
             <h1 class="text-4xl md:text-5xl font-extrabold tracking-tighter italic text-slate-900">AssetPulse <span class="text-blue-600">AI</span></h1>
             <p class="text-slate-500 font-semibold mt-2">Autonomous Strategic Discovery & VC Audit Engine</p>
@@ -91,7 +91,7 @@
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
             <div class="premium-card p-6">
-                <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Nodes Active</p>
+                <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Nodes Locked</p>
                 <h4 class="text-2xl font-bold">100</h4>
             </div>
             <div class="premium-card p-6 border-b-4 border-blue-600">
@@ -101,7 +101,7 @@
         </div>
 
         <div class="sticky top-16 z-[90] mb-12">
-            <input type="text" id="searchInput" onkeyup="filterAssets()" placeholder="Search institutional nodes..." 
+            <input type="text" id="searchInput" onkeyup="filterAssets()" placeholder="Search institutional sectors..." 
                    class="w-full premium-card px-8 py-6 text-lg font-bold outline-none focus:ring-4 ring-blue-500/10 shadow-xl border-none">
         </div>
 
@@ -109,8 +109,8 @@
             </div>
     </div>
 
-    <nav class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-lg bg-white/95 backdrop-blur-2xl p-4 flex justify-between items-center z-[110] rounded-[2.5rem] border border-slate-200 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)]">
-        <button onclick="location.reload()" class="p-4 text-slate-400 hover:text-blue-600">
+    <nav class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-lg bg-white/95 backdrop-blur-2xl p-4 flex justify-between items-center z-[110] rounded-[2.5rem] border border-slate-200 shadow-2xl">
+        <button onclick="location.reload()" class="p-4 text-slate-400">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
         </button>
         <button onclick="alert('Targeting Global Markets...')" class="btn-action px-12 py-4 rounded-[1.8rem] text-[11px] font-black uppercase tracking-widest italic">Deep Scan</button>
@@ -125,9 +125,9 @@
             <button onclick="closeReport()" class="absolute top-6 right-8 text-5xl font-thin text-slate-300 hover:text-slate-900 z-[210]">&times;</button>
             
             <div class="p-8 md:p-12 border-b border-slate-100 bg-white">
-                <span class="text-blue-600 font-black text-[10px] uppercase tracking-[0.5em] mb-1 block text-center md:text-left">Intelligence Audit</span>
+                <span class="text-blue-600 font-black text-[10px] uppercase tracking-[0.5em] mb-1 block">Institutional Audit</span>
                 <div class="flex justify-between items-center">
-                    <h3 id="modalSub" class="text-3xl md:text-4xl font-black text-slate-900 italic tracking-tighter uppercase">LOCKED</h3>
+                    <h3 id="modalSub" class="text-2xl md:text-3xl font-black text-slate-900 italic tracking-tighter uppercase">SECURE_NODE</h3>
                     <div class="bg-slate-50 px-5 py-2 rounded-2xl border border-slate-100 shadow-inner">
                         <p id="timer" class="text-xl font-bold text-red-500">15:00</p>
                     </div>
@@ -141,12 +141,12 @@
                     <button onclick="changeLang('Arabic')" class="lang-btn bg-slate-100 text-slate-500 px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest">Arabic</button>
                 </div>
                 <div id="reportText" class="text-slate-700 leading-relaxed text-base md:text-lg italic font-medium whitespace-pre-line shadow-sm p-4">
-                    Establishing encrypted handshake with neural node...
+                    Establishing encrypted handshake...
                 </div>
             </div>
 
             <div class="p-8 md:p-12 bg-white border-t border-slate-100 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <button onclick="downloadPDF()" class="bg-slate-900 text-white py-6 rounded-[1.8rem] font-black text-[11px] uppercase tracking-widest shadow-xl">Download Audit</button>
+                <button onclick="downloadPDF()" class="bg-slate-900 text-white py-6 rounded-[1.8rem] font-black text-[11px] uppercase tracking-widest">Download Audit</button>
                 <button onclick="unlockIdentity()" class="bg-white border-2 border-slate-200 text-slate-900 py-6 rounded-[1.8rem] font-black text-[11px] uppercase tracking-widest">Unlock Info</button>
                 <button onclick="instantBuy()" class="btn-action py-6 rounded-[1.8rem] font-black text-[11px] uppercase tracking-widest shadow-2xl">Acquire ($99)</button>
             </div>
@@ -171,29 +171,33 @@
         function renderCards(assets) {
             const container = document.getElementById('assetContainer');
             container.innerHTML = assets.map(a => `
-                <div class="premium-card p-10 flex flex-col gap-8">
+                <div class="premium-card p-10 flex flex-col gap-8 border-l-8 border-blue-600 shadow-2xl">
                     <div class="flex justify-between items-start">
                         <div class="max-w-[75%]">
-                            <p class="text-[11px] text-slate-400 font-black uppercase tracking-[0.2em] mb-2">${a.id}</p>
-                            <h2 class="text-3xl font-black text-slate-900 italic tracking-tighter leading-tight uppercase break-words">${a.name}</h2>
+                            <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">${a.sector} SECTOR</span>
+                            <p class="text-[11px] text-slate-400 font-black uppercase tracking-[0.2em] mt-4 mb-2">${a.id}</p>
+                            <h2 class="text-3xl font-black text-slate-900 italic tracking-tighter leading-tight uppercase break-words">High-Liquidity Asset</h2>
+                            <div class="flex gap-4 mt-3">
+                                <p class="text-[11px] text-green-600 font-black italic underline tracking-widest">EST. VALUATION: $8,500+</p>
+                            </div>
                         </div>
                         <div class="bg-blue-50 px-3 py-1.5 rounded-full border border-blue-100">
                             <span class="text-[10px] text-blue-600 font-black uppercase tracking-widest">Locked</span>
                         </div>
                     </div>
-                    <button onclick="openModal('${a.name}', '${a.id}')" class="btn-action py-6 rounded-[1.5rem] font-black text-[12px] uppercase tracking-widest italic transition-all active:scale-95">Initiate Strategy Audit</button>
+                    <button onclick="openModal('${a.id}')" class="btn-action py-6 rounded-[1.5rem] font-black text-[12px] uppercase tracking-widest italic transition-all active:scale-95">Initiate Strategy Audit</button>
                 </div>
             `).join('');
         }
 
         function filterAssets() {
             const val = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = allAssets.filter(a => a.name.toLowerCase().includes(val) || a.id.toLowerCase().includes(val));
+            const filtered = allAssets.filter(a => a.sector.toLowerCase().includes(val) || a.id.toLowerCase().includes(val));
             renderCards(filtered);
         }
 
-        async function openModal(hiddenName, id) {
-            currentAsset = { hiddenName, id };
+        async function openModal(id) {
+            currentAsset = { id };
             const modal = document.getElementById('reportModal');
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
@@ -201,7 +205,7 @@
             document.getElementById('reportText').innerHTML = '<div class="flex flex-col items-center justify-center py-32"><div class="loader-spin"></div><p class="mt-4 text-[10px] font-black text-slate-400 uppercase tracking-widest animate-pulse">Neural Handshake...</p></div>';
             
             startTimer();
-            const res = await fetch(`/safe_report?name=${encodeURIComponent(hiddenName)}&lang=${currentLang}`);
+            const res = await fetch(`/safe_report?asset_id=${id}&lang=${currentLang}`);
             const data = await res.json();
             document.getElementById('reportText').innerText = data.result;
         }
@@ -226,7 +230,7 @@
             });
             event.target.classList.remove('bg-slate-100', 'text-slate-500');
             event.target.classList.add('bg-blue-600', 'text-white');
-            openModal(currentAsset.hiddenName, currentAsset.id);
+            openModal(currentAsset.id);
         }
 
         function closeReport() { 
@@ -247,7 +251,7 @@
             const res = await fetch(`/create_checkout?asset_id=${currentAsset.id}`);
             const data = await res.json();
             if(data.checkout_url) window.open(data.checkout_url, '_blank');
-            else alert("Payment Gateway Offline. Check STRIPE_SECRET_KEY.");
+            else alert("System Node Offline.");
         }
 
         function downloadPDF() {
