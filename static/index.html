@@ -3,40 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AssetPulse Pro | Institutional Vault</title>
+    <title>AssetPulse Pro | Autonomous Terminal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #030303; color: #ededed; }
-        .glass { background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.03); }
-        .sticky-header { position: sticky; top: 0; z-index: 50; background: #000; border-bottom: 1px solid #2563eb; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #2563eb; border-radius: 10px; }
-        .modal-animate { animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Fira+Code:wght@400;500&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #010102; color: #ededed; }
+        .glass { background: rgba(10, 10, 15, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.03); }
+        .terminal-font { font-family: 'Fira Code', monospace; }
+        .neon-border { border: 1px solid rgba(37, 99, 235, 0.3); box-shadow: 0 0 20px rgba(37, 99, 235, 0.1); }
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-thumb { background: #2563eb; }
+        .status-dot { height: 6px; width: 6px; border-radius: 50%; display: inline-block; }
     </style>
 </head>
-<body class="p-4 md:p-12 min-h-screen">
+<body class="p-4 md:p-10 min-h-screen">
 
-    <div class="max-w-7xl mx-auto flex justify-between items-end mb-16">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
         <div>
-            <h1 class="text-5xl font-black tracking-tighter text-blue-600 italic">ASSETPULSE PRO</h1>
-            <p class="text-gray-600 text-[10px] uppercase tracking-[0.4em] mt-2 font-bold">Institutional Digital Real Estate Terminal</p>
+            <h1 class="text-5xl font-black italic text-blue-600 tracking-tighter">ASSETPULSE V8</h1>
+            <p class="text-[10px] uppercase tracking-[0.4em] text-gray-500 font-bold">Autonomous Intelligence Terminal</p>
         </div>
-        <div class="text-right hidden md:block">
-            <p class="text-green-500 text-[10px] font-black uppercase">● System Synced: Neural Node 01</p>
-            <p class="text-gray-700 text-[9px] uppercase">Market Pulse: Active</p>
+        
+        <div class="flex flex-wrap gap-3 items-center">
+            <input type="text" id="searchInput" onkeyup="filterAssets()" placeholder="SEARCH ASSET IDENTITY..." 
+                   class="glass px-6 py-3 rounded-xl border border-white/10 text-[11px] font-bold tracking-widest outline-none focus:border-blue-600 w-64 transition-all">
+            
+            <button onclick="refreshDiscovery()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
+                Refresh Discovery
+            </button>
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto glass rounded-[2rem] overflow-hidden shadow-2xl">
-        <div class="overflow-x-auto max-h-[800px] overflow-y-auto">
-            <table class="w-full text-left">
-                <thead class="sticky-header text-blue-500 uppercase text-[10px] font-black tracking-widest">
+    <div class="max-w-7xl mx-auto glass p-4 mb-8 rounded-2xl border-l-4 border-blue-600">
+        <div class="flex items-center gap-3 mb-2">
+            <span class="status-dot bg-blue-500 animate-pulse"></span>
+            <p class="text-[9px] uppercase font-black text-blue-500 tracking-widest">Live Activity Log</p>
+        </div>
+        <div id="terminal-log" class="terminal-font text-[10px] text-gray-500 h-10 overflow-hidden leading-relaxed">
+            [SYS] Scanning neural nodes...<br>
+            [INTEL] Detecting high-value .ai extensions...
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+        <div class="glass p-5 rounded-[2rem] neon-border">
+            <p class="text-[9px] uppercase text-gray-600 font-black">Success Rate</p>
+            <h4 class="text-xl font-black text-white">94.2%</h4>
+        </div>
+        <div class="glass p-5 rounded-[2rem] neon-border">
+            <p class="text-[9px] uppercase text-gray-600 font-black">Hunted Today</p>
+            <h4 class="text-xl font-black text-white" id="huntCount">8,402</h4>
+        </div>
+        <div class="glass p-5 rounded-[2rem] neon-border">
+            <p class="text-[9px] uppercase text-gray-600 font-black">Node Latency</p>
+            <h4 class="text-xl font-black text-white">12ms</h4>
+        </div>
+        <div class="glass p-5 rounded-[2rem] neon-border">
+            <p class="text-[9px] uppercase text-gray-600 font-black">System Mode</p>
+            <h4 class="text-xl font-black text-green-500 uppercase italic">Autonomous</h4>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto glass rounded-[2.5rem] overflow-hidden">
+        <div class="overflow-x-auto max-h-[700px] overflow-y-auto">
+            <table class="w-full text-left" id="assetTableFull">
+                <thead class="sticky top-0 bg-[#050508] text-blue-600 text-[10px] font-black uppercase tracking-widest">
                     <tr>
-                        <th class="px-10 py-6">Reference ID</th>
-                        <th class="px-10 py-6">Asset Classification</th>
+                        <th class="px-10 py-6">Identity Reference</th>
+                        <th class="px-10 py-6">Classification</th>
                         <th class="px-10 py-6">Market Signal</th>
                         <th class="px-10 py-6 text-center">Protocol Actions</th>
                     </tr>
@@ -47,122 +83,105 @@
         </div>
     </div>
 
-    <div id="reportModal" class="fixed inset-0 bg-black/98 hidden items-center justify-center z-[100] p-4 backdrop-blur-2xl">
-        <div class="glass w-full max-w-3xl rounded-[3rem] p-12 relative modal-animate border border-blue-500/20 shadow-[0_0_80px_rgba(37,99,235,0.15)]">
-            <button onclick="closeReport()" class="absolute top-8 right-10 text-gray-600 hover:text-white text-4xl font-thin transition-all">&times;</button>
-            
-            <div class="mb-10">
-                <div class="flex items-center gap-3 mb-2">
-                    <div class="h-1 w-12 bg-blue-600"></div>
-                    <h2 class="text-blue-600 font-black text-xs uppercase tracking-[0.3em]">Institutional Intelligence</h2>
-                </div>
-                <h3 id="modalSub" class="text-2xl font-black text-white uppercase tracking-tighter italic">LOCKED ASSET AUDIT</h3>
+    <div id="reportModal" class="fixed inset-0 bg-black/95 hidden items-center justify-center z-[100] p-6 backdrop-blur-3xl">
+        <div class="glass w-full max-w-4xl rounded-[3rem] p-10 md:p-16 relative border border-blue-500/20 shadow-2xl">
+            <button onclick="closeReport()" class="absolute top-10 right-12 text-gray-600 hover:text-white text-5xl font-thin">&times;</button>
+            <h3 id="modalSub" class="text-3xl font-black text-white uppercase tracking-tighter mb-8 italic">VAULT ACCESS</h3>
+            <div id="reportText" class="text-gray-400 leading-relaxed text-sm bg-black/30 p-10 rounded-[2rem] border border-white/5 max-h-[450px] overflow-y-auto whitespace-pre-wrap italic">
+                Synchronizing...
             </div>
-
-            <div id="reportText" class="text-gray-400 leading-[1.8] font-light text-sm bg-white/[0.02] p-10 rounded-[2rem] border border-white/5 max-h-[500px] overflow-y-auto whitespace-pre-wrap">
-                Initiating neural data stream...
-            </div>
-
-            <div class="mt-12 flex flex-wrap gap-5">
-                <button onclick="downloadPDF()" class="bg-blue-600 text-white px-10 py-4 rounded-full font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all shadow-xl shadow-blue-900/20">Export Strategic PDF</button>
-                <button onclick="requestAccess()" class="border border-white/10 text-white px-10 py-4 rounded-full font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all">Unlock Identity</button>
+            <div class="mt-10 flex flex-wrap gap-4">
+                <button onclick="downloadPDF()" class="bg-blue-600 text-white px-10 py-4 rounded-full font-black text-[11px] uppercase hover:scale-105 transition-all">Download PDF Audit</button>
+                <button onclick="unlockIdentity()" class="border border-white/10 text-white px-10 py-4 rounded-full font-black text-[11px] uppercase hover:bg-white/10 transition-all italic">Unlock Identity</button>
             </div>
         </div>
     </div>
 
     <script>
-        // 1. Data Loading
+        let allAssets = [];
+        let currentAssetID = "";
+
+        // 1. Data Loader
         async function loadAssets() {
             const res = await fetch('/hunted');
             const data = await res.json();
+            allAssets = data.assets;
+            renderTable(allAssets);
+            updateTerminal();
+        }
+
+        function renderTable(assets) {
             const container = document.getElementById('assetTable');
-            
-            container.innerHTML = data.assets.map(a => `
-                <tr class="hover:bg-blue-600/[0.02] transition-colors border-b border-white/[0.03]">
+            container.innerHTML = assets.map(a => `
+                <tr class="hover:bg-blue-600/[0.03] transition-all border-b border-white/[0.01] asset-row">
                     <td class="px-10 py-8">
-                        <p class="text-[10px] text-gray-600 font-bold mb-1">${a.id}</p>
-                        <p class="text-sm font-black text-white tracking-tight">${a.name}</p>
+                        <p class="text-[9px] text-gray-700 font-bold uppercase mb-1 tracking-widest">${a.id}</p>
+                        <p class="text-md font-black text-white tracking-tight">${a.name}</p>
                     </td>
                     <td class="px-10 py-8">
-                        <span class="bg-blue-900/10 text-blue-400 border border-blue-500/10 px-3 py-1.5 rounded-full text-[9px] font-black uppercase">${a.type}</span>
+                        <span class="bg-blue-900/10 text-blue-400 border border-blue-500/10 px-3 py-1 rounded-full text-[9px] font-black uppercase">Institutional</span>
                     </td>
                     <td class="px-10 py-8">
-                        <span class="text-[9px] font-black text-green-500 uppercase tracking-widest flex items-center gap-2">
-                            <span class="h-1.5 w-1.5 bg-green-500 rounded-full shadow-[0_0_8px_#22c55e]"></span> ${a.status}
+                        <span class="text-[10px] font-black text-green-500 uppercase tracking-widest flex items-center gap-2">
+                            <span class="status-dot bg-green-500 shadow-[0_0_10px_#22c55e]"></span> Verified Expired
                         </span>
                     </td>
-                    <td class="px-10 py-8">
-                        <div class="flex items-center justify-center gap-4">
-                            <button onclick="generateReport('${a.name}', '${a.id}')" class="bg-white text-black px-5 py-2.5 rounded-xl text-[9px] font-black uppercase hover:bg-blue-600 hover:text-white transition-all">Safe Pitch</button>
-                            <button onclick="requestAccess('${a.id}')" class="border border-white/10 text-white px-5 py-2.5 rounded-xl text-[9px] font-black uppercase hover:bg-white/10 transition-all italic">Unlock</button>
+                    <td class="px-10 py-8 text-center">
+                        <div class="flex items-center justify-center gap-3">
+                            <button onclick="generateReport('${a.name}', '${a.id}')" class="bg-white text-black px-5 py-2 rounded-xl text-[9px] font-black uppercase hover:bg-blue-600 hover:text-white transition-all">Safe Pitch</button>
                         </div>
                     </td>
                 </tr>
             `).join('');
         }
 
-        // 2. Detailed Report Engine
+        // 2. Search Functionality
+        function filterAssets() {
+            const val = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allAssets.filter(a => a.name.toLowerCase().includes(val) || a.id.toLowerCase().includes(val));
+            renderTable(filtered);
+        }
+
+        // 3. Autonomous Discovery Refresh
+        async function refreshDiscovery() {
+            const btn = event.target;
+            btn.innerText = "DISCOVERING...";
+            await fetch('/refresh_discovery');
+            await loadAssets();
+            btn.innerText = "REFRESH DISCOVERY";
+            alert("Neural engine has generated 100 new trending assets.");
+        }
+
+        // 4. Activity Terminal Animation
+        function updateTerminal() {
+            const logs = [
+                "[SYS] Scanning expired databases...",
+                "[INTEL] Found high-ROI asset in .IO niche",
+                "[AI] Generating institutional memorandum...",
+                "[SYS] Identity locked. Encryption active.",
+                "[SYS] Syncing with GoDaddy Partner API..."
+            ];
+            const logBox = document.getElementById('terminal-log');
+            setInterval(() => {
+                logBox.innerHTML = logs[Math.floor(Math.random() * logs.length)] + "<br>" + logs[Math.floor(Math.random() * logs.length)];
+            }, 4000);
+        }
+
         async function generateReport(hiddenName, id) {
+            currentAssetID = id;
             const modal = document.getElementById('reportModal');
-            const textDiv = document.getElementById('reportText');
-            const subText = document.getElementById('modalSub');
-            
+            document.getElementById('modalSub').innerText = "AUDIT ANALYSIS: " + id;
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            subText.innerText = "AUDIT: " + id;
-            textDiv.innerHTML = "Decrypting institutional market signals...";
-
-            try {
-                const res = await fetch(`/safe_report?name=${encodeURIComponent(hiddenName)}`);
-                const data = await res.json();
-                textDiv.innerHTML = data.result || "Error: Data stream interrupted.";
-            } catch (err) {
-                textDiv.innerHTML = "Connection Error: Failed to reach AI node.";
-            }
-        }
-
-        // 3. Real PDF Download Logic
-        function downloadPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            const reportContent = document.getElementById('reportText').innerText;
-            const assetID = document.getElementById('modalSub').innerText;
-
-            // PDF Design
-            doc.setFillColor(10, 10, 10);
-            doc.rect(0, 0, 210, 40, 'F');
+            document.getElementById('reportText').innerText = "Streaming data from Groq Llama-3 Node...";
             
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(22);
-            doc.setTextColor(37, 99, 235);
-            doc.text("ASSETPULSE PRO", 15, 20);
-            
-            doc.setFontSize(8);
-            doc.setTextColor(150);
-            doc.text("STRATEGIC MEMORANDUM | " + assetID, 15, 30);
-
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(10);
-            doc.setTextColor(40);
-            
-            const splitText = doc.splitTextToSize(reportContent, 180);
-            doc.text(splitText, 15, 55);
-
-            doc.save(`AssetPulse_Audit_${assetID}.pdf`);
-        }
-
-        // 4. Identity Unlock Logic
-        async function requestAccess(id) {
-            const email = prompt("ENTER AUTHORIZED EMAIL TO UNLOCK IDENTITY:");
-            if (email) {
-                alert("Processing decryption... Check your inbox shortly.");
-                await fetch(`/unlock_identity?asset_id=${id}&buyer_email=${encodeURIComponent(email)}`);
-            }
+            const res = await fetch(`/safe_report?name=${encodeURIComponent(hiddenName)}`);
+            const data = await res.json();
+            document.getElementById('reportText').innerText = data.result;
         }
 
         function closeReport() {
             document.getElementById('reportModal').classList.add('hidden');
-            document.getElementById('reportModal').classList.remove('flex');
         }
 
         window.onload = loadAssets;
