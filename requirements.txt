@@ -9,3 +9,4 @@ apscheduler
 cloudscraper
 resend
 stripe
+python-multipart
