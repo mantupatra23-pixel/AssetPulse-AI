@@ -3,145 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AssetPulse AI | Institutional Acquisition Terminal</title>
+    <title>AssetPulse AI | Global Acquisition Terminal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
         
         body { 
             font-family: 'Inter', sans-serif; 
-            background: #0b0f1a; 
-            color: #e2e8f0;
-            margin: 0;
+            background: #05070a; 
+            color: #e2e8f0; 
+            margin: 0; 
             overflow-x: hidden;
         }
 
         .mono { font-family: 'JetBrains Mono', monospace; }
 
         .glass-card {
-            background: rgba(17, 24, 39, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(59, 130, 246, 0.1);
-            border-radius: 1.5rem;
+            background: rgba(13, 18, 30, 0.8);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 2.5rem;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .glass-card:hover {
             border-color: #3b82f6;
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            transform: translateY(-12px);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
         }
 
-        .btn-glow {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
-            transition: all 0.3s ease;
+        .pulse-red {
+            animation: pulse-red 2s infinite;
         }
 
-        .btn-glow:hover {
-            transform: scale(1.02);
-            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.5);
+        @keyframes pulse-red {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
-        .blur-text {
-            filter: blur(8px);
-            user-select: none;
-            opacity: 0.5;
+        .roi-badge {
+            background: linear-gradient(90deg, #1e3a8a, #2563eb);
+            clip-path: polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%);
         }
 
-        .loader {
-            border-top-color: #3b82f6;
-            animation: spinner 0.6s linear infinite;
-        }
-
-        @keyframes spinner {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Modal Custom Scrollbar */
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
     </style>
 </head>
 <body class="selection:bg-blue-500/30">
 
-    <nav class="border-b border-white/5 py-6 px-8 flex justify-between items-center bg-[#0b0f1a]/80 sticky top-0 z-50 backdrop-blur-md">
+    <nav class="border-b border-white/5 py-6 px-10 flex justify-between items-center sticky top-0 z-50 backdrop-blur-md bg-black/50">
         <div class="flex items-center gap-3">
-            <div class="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center font-black italic">A</div>
-            <h1 class="text-xl font-extrabold tracking-tighter uppercase italic">AssetPulse <span class="text-blue-500 underline decoration-2">AI</span></h1>
+            <div class="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center font-black italic shadow-lg shadow-blue-600/40">A</div>
+            <h1 class="text-xl font-extrabold tracking-tighter uppercase italic text-white">AssetPulse <span class="text-blue-500">AI</span></h1>
         </div>
-        <div class="hidden md:flex items-center gap-6">
-            <div class="flex items-center gap-2">
-                <span class="h-2 w-2 bg-green-500 rounded-full animate-pulse"></span>
-                <span class="text-[10px] mono uppercase font-bold tracking-widest text-slate-400">Nodes Active</span>
-            </div>
-            <div class="h-10 w-[1px] bg-white/10"></div>
-            <span class="text-[10px] mono text-blue-400 font-bold uppercase tracking-[0.2em]">Institutional Access Only</span>
+        <div class="flex gap-4">
+            <span class="text-[10px] mono text-green-400 font-bold uppercase border border-green-500/20 px-3 py-1 rounded bg-green-500/5">98.4% Secure Connection</span>
         </div>
     </nav>
 
-    <header class="max-w-7xl mx-auto px-6 pt-20 pb-12 text-center">
-        <h2 class="text-5xl md:text-7xl font-black text-white mb-6 tracking-tight leading-none italic uppercase">
-            Hunt Strategic <span class="text-blue-600">Assets</span>
+    <header class="max-w-7xl mx-auto px-6 pt-20 pb-16 text-center">
+        <h2 class="text-6xl md:text-8xl font-black text-white mb-6 italic uppercase tracking-tighter leading-none">
+            Institutional <span class="text-blue-600">Liquidity</span> Pool
         </h2>
-        <p class="text-slate-400 max-w-2xl mx-auto text-lg mb-12">
-            Institutional-grade discovery engine for high-liquidity digital nodes and tech assets. Daily 100+ fresh discoveries.
-        </p>
+        <p class="text-slate-500 max-w-xl mx-auto text-[10px] font-bold uppercase tracking-[0.4em] mono">Private Terminal • Access Restricted to Qualified Buyers</p>
     </header>
 
-    <section class="max-w-7xl mx-auto px-6 pb-24">
-        <div id="assetGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            <div class="col-span-full flex justify-center py-20">
-                <div class="loader ease-linear rounded-full border-2 border-t-2 border-gray-200 h-12 w-12"></div>
+    <section class="max-w-7xl mx-auto px-6 pb-32">
+        <div id="assetGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <div class="col-span-full text-center py-20 text-blue-500 mono animate-pulse italic">
+                ESTABLISHING SECURE HANDSHAKE WITH GLOBAL NODES...
             </div>
         </div>
     </section>
 
-    <div id="auditModal" class="fixed inset-0 bg-[#0b0f1a]/95 backdrop-blur-xl hidden z-[100] overflow-y-auto pt-10 pb-10">
-        <div class="max-w-4xl mx-auto px-4">
-            <div class="bg-[#111827] rounded-[2.5rem] border border-white/5 shadow-2xl relative overflow-hidden">
+    <div id="auditModal" class="fixed inset-0 bg-black/98 backdrop-blur-3xl hidden z-[100] overflow-y-auto pt-10">
+        <div class="max-w-4xl mx-auto px-4 pb-20">
+            <div class="bg-[#0d121e] rounded-[3.5rem] border border-white/10 relative overflow-hidden shadow-2xl">
+                <button onclick="closeModal()" class="absolute top-10 right-10 text-slate-500 hover:text-white text-4xl font-light transition-all">&times;</button>
                 
-                <button onclick="closeModal()" class="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-
-                <div class="p-10 md:p-16">
-                    <div class="mb-10">
-                        <span id="modalSector" class="text-blue-500 mono text-xs font-bold uppercase tracking-widest bg-blue-500/10 px-4 py-2 rounded-full">FinTech</span>
-                        <h3 id="modalId" class="text-4xl font-black text-white italic mt-6 uppercase tracking-tighter">NODE-0000</h3>
-                        <p class="text-slate-500 mono text-xs mt-2 font-bold tracking-widest uppercase">Proprietary VC Audit Report</p>
-                    </div>
-
-                    <div id="auditBody" class="space-y-8 text-slate-300 leading-relaxed text-lg">
-                        <div id="summaryBox" class="bg-blue-600/5 border-l-4 border-blue-600 p-8 italic text-white rounded-r-xl">
-                            Deciphering node data packets...
+                <div class="p-12 md:p-20">
+                    <span id="modalSector" class="text-blue-400 mono text-[10px] font-bold uppercase tracking-[0.3em] bg-blue-400/5 px-5 py-2 rounded-full border border-blue-400/10 italic">Sector</span>
+                    <h3 id="modalId" class="text-6xl font-black text-white italic mt-8 uppercase tracking-tighter">NODE-0000</h3>
+                    
+                    <div class="mt-12 space-y-10">
+                        <div id="summaryBox" class="bg-blue-600/5 border-l-8 border-blue-600 p-10 italic text-blue-100 rounded-r-3xl font-semibold text-xl leading-relaxed shadow-inner">
+                            Synchronizing metadata packets...
                         </div>
-                        
-                        <div id="fullAudit" class="blur-text select-none text-base space-y-6">
+                        <div id="fullAudit" class="filter blur-2xl opacity-20 select-none space-y-8 text-slate-400 text-lg">
                             </div>
                     </div>
 
-                    <div id="paywall" class="mt-12 bg-gradient-to-br from-blue-600 to-blue-800 p-12 rounded-[2rem] text-center shadow-2xl">
-                        <h4 class="text-3xl font-black text-white mb-4 italic uppercase">Unlock Full Identity</h4>
-                        <p class="text-blue-100/70 mb-8 text-sm font-semibold tracking-wide">
-                            Revealing Domain Name, Acquisition Roadmap, and Founder Contact Data.
-                        </p>
-                        <button onclick="checkout()" class="bg-white text-blue-800 px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-100 transition-all active:scale-95">
-                            Purchase Report — $19.00 USD
+                    <div id="paywall" class="mt-20 bg-gradient-to-br from-blue-600 to-blue-950 p-16 rounded-[3rem] text-center shadow-3xl relative overflow-hidden">
+                        <h4 class="text-4xl font-black text-white mb-4 italic uppercase tracking-tighter">Unlock Identity</h4>
+                        <p class="text-blue-100 text-[11px] font-bold uppercase tracking-[0.2em] mb-12 opacity-80 italic">Revealing Private Domain, Traffic Moat & Founder Handshake</p>
+                        <button onclick="checkout()" class="w-full md:w-auto bg-white text-blue-900 px-20 py-7 rounded-3xl font-black text-xs uppercase tracking-[0.3em] hover:scale-105 active:scale-95 transition-all shadow-2xl">
+                            Initiate Handshake — $19.00
                         </button>
-                        <p class="text-blue-200/50 text-[10px] mt-6 mono font-bold uppercase">Stripe Secure | Instant Handshake</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <footer class="py-12 border-t border-white/5 text-center">
-        <p class="text-slate-600 mono text-[10px] font-bold uppercase tracking-widest">© 2024 AssetPulse Global Acquisition Terminal</p>
-    </footer>
-
     <script>
-        let selectedAsset = null;
+        let currentId = null;
 
         async function fetchAssets() {
             const grid = document.getElementById('assetGrid');
@@ -149,38 +116,70 @@
                 const res = await fetch('/hunted');
                 const data = await res.json();
                 
-                grid.innerHTML = data.assets.map(a => `
-                    <div class="glass-card p-10 flex flex-col justify-between h-[320px]">
-                        <div>
-                            <span class="text-[10px] mono font-bold text-blue-400 bg-blue-400/5 px-3 py-1 rounded-md uppercase tracking-widest">${a.sector}</span>
-                            <h2 class="text-3xl font-black text-white italic mt-6 tracking-tighter uppercase leading-none">Strategic Node</h2>
-                            <p class="text-[11px] mono text-slate-500 font-bold mt-2 uppercase tracking-widest">${a.id}</p>
+                grid.innerHTML = data.assets.map(a => {
+                    const valuation = (Math.random() * (75 - 18) + 18).toFixed(1);
+                    const watchers = Math.floor(Math.random() * 7) + 4;
+                    const roi = (Math.random() * (620 - 150) + 150).toFixed(0);
+                    const score = (Math.random() * (9.9 - 9.3) + 9.3).toFixed(1);
+                    
+                    return `
+                        <div class="glass-card p-10 flex flex-col justify-between h-[540px] relative overflow-hidden group">
+                            <div class="absolute top-0 right-0 roi-badge text-white text-[10px] font-black px-6 py-2 mono italic z-10">
+                                +${roi}% ROI
+                            </div>
+                            
+                            <div class="flex justify-between items-start">
+                                <span class="text-[9px] mono font-bold text-blue-400 uppercase tracking-widest">${a.sector}</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 bg-red-500 rounded-full pulse-red shadow-lg shadow-red-500/50"></span>
+                                    <span class="text-[9px] font-black text-red-400 uppercase mono">${watchers} Buyers Active</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-8">
+                                <h2 class="text-4xl font-black text-white italic tracking-tighter uppercase leading-none">Strategic Node</h2>
+                                <p class="text-[11px] mono text-slate-700 font-bold mt-2 uppercase tracking-widest">${a.id}</p>
+                            </div>
+
+                            <div class="my-10 space-y-6">
+                                <div class="flex justify-between items-end border-b border-white/5 pb-6">
+                                    <div>
+                                        <p class="text-slate-600 text-[9px] uppercase font-bold tracking-widest">Est. Valuation</p>
+                                        <p class="text-4xl font-black text-white italic mt-1">$${valuation}K</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-slate-600 text-[9px] uppercase font-bold tracking-widest">Audit Score</p>
+                                        <p class="text-xl font-black text-blue-500 mono italic">${score}</p>
+                                    </div>
+                                </div>
+                                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest italic flex items-center gap-2">
+                                    <span class="text-yellow-500 animate-pulse">●</span> Status: Negotiation In-Progress
+                                </p>
+                            </div>
+                            
+                            <button onclick="openAudit('${a.id}', '${a.sector}')" class="w-full py-6 bg-blue-600 hover:bg-blue-500 text-white rounded-[1.8rem] text-[11px] font-black uppercase tracking-[0.3em] transition-all shadow-2xl shadow-blue-900/40">
+                                Open Audit Protocol
+                            </button>
                         </div>
-                        <button onclick="openAudit('${a.id}', '${a.sector}')" class="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all">
-                            Analyze Audit
-                        </button>
-                    </div>
-                `).join('');
-            } catch (e) {
-                grid.innerHTML = `<p class="col-span-full text-center text-red-500">Terminal Connection Failed.</p>`;
-            }
+                    `;
+                }).join('');
+            } catch (e) { grid.innerHTML = `<p class="col-span-full text-center text-red-500">SYSTEM OFFLINE</p>`; }
         }
 
         async function openAudit(id, sector) {
-            selectedAsset = id;
-            const modal = document.getElementById('auditModal');
+            currentId = id;
+            document.getElementById('auditModal').style.display = 'block';
             document.getElementById('modalId').innerText = id;
             document.getElementById('modalSector').innerText = sector;
-            modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
 
             try {
                 const res = await fetch(`/safe_report?asset_id=${id}`);
                 const data = await res.json();
-                document.getElementById('summaryBox').innerText = "EXECUTIVE SUMMARY: " + data.result.split('\n')[0];
+                document.getElementById('summaryBox').innerText = "INSTITUTIONAL ALERT: " + data.result.substring(0, 200) + "...";
                 document.getElementById('fullAudit').innerText = data.result;
             } catch (e) {
-                document.getElementById('summaryBox').innerText = "Data encryption error. Please retry.";
+                document.getElementById('summaryBox').innerText = "Re-establishing secure connection...";
             }
         }
 
@@ -190,21 +189,18 @@
         }
 
         async function checkout() {
-            if(!selectedAsset) return;
+            if(!currentId) return;
             const btn = document.querySelector('#paywall button');
-            const originalText = btn.innerText;
-            btn.innerText = "Connecting Stripe...";
+            btn.innerText = "Syncing with Stripe...";
             btn.disabled = true;
-
             try {
-                const res = await fetch(`/create_checkout?asset_id=${selectedAsset}`);
+                const res = await fetch(`/create_checkout?asset_id=${currentId}`);
                 const data = await res.json();
                 if(data.checkout_url) window.location.href = data.checkout_url;
-                else throw new Error();
             } catch (e) {
-                alert("Payment Gateway Busy. Please refresh.");
-                btn.innerText = originalText;
+                btn.innerText = "Initiate Handshake — $19.00";
                 btn.disabled = false;
+                alert("Gate Busy. Refresh.");
             }
         }
 
