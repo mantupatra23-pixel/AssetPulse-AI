@@ -23,7 +23,7 @@ RENDER_URL = os.environ.get("RENDER_EXTERNAL_URL", "https://assetpulse-ai.onrend
 GMAIL_USER = "assetpulseai@gmail.com"
 GMAIL_PASSWORD = os.environ.get("GMAIL_PASSWORD") 
 
-# GODADDY AFFILIATE LINK (Integrated with your CJ ID)
+# GODADDY AFFILIATE LINK (Integrated with your ID)
 GODADDY_BASE = "https://click.godaddy.com/affiliate?isc=cjccom311&url=https://www.godaddy.com/offers/domain"
 
 stripe.api_key = STRIPE_SECRET_KEY
@@ -32,19 +32,20 @@ client = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
 # --- SYSTEM MEMORY ---
 HUNTED_POOL = []
 
-# --- 1. ANTI-SLEEP ENGINE (24/7 Connectivity) ---
+# --- 1. ANTI-SLEEP ENGINE (24/7 Pulse) ---
 async def keep_alive():
     async with httpx.AsyncClient() as ac:
         while True:
             try:
                 await ac.get(RENDER_URL)
+                print("[SYSTEM] Pulse Active")
             except: pass
             await asyncio.sleep(600)
 
-# --- 2. ASSET DISCOVERY ---
+# --- 2. ASSET DISCOVERY (Stealth Logic) ---
 def ai_asset_discovery():
     global HUNTED_POOL
-    sectors = ["FinTech", "HealthAI", "CyberSecurity", "SaaS Automation", "Web3 Gaming", "OpenTech"]
+    sectors = ["FinTech", "HealthAI", "CyberSecurity", "SaaS Automation", "Web3 Gaming"]
     prefixes = ["Neural", "Quantum", "Cyber", "Aura", "Flow", "Apex", "Vortex"]
     extensions = [".ai", ".io", ".com"]
     new_pool = []
@@ -58,9 +59,9 @@ def ai_asset_discovery():
             "real_name": real_name
         })
     HUNTED_POOL = new_pool
-    print(f"[V32.2] 100 Strategic Assets Shielded in Memory.")
+    print(f"[V32.5] 100 Assets Loaded.")
 
-# --- 3. SILENT SNIPER (Fixes Network Unreachable Error) ---
+# --- 3. SILENT SNIPER (Fixes Network Errors) ---
 async def apollo_outreach_sniper():
     while True:
         try:
@@ -68,8 +69,8 @@ async def apollo_outreach_sniper():
                 target = random.choice(HUNTED_POOL)
                 founder_email = "mantupatra168@gmail.com" 
                 
-                subject = f"Institutional Acquisition Signal: {target['sector']} Node"
-                body = f"AssetPulse flagged a strategic asset in {target['sector']}. VC readiness: 9.8/10. View Audit: {RENDER_URL}"
+                subject = f"Institutional Signal: {target['sector']} Node"
+                body = f"AssetPulse flagged a strategic asset in {target['sector']}. Audit: {RENDER_URL}"
                 
                 msg = MIMEText(body)
                 msg['Subject'] = subject
@@ -82,14 +83,11 @@ async def apollo_outreach_sniper():
                     server.login(GMAIL_USER, GMAIL_PASSWORD)
                     server.send_message(msg)
                     server.quit()
-                    print(f"[SNIPER] Email successfully sent.")
-                except Exception:
+                except:
                     server = smtplib.SMTP_SSL('smtp.gmail.com', 465, timeout=15)
                     server.login(GMAIL_USER, GMAIL_PASSWORD)
                     server.send_message(msg)
                     server.quit()
-                    print(f"[SNIPER] Email successfully sent via SSL.")
-            
             await asyncio.sleep(3600) 
         except Exception:
             await asyncio.sleep(60)
@@ -112,7 +110,7 @@ async def read_index():
     index_file = os.path.join(static_path, "index.html")
     if os.path.exists(index_file):
         return FileResponse(index_file)
-    return HTMLResponse("<h1>AssetPulse Terminal: Static Index Missing.</h1>")
+    return HTMLResponse("<h1>Terminal Error: Static Files Missing.</h1>")
 
 @app.get("/hunted")
 def get_hunted():
@@ -122,27 +120,25 @@ def get_hunted():
 async def get_safe_report(asset_id: str = Query(...)):
     asset = next((a for a in HUNTED_POOL if a["id"] == asset_id), None)
     if not asset: return {"error": "Offline"}
-    prompt = f"Write a professional 1200-word Institutional VC Audit for a {asset['sector']} startup node. Confidential analysis."
+    prompt = f"Professional VC audit for {asset['sector']} startup. Analysis for Mantu."
     try:
-        comp = client.chat.completions.create(
-            messages=[{"role":"user","content":prompt}],
-            model="llama-3.3-70b-versatile"
-        )
+        comp = client.chat.completions.create(messages=[{"role":"user","content":prompt}], model="llama-3.3-70b-versatile")
         return {"result": comp.choices[0].message.content}
     except:
-        return {"result": "Audit generating in encrypted sandbox..."}
+        return {"result": "Generating confidential audit..."}
 
-# --- STRIPE CHECKOUT: INR 5 FIX ---
+# --- STRIPE INR 5 BACKEND FIX ---
 @app.get("/create_checkout")
 async def create_checkout(asset_id: str):
     try:
+        print(f"[STRIPE] Initiating ₹5 Checkout for {asset_id}")
         session = stripe.checkout.Session.create(
             payment_method_types=["card"],
             line_items=[{
                 "price_data": {
-                    "currency": "inr", # Changed to INR
-                    "product_data": {"name": f"Identity Reveal Test: {asset_id}"}, 
-                    "unit_amount": 500, # 500 Paise = ₹5
+                    "currency": "inr", 
+                    "product_data": {"name": f"Identity Reveal: {asset_id}"}, 
+                    "unit_amount": 500, # ₹5.00
                 }, 
                 "quantity": 1
             }],
@@ -152,29 +148,30 @@ async def create_checkout(asset_id: str):
         )
         return {"checkout_url": session.url}
     except Exception as e:
+        print(f"[STRIPE ERROR] {str(e)}")
         return {"error": str(e)}
 
 # --- POST-PAYMENT REVEAL PAGE ---
 @app.get("/reveal")
 async def reveal_identity(asset_id: str = None):
     asset = next((a for a in HUNTED_POOL if a["id"] == asset_id), None)
-    if not asset: return HTMLResponse("Verification Pending.")
+    if not asset: return HTMLResponse("Verification Expired.")
     
     real_domain = asset['real_name']
     final_affiliate = f"{GODADDY_BASE}&q={real_domain}"
 
     html = f"""
     <body style='background:#0f172a; color:white; font-family:sans-serif; text-align:center; padding:100px;'>
-        <h1 style='color:#22c55e; font-size:40px;'>IDENTITY UNLOCKED</h1>
+        <h1 style='color:#22c55e;'>PAYMENT SUCCESSFUL</h1>
         <div style='background:#1e293b; padding:60px; border-radius:40px; border:2px solid #3b82f6; display:inline-block;'>
-            <p style='color:#94a3b8; text-transform:uppercase; font-size:12px;'>Strategic Asset Node</p>
-            <h2 style='font-size:65px; margin:20px 0;'>{real_domain}</h2>
+            <p style='color:#94a3b8; text-transform:uppercase;'>Unlocked Domain Name</p>
+            <h2 style='font-size:60px; margin:20px 0;'>{real_domain}</h2>
             <br>
-            <a href='{final_affiliate}' target='_blank' style='background:#22c55e; color:white; padding:25px 60px; border-radius:20px; text-decoration:none; font-weight:900; font-size:22px; display:inline-block; text-transform:uppercase;'>
+            <a href='{final_affiliate}' target='_blank' style='background:#22c55e; color:white; padding:25px 60px; border-radius:20px; text-decoration:none; font-weight:bold; font-size:22px; display:inline-block;'>
                 Buy on GoDaddy →
             </a>
         </div>
-        <p style='margin-top:60px;'><a href='/' style='color:#3b82f6; text-decoration:none;'>← RETURN TO TERMINAL</a></p>
+        <p style='margin-top:60px;'><a href='/' style='color:#3b82f6;'>← Back to Terminal</a></p>
     </body>
     """
     return HTMLResponse(content=html)
