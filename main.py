@@ -6,20 +6,20 @@ import httpx
 import stripe
 import smtplib
 from email.mime.text import MIMEText
-from fastapi import FastAPI, Query, Request, BackgroundTasks
+from fastapi import FastAPI, Query, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, HTMLResponse
 from groq import Groq
 
 # --- CORE INITIALIZATION ---
-app = FastAPI(title="AssetPulse AI - Institutional Terminal V45.0")
+app = FastAPI(title="AssetPulse AI - Ultimate Terminal V46.5")
 
 # --- SECURE CONFIGURATION ---
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
 RENDER_URL = os.environ.get("RENDER_EXTERNAL_URL", "https://assetpulse-ai.onrender.com")
 
-# GMAIL CONFIG (App Password is Required)
+# GMAIL CONFIG (App Password Mandatory)
 GMAIL_USER = "assetpulseai@gmail.com"
 GMAIL_PASSWORD = os.environ.get("GMAIL_PASSWORD") 
 GODADDY_BASE = "https://click.godaddy.com/affiliate?isc=cjccom311&url=https://www.godaddy.com/offers/domain"
@@ -30,7 +30,7 @@ client = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
 
 # --- SYSTEM MEMORY ---
 HUNTED_POOL = []
-USER_TARGET_LIST = ["mantupatra168@gmail.com"] 
+USER_TARGET_LIST = ["mantupatra168@gmail.com"]
 
 # --- 1. DAILY FRESH HUNT ENGINE ---
 def daily_fresh_hunt():
@@ -50,73 +50,56 @@ def daily_fresh_hunt():
             "real_name": real_name
         })
     HUNTED_POOL = new_pool
-    print(f"[V45.0] 100 Fresh Nodes Synchronized. System Active.")
+    print(f"[V46.5] 100 Fresh Nodes Synchronized. Hunter Active.")
 
-# --- 2. RESILIENT SNIPER ENGINE (Dual-Mode & SSL 465) ---
-def send_sniper_email():
-    """Network-hardened email sniper for Render Environment"""
+# --- 2. RESILIENT SNIPER (Network Stability Fix) ---
+def execute_sniper_outreach():
+    """Network-hardened sniper using SSL/TLS fallbacks to bypass Render blocks"""
     if not (HUNTED_POOL and GMAIL_USER and GMAIL_PASSWORD):
         return
-    
+
     try:
         target = random.choice(HUNTED_POOL)
         target_email = random.choice(USER_TARGET_LIST)
         
-        # 40% Follow-up logic
-        is_followup = random.random() < 0.4
         subject = f"Institutional Signal: {target['sector']} Node {target['id']} [CONFIDENTIAL]"
-        if is_followup:
-            subject = f"URGENT: Final Window for {target['sector']} Strategic Node {target['id']}"
-
-        body = f"""
-Dear Partner,
-
-{'This is a priority follow-up regarding an unclaimed strategic asset.' if is_followup else 'AssetPulse Global Research has flagged a high-liquidity acquisition signal.'}
-
-Institutional Intelligence:
-- Sector: {target['sector']}
-- Node Identifier: {target['id']}
-- VC Liquidity Score: 9.8/10
-- Valuation: $19,500 - $45,000
-
-Access the full encrypted audit and initiate secure handshake:
-{RENDER_URL}
-
-Regards,
-Acquisition Strategy Division
-AssetPulse Global
-"""
+        body = f"AssetPulse flagged a high-liquidity asset. View Audit: {RENDER_URL}"
+        
         msg = MIMEText(body)
         msg['Subject'] = subject
         msg['From'] = f"AssetPulse Research <{GMAIL_USER}>"
         msg['To'] = target_email
 
-        # STABILIZED CONNECTION: SSL Port 465 is best for Cloud Environments
+        # SUCCESSIVE PORT SCANNING: SSL (465) first, then TLS (587)
         try:
-            with smtplib.SMTP_SSL('smtp.gmail.com', 465, timeout=25) as server:
+            # SSL Method (Port 465)
+            with smtplib.SMTP_SSL('smtp.gmail.com', 465, timeout=30) as server:
                 server.login(GMAIL_USER, GMAIL_PASSWORD)
                 server.send_message(msg)
-                print(f"[SNIPER] Signal delivered to {target_email}")
-        except Exception as ssl_err:
-            print(f"[SNIPER] SSL Blocked, attempting TLS Fallback...")
-            with smtplib.SMTP('smtp.gmail.com', 587, timeout=25) as server:
-                server.starttls()
-                server.login(GMAIL_USER, GMAIL_PASSWORD)
-                server.send_message(msg)
-                print(f"[SNIPER] Signal delivered via TLS")
+                print(f"[SNIPER] Delivered to {target_email} via SSL")
+        except Exception:
+            # TLS Method (Port 587) Fallback
+            try:
+                with smtplib.SMTP('smtp.gmail.com', 587, timeout=30) as server:
+                    server.starttls()
+                    server.login(GMAIL_USER, GMAIL_PASSWORD)
+                    server.send_message(msg)
+                    print(f"[SNIPER] Delivered to {target_email} via TLS Fallback")
+            except Exception as final_err:
+                print(f"[SNIPER ERROR] Render network blocked all ports: {final_err}")
                 
     except Exception as e:
-        print(f"[SNIPER SILENT ERROR] Connection reset by peer or host unreachable.")
+        print(f"[SNIPER SILENT ERROR] Protocol mismatch or socket error.")
 
 # --- 3. BACKGROUND SCHEDULERS ---
 async def sniper_loop():
     while True:
-        send_sniper_email()
-        await asyncio.sleep(900) # Every 15 Minutes
+        execute_sniper_outreach()
+        await asyncio.sleep(1800) # Every 30 mins (Slower is better for Render Free Tier)
 
 async def refresh_loop():
     while True:
-        await asyncio.sleep(86400) # Every 24 Hours
+        await asyncio.sleep(86400) # Every 24 hours
         daily_fresh_hunt()
 
 async def heartbeat_loop():
@@ -144,7 +127,7 @@ async def serve_index():
     index_file = os.path.join(static_path, "index.html")
     if os.path.exists(index_file):
         return FileResponse(index_file)
-    return HTMLResponse("<h1>AssetPulse AI: Terminal Error - UI Missing</h1>")
+    return HTMLResponse("<body style='background:#05070a;color:white;text-align:center;'><h1>Terminal UI Not Found</h1></body>")
 
 @app.get("/hunted")
 def get_hunted():
@@ -154,25 +137,18 @@ def get_hunted():
 async def generate_audit(asset_id: str = Query(...)):
     asset = next((a for a in HUNTED_POOL if a["id"] == asset_id), None)
     if not asset: return {"result": "Data Stream Offline."}
-    prompt = f"Act as a Senior VC Analyst. Write a 1200-word audit for a {asset['sector']} node. NO AI MENTIONS."
+    prompt = f"Act as a Senior VC Analyst. Audit report for a {asset['sector']} node. ROI Focus. No AI mentions."
     try:
         comp = client.chat.completions.create(messages=[{"role":"user","content":prompt}], model="llama-3.3-70b-versatile")
         return {"result": comp.choices[0].message.content}
-    except: return {"result": "Encrypted audit generating..."}
+    except: return {"result": "Audit generating in secure sandbox..."}
 
 @app.get("/create_checkout")
 async def stripe_session(asset_id: str):
     try:
         session = stripe.checkout.Session.create(
             payment_method_types=["card"],
-            line_items=[{
-                "price_data": {
-                    "currency": "usd", 
-                    "product_data": {"name": f"Identity Reveal Protocol: {asset_id}"}, 
-                    "unit_amount": 1900, 
-                }, 
-                "quantity": 1
-            }],
+            line_items=[{"price_data":{"currency":"usd","product_data":{"name":f"Identity Reveal: {asset_id}"},"unit_amount":1900},"quantity":1}],
             mode="payment",
             success_url=RENDER_URL + "/reveal?asset_id=" + asset_id,
             cancel_url=RENDER_URL
@@ -183,7 +159,7 @@ async def stripe_session(asset_id: str):
 @app.get("/reveal")
 async def unlock_identity(asset_id: str = None):
     asset = next((a for a in HUNTED_POOL if a["id"] == asset_id), None)
-    if not asset: return HTMLResponse("Handshake Expired.")
+    if not asset: return HTMLResponse("Verification Expired.")
     domain = asset['real_name']
     final_affiliate = f"{GODADDY_BASE}&q={domain}"
     html = f"""
@@ -192,7 +168,7 @@ async def unlock_identity(asset_id: str = None):
             <h1 style='color:#22c55e;'>IDENTITY UNLOCKED</h1>
             <h2 style='font-size:60px; margin:20px 0;'>{domain}</h2>
             <br>
-            <a href='{final_affiliate}' target='_blank' style='background:#22c55e; color:white; padding:25px 60px; border-radius:20px; text-decoration:none; font-weight:bold; font-size:22px; display:inline-block;'>Register on GoDaddy →</a>
+            <a href='{final_affiliate}' target='_blank' style='background:#22c55e; color:white; padding:25px 60px; border-radius:20px; text-decoration:none; font-weight:bold; font-size:22px; display:inline-block;'>Buy on GoDaddy →</a>
         </div>
     </body>
     """
