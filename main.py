@@ -19,11 +19,11 @@ GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
 RENDER_URL = os.environ.get("RENDER_EXTERNAL_URL", "https://assetpulse-ai.onrender.com")
 
-# GMAIL CONFIG (Verified for assetpulseai@gmail.com)
+# GMAIL CONFIG (assetpulseai@gmail.com)
 GMAIL_USER = "assetpulseai@gmail.com"
 GMAIL_PASSWORD = os.environ.get("GMAIL_PASSWORD") 
 
-# GODADDY AFFILIATE LINK (Integrated with your CJ ID)
+# GODADDY AFFILIATE LINK
 GODADDY_BASE = "https://click.godaddy.com/affiliate?isc=cjccom311&url=https://www.godaddy.com/offers/domain"
 
 stripe.api_key = STRIPE_SECRET_KEY
@@ -32,7 +32,7 @@ client = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
 # --- SYSTEM MEMORY ---
 HUNTED_POOL = []
 
-# --- 1. ANTI-SLEEP ENGINE (24/7 Connectivity) ---
+# --- 1. ANTI-SLEEP ENGINE ---
 async def keep_alive():
     async with httpx.AsyncClient() as ac:
         while True:
@@ -41,10 +41,10 @@ async def keep_alive():
             except: pass
             await asyncio.sleep(600)
 
-# --- 2. ASSET DISCOVERY (Stealth Memory Logic) ---
+# --- 2. ASSET DISCOVERY ---
 def ai_asset_discovery():
     global HUNTED_POOL
-    sectors = ["FinTech", "HealthAI", "CyberSecurity", "SaaS Automation", "Web3 Gaming", "OpenTech"]
+    sectors = ["FinTech", "HealthAI", "CyberSecurity", "SaaS Automation", "Web3 Gaming"]
     prefixes = ["Neural", "Quantum", "Cyber", "Aura", "Flow", "Apex", "Vortex"]
     extensions = [".ai", ".io", ".com"]
     new_pool = []
@@ -52,50 +52,36 @@ def ai_asset_discovery():
         ext = random.choice(extensions)
         sector = random.choice(sectors)
         real_name = f"{random.choice(prefixes)}{random.randint(10,99)}{ext}".lower()
-        new_pool.append({
-            "id": f"ASSET-{2000+i}",
-            "sector": sector,
-            "real_name": real_name
-        })
+        new_pool.append({"id": f"ASSET-{2000+i}", "sector": sector, "real_name": real_name})
     HUNTED_POOL = new_pool
-    print(f"[V32.0] 100 Strategic Assets Shielded in Memory.")
+    print(f"[V32.1] 100 Assets Loaded (Price: 500 units)")
 
-# --- 3. SILENT SNIPER (Fixes Network Unreachable Error) ---
+# --- 3. SILENT SNIPER (Network unreachable Fix) ---
 async def apollo_outreach_sniper():
-    """Silent Sniper: Automatically retries connection to bypass Render limitations"""
     while True:
         try:
             if HUNTED_POOL and GMAIL_USER and GMAIL_PASSWORD:
                 target = random.choice(HUNTED_POOL)
-                founder_email = "mantupatra168@gmail.com" # Test Target
+                founder_email = "mantupatra168@gmail.com"
                 
-                subject = f"Institutional Acquisition Signal: {target['sector']} Node"
-                body = f"AssetPulse flagged a strategic asset in {target['sector']}. VC readiness: 9.8/10. View Audit: {RENDER_URL}"
-                
-                msg = MIMEText(body)
-                msg['Subject'] = subject
+                msg = MIMEText(f"Strategic Asset {target['id']} found in {target['sector']}. Audit: {RENDER_URL}")
+                msg['Subject'] = f"Institutional Signal: {target['sector']}"
                 msg['From'] = GMAIL_USER
                 msg['To'] = founder_email
 
-                # Method 1: Port 587 with TLS
                 try:
                     server = smtplib.SMTP('smtp.gmail.com', 587, timeout=15)
                     server.starttls()
                     server.login(GMAIL_USER, GMAIL_PASSWORD)
                     server.send_message(msg)
                     server.quit()
-                    print(f"[SNIPER] Email successfully sent to {founder_email}")
-                except Exception:
-                    # Method 2: Fallback to Port 465 SSL
+                except:
                     server = smtplib.SMTP_SSL('smtp.gmail.com', 465, timeout=15)
                     server.login(GMAIL_USER, GMAIL_PASSWORD)
                     server.send_message(msg)
                     server.quit()
-                    print(f"[SNIPER] Email successfully sent via SSL Fallback")
-            
-            await asyncio.sleep(3600) # Outreach every 1 hour
+            await asyncio.sleep(3600)
         except Exception:
-            # Silent retry if network is unstable
             await asyncio.sleep(60)
 
 @app.on_event("startup")
@@ -107,16 +93,12 @@ async def startup():
 # --- ROUTES ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 static_path = os.path.join(BASE_DIR, "static")
-
 if os.path.exists(static_path):
     app.mount("/static", StaticFiles(directory=static_path), name="static")
 
 @app.get("/")
 async def read_index():
-    index_file = os.path.join(static_path, "index.html")
-    if os.path.exists(index_file):
-        return FileResponse(index_file)
-    return HTMLResponse("<h1>AssetPulse Terminal: Static Index Missing.</h1>")
+    return FileResponse(os.path.join(static_path, "index.html"))
 
 @app.get("/hunted")
 def get_hunted():
@@ -126,26 +108,23 @@ def get_hunted():
 async def get_safe_report(asset_id: str = Query(...)):
     asset = next((a for a in HUNTED_POOL if a["id"] == asset_id), None)
     if not asset: return {"error": "Offline"}
-    prompt = f"Professional VC audit for {asset['sector']} startup node. Confidential analysis."
+    prompt = f"Professional VC audit for {asset['sector']} startup node. Confidential."
     try:
-        comp = client.chat.completions.create(
-            messages=[{"role":"user","content":prompt}],
-            model="llama-3.3-70b-versatile"
-        )
+        comp = client.chat.completions.create(messages=[{"role":"user","content":prompt}], model="llama-3.3-70b-versatile")
         return {"result": comp.choices[0].message.content}
-    except:
-        return {"result": "Audit generating in encrypted sandbox..."}
+    except: return {"result": "Generating institutional audit..."}
 
 @app.get("/create_checkout")
 async def create_checkout(asset_id: str):
     try:
+        # TEST PRICE: Changed to 500 (approx 5 INR or 5 USD cents depending on currency)
         session = stripe.checkout.Session.create(
             payment_method_types=["card"],
             line_items=[{
                 "price_data": {
                     "currency": "usd", 
-                    "product_data": {"name": f"Identity Reveal: {asset_id}"}, 
-                    "unit_amount": 9900
+                    "product_data": {"name": f"Identity Reveal Test: {asset_id}"}, 
+                    "unit_amount": 500, # PRICE SET TO 5 FOR TESTING
                 }, 
                 "quantity": 1
             }],
@@ -157,30 +136,27 @@ async def create_checkout(asset_id: str):
     except Exception as e:
         return {"error": str(e)}
 
-# --- POST-PAYMENT REVEAL PAGE WITH AFFILIATE LINK ---
 @app.get("/reveal")
 async def reveal_identity(asset_id: str = None):
     asset = next((a for a in HUNTED_POOL if a["id"] == asset_id), None)
-    if not asset: return HTMLResponse("Verification Pending. Please restart terminal.")
+    if not asset: return HTMLResponse("Access Denied.")
     
     real_domain = asset['real_name']
-    # Final GoDaddy Link with Affiliate ID
     final_affiliate = f"{GODADDY_BASE}&q={real_domain}"
 
     html = f"""
-    <body style='background:#0f172a; color:white; font-family:sans-serif; text-align:center; padding:100px;'>
-        <h1 style='color:#22c55e; font-size:40px;'>IDENTITY UNLOCKED</h1>
-        <hr style='border:1px solid #1e293b; width:300px; margin:20px auto;'>
-        <div style='background:#1e293b; padding:60px; border-radius:40px; border:2px solid #3b82f6; display:inline-block; box-shadow: 0 30px 60px rgba(0,0,0,0.4);'>
-            <p style='color:#94a3b8; text-transform:uppercase; letter-spacing:4px; font-weight:800; font-size:12px;'>Strategic Asset Node</p>
-            <h2 style='font-size:65px; margin:20px 0; font-style:italic; letter-spacing:-2px;'>{real_domain}</h2>
+    <body style='background:#0f172a; color:white; font-family:sans-serif; text-align:center; padding:60px;'>
+        <h1 style='color:#22c55e;'>Payment Verified!</h1>
+        <div style='background:#1e293b; padding:40px; border-radius:30px; display:inline-block; border:2px solid #3b82f6; margin-top:20px;'>
+            <p style='color:#94a3b8; text-transform:uppercase;'>Unlocked Domain Name</p>
+            <h2 style='font-size:45px; margin:10px 0;'>{real_domain}</h2>
             <br>
-            <a href='{final_affiliate}' target='_blank' style='background:#22c55e; color:white; padding:25px 60px; border-radius:20px; text-decoration:none; font-weight:900; font-size:22px; display:inline-block; box-shadow:0 15px 30px rgba(34, 197, 94, 0.4); text-transform:uppercase;'>
-                Buy on GoDaddy →
+            <a href='{final_affiliate}' target='_blank' 
+               style='background:#22c55e; color:white; padding:20px 40px; border-radius:15px; text-decoration:none; font-weight:bold; display:inline-block; box-shadow: 0 10px 20px rgba(34, 197, 94, 0.3);'>
+               Buy on GoDaddy (Partner Link) →
             </a>
-            <p style='color:#64748b; font-size:11px; margin-top:20px;'>*Official Institutional Partner Link</p>
         </div>
-        <p style='margin-top:60px;'><a href='/' style='color:#3b82f6; text-decoration:none; font-weight:bold;'>← RETURN TO ASSETPULSE TERMINAL</a></p>
+        <p style='margin-top:40px;'><a href='/' style='color:#3b82f6;'>Back to Terminal</a></p>
     </body>
     """
     return HTMLResponse(content=html)
