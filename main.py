@@ -117,14 +117,14 @@ async def get_safe_report(asset_id: str = Query(...)):
 @app.get("/create_checkout")
 async def create_checkout(asset_id: str):
     try:
-        # TEST PRICE: Changed to 500 (approx 5 INR or 5 USD cents depending on currency)
+        # Currency ko "inr" kiya aur amount ko 500 paise (yaani ₹5)
         session = stripe.checkout.Session.create(
             payment_method_types=["card"],
             line_items=[{
                 "price_data": {
-                    "currency": "usd", 
+                    "currency": "inr", 
                     "product_data": {"name": f"Identity Reveal Test: {asset_id}"}, 
-                    "unit_amount": 500, # PRICE SET TO 5 FOR TESTING
+                    "unit_amount": 500, # 500 Paise = ₹5.00
                 }, 
                 "quantity": 1
             }],
