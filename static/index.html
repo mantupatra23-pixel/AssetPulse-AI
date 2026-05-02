@@ -3,208 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AssetPulse AI | Global Acquisition Terminal</title>
+    <title>AssetPulse AI | Institutional Liquidity Terminal</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
-        
         body { 
-            font-family: 'Inter', sans-serif; 
+            font-family: 'Space Grotesk', sans-serif; 
             background: #05070a; 
             color: #e2e8f0; 
-            margin: 0; 
             overflow-x: hidden;
         }
-
-        .mono { font-family: 'JetBrains Mono', monospace; }
-
-        .glass-card {
-            background: rgba(13, 18, 30, 0.8);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(59, 130, 246, 0.15);
-            border-radius: 2.5rem;
+        .glass { 
+            background: rgba(13, 18, 30, 0.95); 
+            backdrop-filter: blur(25px); 
+            border: 1px solid rgba(59, 130, 246, 0.1); 
+        }
+        .neon-blue { 
+            text-shadow: 0 0 15px rgba(59, 130, 246, 0.6); 
+        }
+        .card-glow {
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 255, 255, 0.03);
         }
-
-        .glass-card:hover {
-            border-color: #3b82f6;
-            transform: translateY(-12px);
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+        .card-glow:hover { 
+            border-color: rgba(59, 130, 246, 0.4); 
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(59, 130, 246, 0.1);
+            transform: translateY(-8px) scale(1.02); 
         }
-
-        .pulse-red {
-            animation: pulse-red 2s infinite;
+        .roi-badge { 
+            background: linear-gradient(90deg, #1e40af, #3b82f6); 
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
         }
-
+        .btn-main {
+            background: #2563eb;
+            transition: all 0.3s ease;
+        }
+        .btn-main:hover {
+            background: #3b82f6;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+        }
         @keyframes pulse-red {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.2); }
-            100% { opacity: 1; transform: scale(1); }
+            0% { transform: scale(0.95); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(0.95); opacity: 1; }
         }
-
-        .roi-badge {
-            background: linear-gradient(90deg, #1e3a8a, #2563eb);
-            clip-path: polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%);
-        }
-
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        .pulse-dot { animation: pulse-red 2s infinite; }
     </style>
 </head>
-<body class="selection:bg-blue-500/30">
+<body class="min-h-screen">
 
-    <nav class="border-b border-white/5 py-6 px-10 flex justify-between items-center sticky top-0 z-50 backdrop-blur-md bg-black/50">
-        <div class="flex items-center gap-3">
-            <div class="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center font-black italic shadow-lg shadow-blue-600/40">A</div>
-            <h1 class="text-xl font-extrabold tracking-tighter uppercase italic text-white">AssetPulse <span class="text-blue-500">AI</span></h1>
-        </div>
-        <div class="flex gap-4">
-            <span class="text-[10px] mono text-green-400 font-bold uppercase border border-green-500/20 px-3 py-1 rounded bg-green-500/5">98.4% Secure Connection</span>
+    <nav class="p-6 border-b border-white/5 glass sticky top-0 z-[100]">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="h-2 w-2 bg-blue-500 rounded-full shadow-[0_0_10px_#3b82f6]"></div>
+                <h1 class="text-xl font-bold tracking-tighter neon-blue uppercase italic">AssetPulse <span class="text-white">AI</span></h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="hidden md:block text-[9px] font-mono text-blue-400/60 tracking-[0.2em]">ENCRYPTED TERMINAL V54.0</div>
+                <div class="text-[10px] font-mono text-green-500 bg-green-500/10 px-3 py-1 rounded border border-green-500/20 uppercase">Secure Connection</div>
+            </div>
         </div>
     </nav>
 
     <header class="max-w-7xl mx-auto px-6 pt-20 pb-16 text-center">
-        <h2 class="text-6xl md:text-8xl font-black text-white mb-6 italic uppercase tracking-tighter leading-none">
-            Institutional <span class="text-blue-600">Liquidity</span> Pool
+        <h2 class="text-6xl md:text-8xl font-bold tracking-tighter mb-4 italic uppercase leading-none">
+            Institutional <br><span class="text-blue-600">Liquidity</span> Pool
         </h2>
-        <p class="text-slate-500 max-w-xl mx-auto text-[10px] font-bold uppercase tracking-[0.4em] mono">Private Terminal • Access Restricted to Qualified Buyers</p>
+        <p class="text-gray-600 text-[10px] tracking-[0.5em] uppercase font-bold mt-6">Private Alpha Terminal &bull; AI-Powered Strategic Node Discovery</p>
     </header>
 
-    <section class="max-w-7xl mx-auto px-6 pb-32">
-        <div id="assetGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            <div class="col-span-full text-center py-20 text-blue-500 mono animate-pulse italic">
-                ESTABLISHING SECURE HANDSHAKE WITH GLOBAL NODES...
-            </div>
+    <main class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10" id="asset-grid">
+        <div class="col-span-full text-center py-40">
+            <div class="inline-block h-8 w-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p class="font-mono text-gray-700 text-xs tracking-widest">SYNCHRONIZING WITH GLOBAL NODES...</p>
         </div>
-    </section>
+    </main>
 
-    <div id="auditModal" class="fixed inset-0 bg-black/98 backdrop-blur-3xl hidden z-[100] overflow-y-auto pt-10">
-        <div class="max-w-4xl mx-auto px-4 pb-20">
-            <div class="bg-[#0d121e] rounded-[3.5rem] border border-white/10 relative overflow-hidden shadow-2xl">
-                <button onclick="closeModal()" class="absolute top-10 right-10 text-slate-500 hover:text-white text-4xl font-light transition-all">&times;</button>
-                
-                <div class="p-12 md:p-20">
-                    <span id="modalSector" class="text-blue-400 mono text-[10px] font-bold uppercase tracking-[0.3em] bg-blue-400/5 px-5 py-2 rounded-full border border-blue-400/10 italic">Sector</span>
-                    <h3 id="modalId" class="text-6xl font-black text-white italic mt-8 uppercase tracking-tighter">NODE-0000</h3>
-                    
-                    <div class="mt-12 space-y-10">
-                        <div id="summaryBox" class="bg-blue-600/5 border-l-8 border-blue-600 p-10 italic text-blue-100 rounded-r-3xl font-semibold text-xl leading-relaxed shadow-inner">
-                            Synchronizing metadata packets...
+    <div id="modal" class="fixed inset-0 bg-black/98 hidden z-[200] flex items-center justify-center p-4 backdrop-blur-3xl">
+        <div class="glass w-full max-w-2xl rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl animate-in fade-in zoom-in duration-300">
+            <div class="p-10 md:p-14">
+                <div class="flex justify-between items-start mb-10">
+                    <div>
+                        <h3 id="modal-id" class="text-4xl font-bold tracking-tighter text-white italic uppercase"></h3>
+                        <div class="flex items-center space-x-2 mt-2">
+                            <span id="modal-sector" class="text-blue-500 text-[10px] font-bold uppercase tracking-widest"></span>
+                            <span class="h-1 w-1 bg-gray-700 rounded-full"></span>
+                            <span class="text-green-500 text-[10px] font-mono">VERIFIED NODE</span>
                         </div>
-                        <div id="fullAudit" class="filter blur-2xl opacity-20 select-none space-y-8 text-slate-400 text-lg">
-                            </div>
+                    </div>
+                    <button onclick="closeModal()" class="h-12 w-12 flex items-center justify-center rounded-full border border-white/5 text-gray-500 hover:text-white hover:bg-white/5 transition text-2xl">✕</button>
+                </div>
+                
+                <div id="audit-content" class="bg-black/40 p-8 rounded-[2rem] border border-white/5 text-sm leading-relaxed h-72 overflow-y-auto mb-10 text-gray-400 italic font-light">
                     </div>
 
-                    <div id="paywall" class="mt-20 bg-gradient-to-br from-blue-600 to-blue-950 p-16 rounded-[3rem] text-center shadow-3xl relative overflow-hidden">
-                        <h4 class="text-4xl font-black text-white mb-4 italic uppercase tracking-tighter">Unlock Identity</h4>
-                        <p class="text-blue-100 text-[11px] font-bold uppercase tracking-[0.2em] mb-12 opacity-80 italic">Revealing Private Domain, Traffic Moat & Founder Handshake</p>
-                        <button onclick="checkout()" class="w-full md:w-auto bg-white text-blue-900 px-20 py-7 rounded-3xl font-black text-xs uppercase tracking-[0.3em] hover:scale-105 active:scale-95 transition-all shadow-2xl">
-                            Initiate Handshake — $19.00
-                        </button>
-                    </div>
+                <div class="space-y-4">
+                    <button id="pay-btn" onclick="startPayment()" class="w-full py-6 btn-main text-white font-bold rounded-[2rem] transition-all text-xl uppercase tracking-tighter">
+                        Open Audit Protocol ($19)
+                    </button>
+                    <p class="text-center text-[9px] text-gray-600 uppercase tracking-widest font-medium">Identity Reveal & VC Roadmap instantly after checkout</p>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        let currentId = null;
+        let currentAssetId = null;
+
+        // Logic for Dynamic Valuation & Stats
+        function generateStats(id) {
+            const seed = id.split('-')[1] || "1234";
+            const val = (parseFloat(seed) / 100).toFixed(1);
+            const roi = Math.floor(parseFloat(seed) / 12);
+            const score = (9 + (parseInt(seed) % 9) / 10).toFixed(1);
+            const buyers = (parseInt(seed) % 7) + 3;
+            return { val, roi, score, buyers };
+        }
 
         async function fetchAssets() {
-            const grid = document.getElementById('assetGrid');
             try {
                 const res = await fetch('/hunted');
                 const data = await res.json();
+                const container = document.getElementById('asset-grid');
                 
-                grid.innerHTML = data.assets.map(a => {
-                    const valuation = (Math.random() * (75 - 18) + 18).toFixed(1);
-                    const watchers = Math.floor(Math.random() * 7) + 4;
-                    const roi = (Math.random() * (620 - 150) + 150).toFixed(0);
-                    const score = (Math.random() * (9.9 - 9.3) + 9.3).toFixed(1);
-                    
+                container.innerHTML = data.assets.map(asset => {
+                    const stats = generateStats(asset.id);
                     return `
-                        <div class="glass-card p-10 flex flex-col justify-between h-[540px] relative overflow-hidden group">
-                            <div class="absolute top-0 right-0 roi-badge text-white text-[10px] font-black px-6 py-2 mono italic z-10">
-                                +${roi}% ROI
-                            </div>
-                            
-                            <div class="flex justify-between items-start">
-                                <span class="text-[9px] mono font-bold text-blue-400 uppercase tracking-widest">${a.sector}</span>
-                                <div class="flex items-center gap-2">
-                                    <span class="h-2 w-2 bg-red-500 rounded-full pulse-red shadow-lg shadow-red-500/50"></span>
-                                    <span class="text-[9px] font-black text-red-400 uppercase mono">${watchers} Buyers Active</span>
-                                </div>
-                            </div>
-                            
-                            <div class="mt-8">
-                                <h2 class="text-4xl font-black text-white italic tracking-tighter uppercase leading-none">Strategic Node</h2>
-                                <p class="text-[11px] mono text-slate-700 font-bold mt-2 uppercase tracking-widest">${a.id}</p>
-                            </div>
-
-                            <div class="my-10 space-y-6">
-                                <div class="flex justify-between items-end border-b border-white/5 pb-6">
-                                    <div>
-                                        <p class="text-slate-600 text-[9px] uppercase font-bold tracking-widest">Est. Valuation</p>
-                                        <p class="text-4xl font-black text-white italic mt-1">$${valuation}K</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-slate-600 text-[9px] uppercase font-bold tracking-widest">Audit Score</p>
-                                        <p class="text-xl font-black text-blue-500 mono italic">${score}</p>
-                                    </div>
-                                </div>
-                                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest italic flex items-center gap-2">
-                                    <span class="text-yellow-500 animate-pulse">●</span> Status: Negotiation In-Progress
-                                </p>
-                            </div>
-                            
-                            <button onclick="openAudit('${a.id}', '${a.sector}')" class="w-full py-6 bg-blue-600 hover:bg-blue-500 text-white rounded-[1.8rem] text-[11px] font-black uppercase tracking-[0.3em] transition-all shadow-2xl shadow-blue-900/40">
-                                Open Audit Protocol
-                            </button>
+                    <div class="glass p-10 rounded-[3rem] card-glow cursor-pointer relative overflow-hidden group" onclick="openAudit('${asset.id}', '${asset.sector}')">
+                        <div class="roi-badge absolute top-0 right-0 px-6 py-2 text-[10px] font-bold text-white rounded-bl-3xl">
+                            +${stats.roi}% ROI
                         </div>
+
+                        <div class="mb-10">
+                            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-[0.3em]">${asset.sector}</span>
+                            <div class="flex items-center text-[10px] text-red-500 font-bold mt-2 uppercase tracking-tight">
+                                <span class="h-2 w-2 bg-red-500 rounded-full mr-2 pulse-dot"></span>
+                                ${stats.buyers} Qualified Buyers Active
+                            </div>
+                        </div>
+
+                        <h3 class="text-4xl font-bold text-white tracking-tighter italic uppercase mb-2 group-hover:text-blue-400 transition">Strategic Node</h3>
+                        <p class="text-[10px] font-mono text-gray-700 mb-12 tracking-widest">${asset.id}</p>
+                        
+                        <div class="flex justify-between items-end border-t border-white/5 pt-8">
+                            <div>
+                                <p class="text-[8px] text-gray-600 uppercase font-bold tracking-[0.2em] mb-1">Est. Valuation</p>
+                                <p class="text-4xl font-bold text-white tracking-tighter">$${stats.val}K</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[8px] text-gray-600 uppercase font-bold tracking-[0.2em] mb-1">Audit Score</p>
+                                <p class="text-3xl font-bold text-blue-600 italic font-serif">${stats.score}</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 text-[9px] text-gray-800 font-bold uppercase tracking-[0.3em]">
+                            Status: <span class="text-blue-900">Negotiation In-Progress</span>
+                        </div>
+                    </div>
                     `;
                 }).join('');
-            } catch (e) { grid.innerHTML = `<p class="col-span-full text-center text-red-500">SYSTEM OFFLINE</p>`; }
+            } catch (e) {
+                console.error("Neural Link Offline.");
+            }
         }
 
         async function openAudit(id, sector) {
-            currentId = id;
-            document.getElementById('auditModal').style.display = 'block';
-            document.getElementById('modalId').innerText = id;
-            document.getElementById('modalSector').innerText = sector;
+            currentAssetId = id;
+            document.getElementById('modal-id').innerText = id;
+            document.getElementById('modal-sector').innerText = sector;
+            document.getElementById('modal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
+            document.getElementById('audit-content').innerHTML = `
+                <div class="flex flex-col items-center justify-center h-full space-y-3">
+                    <div class="h-4 w-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                    <span class="text-[10px] font-mono uppercase tracking-widest">Deciphering VC Signal...</span>
+                </div>
+            `;
+
+            const res = await fetch(`/safe_report?asset_id=${id}`);
+            const data = await res.json();
+            document.getElementById('audit-content').innerText = data.result;
+        }
+
+        async function startPayment() {
+            const btn = document.getElementById('pay-btn');
+            const oldText = btn.innerText;
+            btn.innerText = "REDIRECTING TO GATEWAY...";
+            btn.disabled = true;
 
             try {
-                const res = await fetch(`/safe_report?asset_id=${id}`);
+                const res = await fetch(`/create_checkout?asset_id=${currentAssetId}`);
                 const data = await res.json();
-                document.getElementById('summaryBox').innerText = "INSTITUTIONAL ALERT: " + data.result.substring(0, 200) + "...";
-                document.getElementById('fullAudit').innerText = data.result;
+                if (data.checkout_url) {
+                    window.location.href = data.checkout_url;
+                } else {
+                    throw new Error();
+                }
             } catch (e) {
-                document.getElementById('summaryBox').innerText = "Re-establishing secure connection...";
+                alert("Institutional Bridge Reset. Please try again.");
+                btn.innerText = oldText;
+                btn.disabled = false;
             }
         }
 
         function closeModal() {
-            document.getElementById('auditModal').style.display = 'none';
+            document.getElementById('modal').classList.add('hidden');
             document.body.style.overflow = 'auto';
         }
 
-        async function checkout() {
-            if(!currentId) return;
-            const btn = document.querySelector('#paywall button');
-            btn.innerText = "Syncing with Stripe...";
-            btn.disabled = true;
-            try {
-                const res = await fetch(`/create_checkout?asset_id=${currentId}`);
-                const data = await res.json();
-                if(data.checkout_url) window.location.href = data.checkout_url;
-            } catch (e) {
-                btn.innerText = "Initiate Handshake — $19.00";
-                btn.disabled = false;
-                alert("Gate Busy. Refresh.");
-            }
-        }
-
-        window.onload = fetchAssets;
+        // Initialize Hunt
+        fetchAssets();
     </script>
 </body>
 </html>
