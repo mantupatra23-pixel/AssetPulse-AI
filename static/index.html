@@ -12,96 +12,146 @@
             background: #05070a; 
             color: #e2e8f0; 
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
+        
+        /* Glassmorphism & Effects */
         .glass { 
-            background: rgba(13, 18, 30, 0.95); 
-            backdrop-filter: blur(25px); 
+            background: rgba(13, 18, 30, 0.96); 
+            backdrop-filter: blur(30px); 
             border: 1px solid rgba(59, 130, 246, 0.1); 
         }
-        .neon-blue { 
-            text-shadow: 0 0 15px rgba(59, 130, 246, 0.6); 
-        }
-        .card-glow {
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-        }
+        .neon-blue { text-shadow: 0 0 15px rgba(59, 130, 246, 0.6); }
         .card-glow:hover { 
-            border-color: rgba(59, 130, 246, 0.4); 
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(59, 130, 246, 0.1);
-            transform: translateY(-8px) scale(1.02); 
+            border-color: rgba(59, 130, 246, 0.5); 
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
+            transform: translateY(-8px);
         }
-        .roi-badge { 
-            background: linear-gradient(90deg, #1e40af, #3b82f6); 
-            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+
+        /* Paywall Protection Overlay */
+        .blur-shield {
+            background: linear-gradient(to top, #05070a 40%, rgba(13, 18, 30, 0.7) 85%, transparent 100%);
+            backdrop-filter: blur(14px);
         }
-        .btn-main {
-            background: #2563eb;
-            transition: all 0.3s ease;
+
+        /* ROI & Stats Labels */
+        .roi-label {
+            background: linear-gradient(90deg, #1d4ed8, #3b82f6);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
         }
-        .btn-main:hover {
+
+        /* Support Button Styling */
+        .support-desk {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            background: rgba(13, 18, 30, 0.9);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .support-desk:hover {
             background: #3b82f6;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+            color: white;
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
+            transform: translateY(-5px) scale(1.05);
         }
-        @keyframes pulse-red {
-            0% { transform: scale(0.95); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.7; }
-            100% { transform: scale(0.95); opacity: 1; }
+
+        /* Pulse Animation for Live Status */
+        @keyframes pulse-live {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.3); }
+            100% { opacity: 1; transform: scale(1); }
         }
-        .pulse-dot { animation: pulse-red 2s infinite; }
+        .pulse-dot { animation: pulse-live 2s infinite; }
+        
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
     </style>
 </head>
 <body class="min-h-screen">
 
+    <a href="mailto:assetpulseai@gmail.com?subject=Institutional Support Inquiry" class="support-desk">
+        <span class="h-2 w-2 bg-blue-500 rounded-full animate-pulse shadow-[0_0_8px_#3b82f6]"></span>
+        Contact Support Desk
+    </a>
+
     <nav class="p-6 border-b border-white/5 glass sticky top-0 z-[100]">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <div class="h-2 w-2 bg-blue-500 rounded-full shadow-[0_0_10px_#3b82f6]"></div>
-                <h1 class="text-xl font-bold tracking-tighter neon-blue uppercase italic">AssetPulse <span class="text-white">AI</span></h1>
+                <div class="h-2.5 w-2.5 bg-blue-500 rounded-full shadow-[0_0_12px_#3b82f6]"></div>
+                <h1 class="text-xl font-bold tracking-tighter neon-blue uppercase italic">AssetPulse <span class="text-white font-light uppercase">AI</span></h1>
             </div>
-            <div class="flex items-center space-x-4">
-                <div class="hidden md:block text-[9px] font-mono text-blue-400/60 tracking-[0.2em]">ENCRYPTED TERMINAL V54.0</div>
-                <div class="text-[10px] font-mono text-green-500 bg-green-500/10 px-3 py-1 rounded border border-green-500/20 uppercase">Secure Connection</div>
+            <div class="flex items-center space-x-6">
+                <div class="hidden lg:block text-[9px] font-mono text-gray-600 tracking-[0.4em] uppercase">Security Protocol V61.0 Active</div>
+                <div class="text-[10px] font-mono text-green-500 bg-green-500/10 px-4 py-1.5 rounded-full border border-green-500/20 uppercase tracking-widest">
+                    98.4% Secure Connection
+                </div>
             </div>
         </div>
     </nav>
 
-    <header class="max-w-7xl mx-auto px-6 pt-20 pb-16 text-center">
-        <h2 class="text-6xl md:text-8xl font-bold tracking-tighter mb-4 italic uppercase leading-none">
+    <header class="max-w-7xl mx-auto px-6 pt-24 pb-16 text-center">
+        <h2 class="text-6xl md:text-8xl font-bold tracking-tighter mb-6 italic uppercase leading-[0.9] text-white">
             Institutional <br><span class="text-blue-600">Liquidity</span> Pool
         </h2>
-        <p class="text-gray-600 text-[10px] tracking-[0.5em] uppercase font-bold mt-6">Private Alpha Terminal &bull; AI-Powered Strategic Node Discovery</p>
+        <p class="text-gray-600 text-[10px] tracking-[0.5em] uppercase font-bold mt-8">Autonomous Strategic Node Discovery &bullet; Private Alpha Access</p>
     </header>
 
     <main class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10" id="asset-grid">
         <div class="col-span-full text-center py-40">
-            <div class="inline-block h-8 w-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p class="font-mono text-gray-700 text-xs tracking-widest">SYNCHRONIZING WITH GLOBAL NODES...</p>
+            <div class="inline-block h-6 w-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mb-6"></div>
+            <p class="font-mono text-gray-700 text-[10px] tracking-[0.3em] uppercase">Synchronizing Neural Data Streams...</p>
         </div>
     </main>
 
-    <div id="modal" class="fixed inset-0 bg-black/98 hidden z-[200] flex items-center justify-center p-4 backdrop-blur-3xl">
-        <div class="glass w-full max-w-2xl rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl animate-in fade-in zoom-in duration-300">
+    <div id="modal" class="fixed inset-0 bg-black/98 hidden z-[200] flex items-center justify-center p-4 backdrop-blur-3xl transition-all duration-300">
+        <div class="glass w-full max-w-2xl rounded-[3.5rem] overflow-hidden border border-white/10 shadow-2xl animate-in zoom-in duration-300">
             <div class="p-10 md:p-14">
-                <div class="flex justify-between items-start mb-10">
+                <div class="flex justify-between items-start mb-12">
                     <div>
                         <h3 id="modal-id" class="text-4xl font-bold tracking-tighter text-white italic uppercase"></h3>
-                        <div class="flex items-center space-x-2 mt-2">
+                        <div class="flex items-center space-x-3 mt-3">
                             <span id="modal-sector" class="text-blue-500 text-[10px] font-bold uppercase tracking-widest"></span>
-                            <span class="h-1 w-1 bg-gray-700 rounded-full"></span>
-                            <span class="text-green-500 text-[10px] font-mono">VERIFIED NODE</span>
+                            <span class="h-1 w-1 bg-gray-800 rounded-full"></span>
+                            <span class="text-green-500 text-[9px] font-mono uppercase tracking-tighter">Verified Lead</span>
                         </div>
                     </div>
-                    <button onclick="closeModal()" class="h-12 w-12 flex items-center justify-center rounded-full border border-white/5 text-gray-500 hover:text-white hover:bg-white/5 transition text-2xl">✕</button>
+                    <button onclick="closeModal()" class="h-12 w-12 flex items-center justify-center rounded-full border border-white/5 text-gray-600 hover:text-white transition-colors duration-300">✕</button>
                 </div>
                 
-                <div id="audit-content" class="bg-black/40 p-8 rounded-[2rem] border border-white/5 text-sm leading-relaxed h-72 overflow-y-auto mb-10 text-gray-400 italic font-light">
+                <div class="relative mb-12">
+                    <div id="audit-content" class="bg-black/40 p-8 rounded-[2.5rem] border border-white/5 text-sm leading-relaxed h-80 overflow-hidden text-gray-500 italic font-light">
+                        </div>
+                    
+                    <div id="paywall" class="absolute inset-0 blur-shield flex flex-col items-center justify-end pb-14">
+                        <div class="text-center px-10">
+                            <div class="inline-flex items-center justify-center h-14 w-14 rounded-full bg-blue-600/10 border border-blue-600/20 mb-6">
+                                <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                            </div>
+                            <h4 class="text-white font-bold text-xl uppercase tracking-tighter mb-2 italic">Report Encrypted</h4>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-[0.3em] leading-relaxed">Full identity disclosure & roadmap access <br>requires institutional decryption</p>
+                        </div>
                     </div>
+                </div>
 
-                <div class="space-y-4">
-                    <button id="pay-btn" onclick="startPayment()" class="w-full py-6 btn-main text-white font-bold rounded-[2rem] transition-all text-xl uppercase tracking-tighter">
-                        Open Audit Protocol ($19)
+                <div class="space-y-5">
+                    <button id="pay-btn" onclick="startPayment()" class="w-full py-6 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-[2.2rem] transition-all duration-300 text-xl uppercase tracking-tighter shadow-2xl shadow-blue-900/30">
+                        Decrypt Protocol ($19)
                     </button>
-                    <p class="text-center text-[9px] text-gray-600 uppercase tracking-widest font-medium">Identity Reveal & VC Roadmap instantly after checkout</p>
+                    <p class="text-center text-[9px] text-gray-700 uppercase tracking-widest font-bold">Instant Handshake Post-Checkout</p>
                 </div>
             </div>
         </div>
@@ -110,14 +160,15 @@
     <script>
         let currentAssetId = null;
 
-        // Logic for Dynamic Valuation & Stats
-        function generateStats(id) {
-            const seed = id.split('-')[1] || "1234";
-            const val = (parseFloat(seed) / 100).toFixed(1);
-            const roi = Math.floor(parseFloat(seed) / 12);
-            const score = (9 + (parseInt(seed) % 9) / 10).toFixed(1);
-            const buyers = (parseInt(seed) % 7) + 3;
-            return { val, roi, score, buyers };
+        // Generate Stats exactly like screenshots
+        function getAdvancedStats(id) {
+            const seed = parseInt(id.split('-')[1]) || 5000;
+            return {
+                val: (seed / 100).toFixed(1),
+                roi: Math.floor(seed / 14),
+                score: (9 + (seed % 9) / 10).toFixed(1),
+                buyers: (seed % 7) + 3
+            };
         }
 
         async function fetchAssets() {
@@ -127,44 +178,28 @@
                 const container = document.getElementById('asset-grid');
                 
                 container.innerHTML = data.assets.map(asset => {
-                    const stats = generateStats(asset.id);
+                    const s = getAdvancedStats(asset.id);
                     return `
-                    <div class="glass p-10 rounded-[3rem] card-glow cursor-pointer relative overflow-hidden group" onclick="openAudit('${asset.id}', '${asset.sector}')">
-                        <div class="roi-badge absolute top-0 right-0 px-6 py-2 text-[10px] font-bold text-white rounded-bl-3xl">
-                            +${stats.roi}% ROI
+                    <div class="glass p-10 rounded-[3.5rem] border border-white/5 transition-all duration-500 card-glow cursor-pointer relative overflow-hidden group" onclick="openAudit('${asset.id}', '${asset.sector}')">
+                        <div class="roi-label absolute top-0 right-0 px-6 py-2.5 text-[10px] font-bold text-white rounded-bl-[1.5rem] italic">
+                            +${s.roi}% ROI
                         </div>
-
-                        <div class="mb-10">
-                            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-[0.3em]">${asset.sector}</span>
-                            <div class="flex items-center text-[10px] text-red-500 font-bold mt-2 uppercase tracking-tight">
+                        <div class="mb-10 text-[10px] font-bold uppercase tracking-[0.4em] text-gray-600">
+                            ${asset.sector} <br>
+                            <span class="text-red-500 inline-flex items-center mt-2 tracking-tight">
                                 <span class="h-2 w-2 bg-red-500 rounded-full mr-2 pulse-dot"></span>
-                                ${stats.buyers} Qualified Buyers Active
-                            </div>
+                                ${s.buyers} Buyers Active
+                            </span>
                         </div>
-
-                        <h3 class="text-4xl font-bold text-white tracking-tighter italic uppercase mb-2 group-hover:text-blue-400 transition">Strategic Node</h3>
-                        <p class="text-[10px] font-mono text-gray-700 mb-12 tracking-widest">${asset.id}</p>
-                        
-                        <div class="flex justify-between items-end border-t border-white/5 pt-8">
-                            <div>
-                                <p class="text-[8px] text-gray-600 uppercase font-bold tracking-[0.2em] mb-1">Est. Valuation</p>
-                                <p class="text-4xl font-bold text-white tracking-tighter">$${stats.val}K</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-[8px] text-gray-600 uppercase font-bold tracking-[0.2em] mb-1">Audit Score</p>
-                                <p class="text-3xl font-bold text-blue-600 italic font-serif">${stats.score}</p>
-                            </div>
+                        <h3 class="text-4xl font-bold text-white tracking-tighter italic uppercase mb-3 group-hover:text-blue-500 transition-colors duration-300 leading-none">Strategic Node</h3>
+                        <p class="text-[10px] font-mono text-gray-800 mb-14 tracking-widest">${asset.id}</p>
+                        <div class="flex justify-between items-end pt-10 border-t border-white/5">
+                            <div><p class="text-[9px] text-gray-700 uppercase font-bold tracking-widest mb-1">Valuation</p><p class="text-4xl font-bold text-white tracking-tighter leading-none">$${s.val}K</p></div>
+                            <div class="text-right"><p class="text-[9px] text-gray-700 uppercase font-bold tracking-widest mb-1">Score</p><p class="text-3xl font-bold text-blue-600 italic font-serif leading-none">${s.score}</p></div>
                         </div>
-
-                        <div class="mt-8 text-[9px] text-gray-800 font-bold uppercase tracking-[0.3em]">
-                            Status: <span class="text-blue-900">Negotiation In-Progress</span>
-                        </div>
-                    </div>
-                    `;
+                    </div>`;
                 }).join('');
-            } catch (e) {
-                console.error("Neural Link Offline.");
-            }
+            } catch (e) { console.error("Neural Bridge Timeout."); }
         }
 
         async function openAudit(id, sector) {
@@ -173,35 +208,27 @@
             document.getElementById('modal-sector').innerText = sector;
             document.getElementById('modal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
-            document.getElementById('audit-content').innerHTML = `
-                <div class="flex flex-col items-center justify-center h-full space-y-3">
-                    <div class="h-4 w-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                    <span class="text-[10px] font-mono uppercase tracking-widest">Deciphering VC Signal...</span>
-                </div>
-            `;
+            
+            document.getElementById('audit-content').innerHTML = `<div class="flex flex-col items-center justify-center h-full space-y-3"><div class="h-4 w-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div><span class="text-[9px] font-mono uppercase tracking-widest text-gray-700">Accessing Data...</span></div>`;
 
             const res = await fetch(`/safe_report?asset_id=${id}`);
             const data = await res.json();
-            document.getElementById('audit-content').innerText = data.result;
+            // Paywall logic: Only show teaser
+            document.getElementById('audit-content').innerText = data.result.substring(0, 165) + "... [SECURITY LOCK: ACCESS DENIED]";
         }
 
         async function startPayment() {
             const btn = document.getElementById('pay-btn');
-            const oldText = btn.innerText;
-            btn.innerText = "REDIRECTING TO GATEWAY...";
+            btn.innerText = "AUTHENTICATING GATEWAY...";
             btn.disabled = true;
-
             try {
                 const res = await fetch(`/create_checkout?asset_id=${currentAssetId}`);
                 const data = await res.json();
-                if (data.checkout_url) {
-                    window.location.href = data.checkout_url;
-                } else {
-                    throw new Error();
-                }
+                if (data.checkout_url) { window.location.href = data.checkout_url; }
+                else { throw new Error(); }
             } catch (e) {
-                alert("Institutional Bridge Reset. Please try again.");
-                btn.innerText = oldText;
+                alert("Institutional Bridge Reset. Try again.");
+                btn.innerText = "Decrypt Protocol ($19)";
                 btn.disabled = false;
             }
         }
@@ -211,7 +238,6 @@
             document.body.style.overflow = 'auto';
         }
 
-        // Initialize Hunt
         fetchAssets();
     </script>
 </body>
